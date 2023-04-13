@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://example.com/img/proto3.png">
 <meta property="og:image" content="http://example.com/img/proto4.png">
 <meta property="article:published_time" content="2022-10-05T07:07:14.000Z">
-<meta property="article:modified_time" content="2023-03-26T15:43:45.231Z">
+<meta property="article:modified_time" content="2023-04-13T10:57:05.703Z">
 <meta property="article:author" content="Vito">
 <meta property="article:tag" content="JS基础">
 <meta name="twitter:card" content="summary_large_image">
@@ -228,7 +228,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          8.2k 字
+          10k 字
         
       </span>
     
@@ -239,7 +239,7 @@
         
         
         
-          69 分钟
+          84 分钟
         
       </span>
     
@@ -344,7 +344,7 @@
 
 <p><strong>优点:</strong></p>
 <ul>
-<li>可以在子类构造函数通过<code>**call**</code>可以<strong>向父类传参数</strong></li>
+<li>可以在子类构造函数通过<code>call</code>可以<strong>向父类传参数</strong></li>
 <li><strong>父类的引用属性不会被共享</strong></li>
 </ul>
 <p><strong>缺点：</strong></p>
@@ -385,7 +385,7 @@
 </ul>
 <p><strong>注意：</strong></p>
 <p><code>Child3.prototype.constructor = Child3</code> 由于Child3的原型对象被重写，所以<code>Child3.prototype</code> 原本默认的constructor会被丢失。所以我们需要手动指定下原型对象的构造函数指向。</p>
-<h3 id="4-原型式继承"><a href="#4-原型式继承" class="headerlink" title="4.原型式继承"></a>4.原型式继承</h3><p>原型式继承是不涉及严格意义上构造函数的继承方法，基于已有的<strong>对象（不是构造函数哦！）</strong>创建一个新对象，该新对象的原型指向已有的对象</p>
+<h3 id="4-原型式继承"><a href="#4-原型式继承" class="headerlink" title="4.原型式继承"></a>4.原型式继承</h3><p>原型式继承是不涉及严格意义上构造函数的继承方法，<strong>基于已有的对象</strong>（不是构造函数哦！）创建一个新对象，该新对象的原型指向已有的对象</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> parent4 = &#123;<br>    <span class="hljs-attr">name</span>:<span class="hljs-string">&#x27;parent4&#x27;</span>,<br>    <span class="hljs-attr">play</span>:[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br>  &#125;<br><br><span class="hljs-keyword">var</span> child4 = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(parent4,&#123;<br>	<span class="hljs-attr">type</span>:&#123;<span class="hljs-attr">value</span>:<span class="hljs-string">&#x27;child4&#x27;</span>&#125;<br>&#125;)<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child4);<br></code></pre></td></tr></table></figure>
 
 <p><strong>优点：</strong></p>
@@ -400,7 +400,7 @@
 <p>例子：</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> child5 = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(parent4)<br>child4.<span class="hljs-property">play</span>.<span class="hljs-title function_">push</span>(<span class="hljs-number">4</span>)<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child4.<span class="hljs-property">play</span>) <span class="hljs-comment">//[1,2,3,4]</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child5.<span class="hljs-property">play</span>) <span class="hljs-comment">//[1,2,3,4]</span><br><br></code></pre></td></tr></table></figure></li>
 </ul>
-<p><strong>注意：<code>Object.create()</code> 是原型式继承的核心，</strong>是ES5为了<strong>规范原型式继承</strong>而出的方法，而这个方法核心原理如下：</p>
+<p><strong>注意：<code>Object.create()</code> 是原型式继承的核心，</strong>是ES5为了<strong>规范原型式继承</strong>而出的方法，可以理解为<code>Object.create()</code>就是原型式继承，而这个方法核心原理如下：</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">create</span>(<span class="hljs-params">superInstance</span>)&#123;<br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">Fn</span>(<span class="hljs-params"></span>)&#123;&#125;<br>	<span class="hljs-title class_">Fn</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = superInstance<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Fn</span>() <br>&#125;<br><br></code></pre></td></tr></table></figure>
 
 <h3 id="5-寄生式继承"><a href="#5-寄生式继承" class="headerlink" title="5. 寄生式继承"></a>5. 寄生式继承</h3><p>寄生式继承是和原型式继承比较接近的一种继承方式，是一个类似于工厂函数的继承方式：创建一个实现继承的函数，在函数里以某种方法进行增强（加工）对象，然后返回一个对象。</p>
@@ -410,6 +410,9 @@
 <p><strong>优点：</strong></p>
 <ul>
 <li>父类方法可复用</li>
+<li>在不修改原型对象情况下，对新对象进行扩展</li>
+<li>通过寄生继承实现混入、单例等功能</li>
+<li>代码简洁，易于维护。</li>
 </ul>
 <p><strong>缺点：</strong></p>
 <ul>
@@ -423,24 +426,39 @@
 <p>注意：</p>
 <p>Object.create()方法并不是寄生式继承所必需的，任何可以返回新对象的函数都可以在这使用。</p>
 <aside>
-💡 在没有必要兴师动众地创建[构造函数](https://so.csdn.net/so/search?q=%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0&spm=1001.2101.3001.7020)，而只想让一个对象和另一个对象保持类似的情况下，原型式继承是完全可以胜任的。不过别忘了，**包含引用类型值的属性始终都会共享相应的值，就像使用原型模式一样**。
-
-
+💡 在没有必要兴师动众地创建构造函数，而只想让一个对象和另一个对象保持类似的情况下，原型式继承是完全可以胜任的。不过别忘了，包含引用类型值的属性始终都会共享相应的值，就像使用原型模式一样。
 </aside>
 
-<h3 id="6-方式5-最推荐使用-寄生组合继承-———-最接近extends实现方法"><a href="#6-方式5-最推荐使用-寄生组合继承-———-最接近extends实现方法" class="headerlink" title="6**. 方式5(最推荐使用): 寄生组合继承 ——— 最接近extends实现方法**"></a>6**. 方式5(最推荐使用): 寄生组合继承 ——— 最接近extends实现方法**</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">inheritPrototype</span> (subClass,superClass)&#123;<br>	<span class="hljs-keyword">let</span> prototype = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(superClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>) <span class="hljs-comment">//通过create方法将父类浅复制一份，引用类型依旧是原来的引用</span><br>	subClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = prototype <span class="hljs-comment">//解决组合继承父类调用两次的问题，由于call已经解决继承父类的问题，那就直接将父类原型继承过去就行了</span><br>	subClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span> = subClass <span class="hljs-comment">//修改原型会导致原型对象的constructor属性失效，需要是手动指定</span><br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent6</span> () &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent6&#x27;</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child5</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-title class_">Parent5</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<span class="hljs-comment">//用于继承父类自己的属性和传参</span><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child6&#x27;</span>;<br>&#125;<br><br>inheritPrototype (<span class="hljs-title class_">Child6</span>,<span class="hljs-title class_">Parent6</span>)<br><br></code></pre></td></tr></table></figure>
+<h3 id="6-方式5-最推荐使用-寄生组合继承-———-最接近extends实现方法"><a href="#6-方式5-最推荐使用-寄生组合继承-———-最接近extends实现方法" class="headerlink" title="6. 方式5(最推荐使用): 寄生组合继承 ——— 最接近extends实现方法"></a>6. 方式5(最推荐使用): 寄生组合继承 ——— 最接近extends实现方法</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">inheritPrototype</span> (subClass,superClass)&#123;<br>	<span class="hljs-keyword">let</span> prototype = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(superClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>) <span class="hljs-comment">//通过create方法将父类浅复制一份，引用类型依旧是原来的引用</span><br>	subClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = prototype <span class="hljs-comment">//解决组合继承父类调用两次的问题，由于call已经解决继承父类的问题，那就直接将父类原型继承过去就行了</span><br>	subClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span> = subClass <span class="hljs-comment">//修改原型会导致原型对象的constructor属性失效，需要是手动指定</span><br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent6</span> () &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent6&#x27;</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child5</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-title class_">Parent5</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<span class="hljs-comment">//用于继承父类自己的属性和传参</span><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child6&#x27;</span>;<br>&#125;<br><br>inheritPrototype (<span class="hljs-title class_">Child6</span>,<span class="hljs-title class_">Parent6</span>)<br><br></code></pre></td></tr></table></figure>
 
 <p>这是标准的寄生组合继承，有着寄生式继承的标志性的工厂函数，也有组合式继承的特点，所以这就是集聚所有继承方法的优点，解决了以下问题：</p>
 <ol>
 <li>方法共享（复用）</li>
 <li>引用值修改不会产生副作用</li>
 <li>可以传参数到父类构造函数</li>
-<li>原型键保持不变（<code>instanceof</code>和<code>isPrototypeOf()</code>有效）</li>
 <li>效率提升，只调用了一次父类构造函数，避免了<code>Sub.prototype</code>上不必要也用不到的属性</li>
+</ol>
+<p><strong>下面我们复盘分析下，我们如何实现这些功能的</strong>：</p>
+<ol>
+<li><p><strong>方法的共享，不用频繁的创建方法</strong><br>方法一定是放在原型上，而不是构造函数里，这样就避免频繁创建方法。</p>
+</li>
+<li><p><strong>引用值修改不会产生副作用，这里副作用指的是影响其他对象。</strong><br>想要产生不会产生副作用的引用，那我们不可以直接引用我们想要继承的对象，而是通过新建个拷贝，间接引用。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent5</span> () &#123;<br> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent3&#x27;</span>;<br> <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br> &#125;<br> <br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child5</span>(<span class="hljs-params"></span>) &#123;<br> <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child3&#x27;</span>;<br>&#125;<br><br><span class="hljs-comment">//方式一 </span><br><span class="hljs-title class_">Child5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent5</span>()<br><span class="hljs-comment">//方式二</span><br><span class="hljs-title class_">Child5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Parent5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span><br><span class="hljs-comment">//方式三</span><br><span class="hljs-title class_">Child5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent5</span>)<br><span class="hljs-comment">//方式四</span><br><span class="hljs-title class_">Child5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Parent5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>)<br><br></code></pre></td></tr></table></figure>
+<p><strong>方式一</strong>：这个可以看<code>原型链继承</code>,这个主要是为了Child5继承Parent5本身以及原型上的属性和方法，不过这样会产生引用的副作用，如果实例更改Parent本身或者原型属性，都会导致其他实例的属性改变。</p>
+<p><strong>方式二</strong>：这个方式只是继承了Parent5原型上的属性和方法，没有继承Parent5本身的属性和方法，但是这个同样存在一个缺点就是会产生引用的副作用,Child5的实例只要改其原型上的方法和属性，会直接影响到Person5本身</p>
+<p><strong>方式三</strong>：这个方法通过Obect.create()让一个中间空对象的承担Child5原型,再把Parent5的实例绑到中间空对象上，修改Child5.prototype不会影响到Parent本身，但是有一个缺点就是如果使用Parent5的属性还是会产生饮用的副作用，具体后面做总结</p>
+<p><strong>方式四</strong>：这个与方式三优点相同，修改Child5.prototype不会影响到Parent本身，因为Child5.prototype绑定是一个空对象，而空对象的原型才是Parent5,同时，方式四还弥补了方式三的缺点就是修改Parent5自身属性是不会产生引用的副作用的，除非你去修改Parent5原型的属性和方法，肯定会有引用副作用，这个是避免不了的。</p>
+<p> <strong>总的来说，根据这四种方式总结下</strong>，<strong>只要我想要绑定到Child5.prototype的对象就一定存在引用的副作用，所以就需要我们选择用谁来绑定，是它的实例还是原型等</strong>。一般情况下构造函数里放属性，构造函数的原型放方法，这也是现代Class继承的原理，所以我们通过原型链的实现继承，就不能让引用类型副作用影响继承的属性，这时，继承构造函数的属性就不能通过原型链方式，只能通过<code>构造函数继承</code>来继承自身属性，而构造函数的原型属性方法再通过原型链的方式继承，并且不能是方式二的直接继承，这样会直接影响到Parent5对象本身，我们需要一个空对象来做中介，这样，通过<code>Child5.prototype</code>来操作的就不是Parent.peototype本身，而是’隔着一个墙’的空对象,除非你通过<code>Child5.prototype.__proto__</code>才能影响到Parent5.prototype本身。</p>
+</li>
+<li><p><strong>可以传参数到父类构造函数</strong><br>这个主要是通过构造函数继承的特性，通过call函数技能改变Parent5中this指向，又可以传参的特性。</p>
+</li>
+<li><p><strong>效率提升，只调用了一次父类构造函数</strong><br>像<code>组合式继承</code>的缺点就是通过call方式继承Parent5自身属性和通过<code>Child5.prototype = new Parent5()</code>方式,会导致Parent5执行两次，所以，加上寄生继承的优势Child5.prototype = Object.create(Parent5)减少一次Parent5的调用。</p>
+</li>
 </ol>
 <p>最后我们来探讨一个问题：<code>inheritPrototype()</code>是复制父类的原型到子类身上，那为什么不直接用<code>SubClass.prototype=Super.prototype</code>呢，这样也达到了复制的目的啊？</p>
 <p>这是因为，这样做是一种浅拷贝，如果我们改变<code>SubClass.prototype</code>的某个属性或者方法，<code>SuperClass.prototype</code>也会跟着变，看以下代码：</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent6</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent5&#x27;</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child6</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-title class_">Parent5</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child6&#x27;</span>;<br>&#125;<br><span class="hljs-title class_">Child6</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Parent6</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span><br><span class="hljs-title class_">Child6</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span> = <span class="hljs-title class_">Child6</span>;<br><br><span class="hljs-title class_">Child6</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">sayHi</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;sayHi&quot;</span><br>&#125;<br><br><span class="hljs-keyword">var</span> s1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child6</span>()<br><span class="hljs-keyword">var</span> s2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent6</span>()<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s1.<span class="hljs-property">constructor</span> ===s2.<span class="hljs-property">constructor</span>) <span class="hljs-comment">// true</span><br><br></code></pre></td></tr></table></figure>
+
 
 <p>从这个例子得之，<code>Child5.prototype.constructor = Child5</code> 将 <code>Parent5.prototype</code> 原型中的constructor 也修改了，所以我们需要用Object.create() 避免对 <code>Parent5.prototype</code> 的直接引用。</p>
 <h3 id="7-ES6的extends被编译后的JavaScript代码"><a href="#7-ES6的extends被编译后的JavaScript代码" class="headerlink" title="7.ES6的extends被编译后的JavaScript代码"></a>7.<strong>ES6的extends被编译后的JavaScript代码</strong></h3><p>我们通过babel将<code>extends</code>从ES6转换成ES5：</p>
@@ -467,6 +485,13 @@
 <td>用于创建一个新对象，使用现有的对象来作为新创建对象的原型</td>
 </tr>
 </tbody></table>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><ul>
+<li><strong>继承对象自身属性</strong>，我们需要<code>构造函数继承</code>的方式，通过call改变对象的构造函数this和传参</li>
+<li><strong>继承对象原型的属性和方式</strong>，我们需要<code>原型链继承</code>的方式，将对象原型的属性和方法绑定到需要继承的对象上</li>
+<li><strong>继承对象原型属性和方式又不想影响继承对象原型本身</strong>，我们需要通过<code>原型式继承</code>，通过<code>Object.create()</code>将继承对象绑定到这个空对象上，从而实现继承后的类通过prototype直接修改到继承对象的原型</li>
+<li><strong>修改原型对象之后会丢失constructor属性，注意重新增加其继承的构造函数的constructor</strong></li>
+<li>方便自己的扩展性的话，再利用<code>寄生继承</code>封装成工厂函数，方便继承。</li>
+</ul>
 
                 
               </div>
