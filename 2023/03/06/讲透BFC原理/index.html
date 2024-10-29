@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="讲透BFC原理一、什么是BFCBFC全称Block formatting context，中文叫“块级格式化上下文”，它是一个独立的渲染区域。也就是说可以理解BFC是一个容器，一个BFC容器里面的元素不会影响容器之外的元素。 二、Box与Formatting Context1. BoxBox 是 CSS 布局的对象和基本单位， 直观点来说，就是一个页面是由很多个 Box 组成的。 元素的类型和 d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="讲透BFC原理">
+<meta property="og:url" content="http://example.com/2023/03/06/%E8%AE%B2%E9%80%8FBFC%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="讲透BFC原理一、什么是BFCBFC全称Block formatting context，中文叫“块级格式化上下文”，它是一个独立的渲染区域。也就是说可以理解BFC是一个容器，一个BFC容器里面的元素不会影响容器之外的元素。 二、Box与Formatting Context1. BoxBox 是 CSS 布局的对象和基本单位， 直观点来说，就是一个页面是由很多个 Box 组成的。 元素的类型和 d">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/bfc1.png">
+<meta property="og:image" content="http://example.com/img/bfc2.png">
+<meta property="og:image" content="http://example.com/img/bfc3.png">
+<meta property="og:image" content="http://example.com/img/bfc4.png">
+<meta property="og:image" content="http://example.com/img/bfc5.png">
+<meta property="og:image" content="http://example.com/img/bfc6.png">
+<meta property="article:published_time" content="2023-03-06T07:14:26.000Z">
+<meta property="article:modified_time" content="2024-10-21T14:37:58.052Z">
+<meta property="article:author" content="Vito">
+<meta property="article:tag" content="BFC">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/bfc1.png">
+  
+  
+  
+  <title>讲透BFC原理 - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="讲透BFC原理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-06 15:14" pubdate>
+          2023年3月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          991 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          9 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">讲透BFC原理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="讲透BFC原理"><a href="#讲透BFC原理" class="headerlink" title="讲透BFC原理"></a>讲透BFC原理</h1><h2 id="一、什么是BFC"><a href="#一、什么是BFC" class="headerlink" title="一、什么是BFC"></a>一、什么是BFC</h2><p>BFC全称<strong>Block formatting context</strong>，中文叫“块级格式化上下文”，它是一个独立的渲染区域。也就是说可以理解<strong>BFC是一个容器，一个BFC容器里面的元素不会影响容器之外的元素。</strong></p>
+<h2 id="二、Box与Formatting-Context"><a href="#二、Box与Formatting-Context" class="headerlink" title="二、Box与Formatting Context"></a>二、Box与Formatting Context</h2><h3 id="1-Box"><a href="#1-Box" class="headerlink" title="1. Box"></a>1. <strong><strong>Box</strong></strong></h3><p><strong>Box 是 CSS 布局的对象和基本单位</strong>， 直观点来说，就是一个页面是由很多个 Box 组成的。</p>
+<p><strong>元素的类型</strong>和 <strong>display 属性</strong>，决定了这个 <strong>Box 的类型</strong>。 不同类型的 Box， 会参与不同的 Formatting Context（一个决定如何渲染文档的容器），因此Box内的元素会以不同的方式渲染。让我们看看有哪些盒子：</p>
+<ul>
+<li><code>block-level box</code>：display 属性为 block, list-item, table 的元素，会生成 block-level box。并且参与 block fomatting context，也就是我们说的 <strong>BFC</strong></li>
+<li><code>inline-level box</code>：display 属性为 inline, inline-block, inline-table 的元素，会生成 inline-level box。并且参与 inline formatting context，也就是我们说的 <strong>IFC</strong></li>
+<li><code>run-in box</code>：css3 中才有， 这儿先不讲了。</li>
+</ul>
+<h3 id="2-Formatting-context"><a href="#2-Formatting-context" class="headerlink" title="2. Formatting context"></a>2. <strong>Formatting context</strong></h3><p>Formatting context 是 W3C CSS2.1 规范中的一个概念。<strong>它是页面中的一块渲染区域，并且有一套渲染规则，它决定了其子元素将如何定位，以及和其他元素的关系和相互作用。</strong></p>
+<p>最常见的 Formatting context 有 Block fomatting context (简称BFC) 和 Inline formatting context (简称IFC)。</p>
+<h2 id="三、BFC特性"><a href="#三、BFC特性" class="headerlink" title="三、BFC特性"></a>三、BFC特性</h2><ol>
+<li>同一个 <code>BFC</code>的元素会在垂直方向上一个接一个地放置，形成一个垂直流。</li>
+<li>同一个 <code>BFC</code> 的两个相邻 <code>Box</code> 的 <code>margin</code> 会发生重叠</li>
+<li><code>BFC</code>区域不会与外部浮动元素重叠。</li>
+<li><code>BFC</code>区域的高度会被内部元素的高度撑开，<strong>浮动子元素也参与计算</strong></li>
+<li><code>BFC</code>区域内部的元素会形成一个独立的渲染环境，不会影响到外部元素的布局。</li>
+<li><code>BFC</code>区域的左边缘与<strong>包含块</strong>的左边缘相接触（对于从右到左格式，右边缘接触），即使存在浮动元素也是如此。</li>
+</ol>
+<aside>
+💡 CSS包含块是指一个元素的布局上下文，它是指定元素的位置和尺寸的基准，也可以理解为布局的参考系。
+</aside>
+
+<h2 id="四、形成BFC条件"><a href="#四、形成BFC条件" class="headerlink" title="四、形成BFC条件"></a>四<strong>、形成BFC条件</strong></h2><ol>
+<li>根元素html</li>
+<li><code>float</code>属性不为<code>none</code> ，为<code>left</code>、<code>right</code></li>
+<li><code>position</code>为<code>absolute</code>或<code>fixed</code></li>
+<li><code>display</code>为<code>inline-block、 table-cell、table-caption</code>、<code>flex、inline-flex</code>、<code>grid</code><br>、<code>inline-grid</code></li>
+<li><code>overflow</code>不为<code>visible</code>，为 <code>auto</code>、<code>scroll</code>、<code>hidden</code></li>
+</ol>
+<h2 id="五、BFC的应用"><a href="#五、BFC的应用" class="headerlink" title="五、BFC的应用"></a>五、BFC的应用</h2><h3 id="1-清除浮动"><a href="#1-清除浮动" class="headerlink" title="1. 清除浮动"></a>1. <strong>清除浮动</strong></h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="language-css"></span><br><span class="language-css">    <span class="hljs-selector-class">.par</span> &#123;</span><br><span class="language-css">        <span class="hljs-attribute">border</span>: <span class="hljs-number">5px</span> solid <span class="hljs-number">#fcc</span>;</span><br><span class="language-css">        <span class="hljs-attribute">width</span>: <span class="hljs-number">300px</span>;</span><br><span class="language-css">    &#125;</span><br><span class="language-css"> </span><br><span class="language-css">    <span class="hljs-selector-class">.child</span> &#123;</span><br><span class="language-css">        <span class="hljs-attribute">border</span>: <span class="hljs-number">5px</span> solid <span class="hljs-number">#f66</span>;</span><br><span class="language-css">        <span class="hljs-attribute">width</span>:<span class="hljs-number">100px</span>;</span><br><span class="language-css">        <span class="hljs-attribute">height</span>: <span class="hljs-number">100px</span>;</span><br><span class="language-css">        <span class="hljs-attribute">float</span>: left;</span><br><span class="language-css">    &#125;</span><br><span class="language-css"></span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;par&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;child&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;child&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/bfc1.png" srcset="/img/loading.gif" lazyload></p>
+<p>根据BFC特性，<code>BFC</code>在计算高度时，浮动元素也会参与，所以我们可以触发<code>.par</code>元素生成<code>BFC</code>，则内部浮动元素计算高度时候也会计算，从而解决父元素高度塌陷问题。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs jsx">.<span class="hljs-property">par</span> &#123;<br>    <span class="hljs-attr">overflow</span>: hidden;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/bfc2.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="2-防止margin重叠（塌陷）"><a href="#2-防止margin重叠（塌陷）" class="headerlink" title="2. 防止margin重叠（塌陷）"></a>2. <strong>防止margin重叠（塌陷）</strong></h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="language-css"></span><br><span class="language-css">    <span class="hljs-selector-tag">p</span> &#123;</span><br><span class="language-css">        <span class="hljs-attribute">color</span>: <span class="hljs-number">#f55</span>;</span><br><span class="language-css">        <span class="hljs-attribute">background</span>: <span class="hljs-number">#fcc</span>;</span><br><span class="language-css">        <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;</span><br><span class="language-css">        <span class="hljs-attribute">line-height</span>: <span class="hljs-number">100px</span>;</span><br><span class="language-css">        <span class="hljs-attribute">text-align</span>:center;</span><br><span class="language-css">        <span class="hljs-attribute">margin</span>: <span class="hljs-number">100px</span>;</span><br><span class="language-css">    &#125;</span><br><span class="language-css"></span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Haha<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Hehe<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/bfc3.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>根据BFC特性，同一个 <code>BFC</code> 的两个相邻 <code>Box</code> 的 <code>margin</code> 会发生重叠，</strong>我们可以在p外面包裹一层容器，并触发该容器生成一个<code>BFC</code>。那么两个P便不属于同一个<code>BFC</code>，就不会发生margin重叠了，代码如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs jsx">&lt;style&gt;<br>    .<span class="hljs-property">wrap</span> &#123;<br>        <span class="hljs-attr">overflow</span>: hidden;<span class="hljs-comment">// 新的BFC</span><br>    &#125;<br>    p &#123;<br>        <span class="hljs-attr">color</span>: #f55;<br>        <span class="hljs-attr">background</span>: #fcc;<br>        <span class="hljs-attr">width</span>: 200px;<br>        line-<span class="hljs-attr">height</span>: 100px;<br>        text-<span class="hljs-attr">align</span>:center;<br>        <span class="hljs-attr">margin</span>: 100px;<br>    &#125;<br>&lt;/style&gt;<br>&lt;body&gt;<br>&lt;p&gt;Haha&lt;/p &gt;<br>&lt;div class=&quot;wrap&quot;&gt;<br>	&lt;p&gt;Hehe&lt;/p &gt;<br>&lt;/div&gt;<br>&lt;/body&gt;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/bfc4.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="3-自适应两栏布局"><a href="#3-自适应两栏布局" class="headerlink" title="3. 自适应两栏布局"></a>3. 自适应两栏布局</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs jsx">&lt;style&gt;<br>    body &#123;<br>        <span class="hljs-attr">width</span>: 300px;<br>        <span class="hljs-attr">position</span>: relative;<br>    &#125;<br> <br>    .<span class="hljs-property">aside</span> &#123;<br>        <span class="hljs-attr">width</span>: 100px;<br>        <span class="hljs-attr">height</span>: 150px;<br>        <span class="hljs-attr">float</span>: left;<br>        <span class="hljs-attr">background</span>: #f66;<br>    &#125;<br> <br>    .<span class="hljs-property">main</span> &#123;<br>        <span class="hljs-attr">height</span>: 200px;<br>        <span class="hljs-attr">background</span>: #fcc;<br>    &#125;<br>&lt;/style&gt;<br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;aside&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;main&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/bfc5.png" srcset="/img/loading.gif" lazyload></p>
+<p>利用BFC特性：<code>BFC</code>区域不会与外部浮动元素重叠，通过让<code>.main</code>形成一个BFC就可以实现自适应的两栏布局</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs jsx">.<span class="hljs-property">main</span>&#123;<br>	<span class="hljs-attr">overflow</span>:hidden<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/bfc6.png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CSS/" class="category-chain-item">CSS</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/BFC/" class="print-no-link">#BFC</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>讲透BFC原理</div>
+      <div>http://example.com/2023/03/06/讲透BFC原理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/08/%E6%B8%85%E9%99%A4%E6%B5%AE%E5%8A%A8/" title="清除浮动">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">清除浮动</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/05/CSS%E4%B8%AD%E7%9A%84%E5%B8%83%E5%B1%80%E4%B8%8A%E4%B8%8B%E6%96%87%E2%80%94%E2%80%94%E5%8C%85%E5%90%AB%E5%9D%97/" title="CSS中的布局上下文——包含块">
+                        <span class="hidden-mobile">CSS中的布局上下文——包含块</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

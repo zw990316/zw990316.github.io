@@ -1,0 +1,775 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="pa11y源码分享一、目录介绍  bin：pa11y 命令的入口文件，该文件主要完成了参数解析、配置文件加载和初始化等操作。 lib：pa11y 的主要逻辑代码。该目录下的核心代码包括了 pa11y 的页面检测逻辑、规则和插件管理等。 example：pa11y使用的示例。 test：包含了 pa11y 的测试文件。pa11y 使用了一系列测试文件来确保其功能正常、代码无误。测试框架主要采用的是J">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pa11y源码分享">
+<meta property="og:url" content="http://example.com/2023/08/22/pa11y%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="pa11y源码分享一、目录介绍  bin：pa11y 命令的入口文件，该文件主要完成了参数解析、配置文件加载和初始化等操作。 lib：pa11y 的主要逻辑代码。该目录下的核心代码包括了 pa11y 的页面检测逻辑、规则和插件管理等。 example：pa11y使用的示例。 test：包含了 pa11y 的测试文件。pa11y 使用了一系列测试文件来确保其功能正常、代码无误。测试框架主要采用的是J">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_5c59e696-d9cf-498f-abea-afd4c76000f1.png">
+<meta property="og:image" content="http://example.com/img/Untitled523524625.png">
+<meta property="og:image" content="http://example.com/img/Untitled47857875647.jpg">
+<meta property="og:image" content="http://example.com/img/Untitled1343144315.jpg">
+<meta property="og:image" content="http://example.com/img/Untitled764353456634.jpg">
+<meta property="og:image" content="http://example.com/img/Untitled5423256246535.jpg">
+<meta property="article:published_time" content="2023-08-22T03:16:20.000Z">
+<meta property="article:modified_time" content="2024-10-22T17:25:02.171Z">
+<meta property="article:author" content="Vito">
+<meta property="article:tag" content="工具">
+<meta property="article:tag" content="pa11y">
+<meta property="article:tag" content="WCAG">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_5c59e696-d9cf-498f-abea-afd4c76000f1.png">
+  
+  
+  
+  <title>pa11y源码分享 - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="pa11y源码分享"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-22 11:16" pubdate>
+          2023年8月22日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">pa11y源码分享</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="pa11y源码分享"><a href="#pa11y源码分享" class="headerlink" title="pa11y源码分享"></a>pa11y源码分享</h1><h2 id="一、目录介绍"><a href="#一、目录介绍" class="headerlink" title="一、目录介绍"></a>一、目录介绍</h2><p><img src="/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_5c59e696-d9cf-498f-abea-afd4c76000f1.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li><code>bin</code>：<code>pa11y</code> 命令的入口文件，该文件主要完成了参数解析、配置文件加载和初始化等操作。</li>
+<li><code>lib</code>：<code>pa11y</code> 的主要逻辑代码。该目录下的核心代码包括了 <code>pa11y</code> 的页面检测逻辑、规则和插件管理等。</li>
+<li><code>example</code>：<code>pa11y</code>使用的示例。</li>
+<li><code>test</code>：包含了 <code>pa11y</code> 的测试文件。<code>pa11y</code> 使用了一系列测试文件来确保其功能正常、代码无误。测试框架主要采用的是<code>Jest</code>。</li>
+<li><code>package.json</code>：定义了 <code>pa11y</code> 的相关信息，包括名称、版本、依赖和开发者等内容。</li>
+</ul>
+<p><strong>【问题1】当你打开lib中的文件夹，你会发现也有个<code>pa11y.js</code>，他们两个作用是什么呢？</strong></p>
+<p>由于<code>pa11y</code>本身支持命令行也可以直接在项目通过js引用，所以造就我们造就我们现在看到的样子。</p>
+<ul>
+<li><code>bin/pa11y</code>：主要是引入了 <code>commander</code> 和 <code>package.json</code> 文件，用于解析命令行参数以及获取程序的版本号等信息。然后，它调用 <code>lib/pa11y.js</code> 中的各种方法来执行不同的功能，如分析 <code>HTML</code> 页面、执行自动化测试、输出测试结果等等。</li>
+<li><code>lib/pa11y</code>：是 Pa11y 的核心代码，它实现了 <code>Pa11y</code> 的所有功能，包括对 <code>HTML</code> 页面进行分析、执行自动化测试等。这个文件通常被其他程序或库所使用，可以被视为 <code>Pa11y</code> 的 <code>API</code> 接口。</li>
+</ul>
+<p><img src="/img/Untitled523524625.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="二、解析-bin-pa11y-js命令行入口"><a href="#二、解析-bin-pa11y-js命令行入口" class="headerlink" title="二、解析/bin/pa11y.js命令行入口"></a>二、解析<code>/bin/pa11y.js</code>命令行入口</h2><p><img src="/img/Untitled47857875647.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>通过上面流程图我们大致了解了这个流程，接下来来看下<code>runProgram</code>函数的内部</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">runProgram</span>(<span class="hljs-params"></span>) &#123;<br>	<span class="hljs-title function_">handleHelp</span>();<br>	<span class="hljs-keyword">const</span> options = <span class="hljs-title function_">processOptions</span>();<br>	<span class="hljs-keyword">const</span> report = <span class="hljs-title function_">loadReporter</span>(options.<span class="hljs-property">reporter</span>);<br>	options.<span class="hljs-property">log</span> = report.<span class="hljs-property">log</span>;<br>	<span class="hljs-keyword">if</span> (!programOptions.<span class="hljs-property">debug</span>) &#123;<br>		options.<span class="hljs-property">log</span>.<span class="hljs-property">debug</span> = <span class="hljs-function">() =&gt;</span> &#123; <span class="hljs-comment">/* NoOp */</span> &#125;;<br>	&#125;<br>	<span class="hljs-keyword">await</span> report.<span class="hljs-title function_">begin</span>(program.<span class="hljs-property">url</span>);<br>	<span class="hljs-keyword">try</span> &#123;<br>		<span class="hljs-keyword">const</span> results = <span class="hljs-keyword">await</span> <span class="hljs-title function_">pa11y</span>(program.<span class="hljs-property">url</span>, options);<br>		<span class="hljs-keyword">if</span> (<span class="hljs-title function_">reportShouldFail</span>(options.<span class="hljs-property">level</span>, results.<span class="hljs-property">issues</span>, options.<span class="hljs-property">threshold</span>)) &#123;<br>			process.<span class="hljs-title function_">once</span>(<span class="hljs-string">&#x27;exit&#x27;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>				process.<span class="hljs-title function_">exit</span>(<span class="hljs-number">2</span>);<br>			&#125;);<br>		&#125;<br>		<span class="hljs-keyword">await</span> report.<span class="hljs-title function_">results</span>(results);<br>	&#125; <span class="hljs-keyword">catch</span> (error) &#123;<br>		<span class="hljs-keyword">await</span> options.<span class="hljs-property">log</span>.<span class="hljs-title function_">error</span>(error.<span class="hljs-property">stack</span>);<br>		process.<span class="hljs-title function_">exit</span>(<span class="hljs-number">1</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个函数主要做了以下几件事：</p>
+<ul>
+<li><code>handleHelp()</code> 函数来检查是否需要打印帮助信息，如果需要则打印帮助信息并退出程序。</li>
+<li>调用 <code>processOptions()</code> 函数来获取和处理命令行选项和参数。这个函数会返回一个包含 <code>Pa11y</code> 运行所需选项和参数的对象。</li>
+<li>调用 <code>loadReporter()</code> 函数来加载并初始化生成报告所需的报告器。这里需要根据 <code>options.reporter</code> 属性的值来选择加载何种类型的报告器。加载报告器之后，会接着将日志记录器传递给报告器。</li>
+<li>根据命令行参数中是否包含 <code>-debug</code> 选项来判断是否需要启用调试模式。在调试模式下，<code>Pa11y</code> 生成的调试日志将被输出到控制台。如果没有开启调试模式，则将 <code>options.log.debug</code> 方法置为空。这意味着在生成正常输出时，任何调试日志都将被忽略。</li>
+<li>使用选项和参数调用报告器的 <code>begin()</code> 方法，以开始报告器生成报告的流程。在此期间，会为报告器分配必要的资源，并开始创建报告文件或者输出到控制台。</li>
+<li>调用 <code>pa11y()</code> 函数来执行 <code>Pa11y</code> 检查。根据 <code>Pa11y</code> 的结果生成报告。</li>
+<li>如果报告显示问题且问题数量超出了设定的阈值，则调用 <code>process.exit(2)</code> 函数，告知外部程序该进程以状态码 2 退出。状态码 2 通常表示意外地遇到错误。</li>
+<li>如果发生了任何异常，使用 <code>options.log.error</code> 方法记录错误信息。最后使用 <code>process.exit(1)</code> 函数随即终止进程，并告知外部程序该进程以状态码 1 退出，表示发生了一般性错误。</li>
+</ul>
+<h2 id="三、解析-lib-pa11y-js中核心函数pa11y"><a href="#三、解析-lib-pa11y-js中核心函数pa11y" class="headerlink" title="三、解析/lib/pa11y.js中核心函数pa11y()"></a>三、解析<code>/lib/pa11y.js</code>中核心函数<code>pa11y()</code></h2><p><img src="/img/Untitled1343144315.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>我们通过流程图了解了pa11y函数核心流程了，接下来我们了解流程中核心函数<code>runPa11yTest()</code></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">runPa11yTest</span>(<span class="hljs-params">url, options, state</span>) &#123;<br><br>	options.<span class="hljs-property">log</span>.<span class="hljs-title function_">info</span>(<span class="hljs-string">`Running Pa11y on URL <span class="hljs-subst">$&#123;url&#125;</span>`</span>);<br><br>	<span class="hljs-keyword">await</span> <span class="hljs-title function_">setBrowser</span>(options, state);<br><br>	<span class="hljs-keyword">await</span> <span class="hljs-title function_">setPage</span>(url, options, state);<br><br>	<span class="hljs-keyword">await</span> <span class="hljs-title function_">interceptRequests</span>(options, state);<br><br>	<span class="hljs-keyword">await</span> <span class="hljs-title function_">gotoUrl</span>(url, options, state);<br><br>	<span class="hljs-keyword">await</span> <span class="hljs-title function_">runActionsList</span>(options, state);<br><br>	<span class="hljs-keyword">await</span> <span class="hljs-title function_">injectRunners</span>(options, state);<br><br>	<span class="hljs-comment">// Launch the test runner!</span><br>	options.<span class="hljs-property">log</span>.<span class="hljs-title function_">debug</span>(<span class="hljs-string">&#x27;Running Pa11y on the page&#x27;</span>);<br><br>	<span class="hljs-comment">/* istanbul ignore next */</span><br>	<span class="hljs-keyword">if</span> (options.<span class="hljs-property">wait</span> &gt; <span class="hljs-number">0</span>) &#123;<br>		options.<span class="hljs-property">log</span>.<span class="hljs-title function_">debug</span>(<span class="hljs-string">`Waiting for <span class="hljs-subst">$&#123;options.wait&#125;</span>ms`</span>);<br>	&#125;<br><br>	<span class="hljs-keyword">const</span> results = <span class="hljs-keyword">await</span> <span class="hljs-title function_">runPa11yWithOptions</span>(options, state);<br><br>	options.<span class="hljs-property">log</span>.<span class="hljs-title function_">debug</span>(<span class="hljs-string">`Document title: &quot;<span class="hljs-subst">$&#123;results.documentTitle&#125;</span>&quot;`</span>);<br><br>	<span class="hljs-keyword">await</span> <span class="hljs-title function_">saveScreenCapture</span>(options, state);<br><br>	<span class="hljs-keyword">return</span> results;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>此函数主要做了以下几件事：</p>
+<ul>
+<li><code>options.log.info()</code>：记录正在运行Pa11y的URL。</li>
+<li><code>setBrowser(options, state)</code>：来设置浏览器实例，核心通过<code>puppeteer.launch()</code>来设置<code>browser</code>实例的。</li>
+<li><code>setPage(url, options, state)</code>：创建一个新的浏览器页面，并在其中加载指定的URL，核心通过<code>browser.newPage()</code>来创建新页面<code>page</code>。</li>
+<li><code>interceptRequests(options, state)</code>：来配置浏览器实例以拦截网络请求。</li>
+<li><code>gotoUrl(url, options, state)</code>：在浏览器页面中加载指定的URL，核心通过<code>page.goto()</code>加载指定url</li>
+<li><code>runActionsList(options, state)</code>：执行用户提供的操作列表，例如点击按钮、输入表单值等，其核心是<code>runAction()</code>函数</li>
+<li><code>injectRunners(options, state)</code>：将必要的脚本（指的是<code>axe</code>或者<code>htmlcs</code>）注入到浏览器页面中（注入到window中），以支持Pa11y的运行，其核心是<code>runner()</code>IIFE函数和<code>axe</code>引擎和<code>htmlcs</code>引擎。</li>
+<li><code>options.log.debug()</code>：记录正在对页面运行Pa11y。</li>
+<li>如果指定了<code>options.wait</code>，则会使用<code>options.log.debug()</code>记录等待的时长。</li>
+<li><code>runPa11yWithOptions(options, state)</code>：带着options执行Pa11y相应脚本检查，并返回结果。</li>
+<li><code>options.log.debug()</code>：记录页面的标题。</li>
+<li><code>saveScreenCapture(options, state)</code>：函数保存页面的屏幕截图。</li>
+<li>返回Pa11y检查的结果。</li>
+</ul>
+<p>以上所有都是比较宏观上的流程，所以我们基本知道了pa11y.js和其他文件的一个调用关系，如图所示：</p>
+<p><img src="/img/Untitled764353456634.jpg" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li><code>action.js</code>：主要是模拟用户的一些操作，例如点击元素操作、清空input操作等，以及一些执行函数</li>
+<li><code>option.js</code>：主要是对<code>option</code>选项的解析和验证合法性以及设置默认option的API</li>
+<li><code>runner.js</code>：是<code>pa11y</code>的测试引擎框架，其作用是提供了一些通用的测试功能，如配置解析、页面加载和运行测试等，用于<strong>支持各类测试引擎的开发和运行，例如</strong><code>axe-core</code><strong>和</strong><code>htmlcs</code><strong>都是基于runner运行，为其提供统一的测试执行环境</strong></li>
+<li><code>axe.js</code>：以axe-core的JS库为核心开发的测试引擎，提供web的无障碍测试。</li>
+<li><code>htmlcs.js</code>：以<code>HTMLCS</code>的<code>JS</code>库为核心开发的测试引擎，提供<code>web</code>的无障碍测试。</li>
+</ul>
+<h2 id="四、解析-lib-option-js"><a href="#四、解析-lib-option-js" class="headerlink" title="四、解析/lib/option.js"></a><strong>四、解析<code>/lib/option.js</code></strong></h2><p>这个文件里主要是提供一些对于option的操作的API,主要涉及这两个函数：<code>parseArguments()</code>和<code>verifyOptions()</code></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">parseArguments</span>(<span class="hljs-params">url, options, defaults, callback</span>) &#123;<br>	<span class="hljs-keyword">if</span> (!callback &amp;&amp; <span class="hljs-keyword">typeof</span> options === <span class="hljs-string">&#x27;function&#x27;</span>) &#123;<br>		callback = options;<br>		options = &#123;&#125;;<br>	&#125;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> url !== <span class="hljs-string">&#x27;string&#x27;</span>) &#123;<br>		options = url;<br>		url = options.<span class="hljs-property">url</span>;<br>	&#125;<br><br>	url = <span class="hljs-title function_">sanitizeUrl</span>(url, defaults);<br>	options = <span class="hljs-title function_">defaultOptions</span>(options, defaults);<br><br>	<span class="hljs-keyword">return</span> [url,<br>		options,<br>		callback];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>parseArguments()</code>主要解析传入的参数并且规范化<code>url</code>、<code>options</code>、<code>callback</code></p>
+<p>具体做了以下几件事：</p>
+<ul>
+<li>如果没有传入 <code>callback</code> 参数且 <code>options</code> 参数为函数类型，将 <code>options</code> 参数的值赋给 <code>callback</code>，并将 <code>options</code> 对象设置为空对象。</li>
+<li>如果传入的 <code>url</code> 参数不是字符串类型，将 <code>url</code> 的值赋给 <code>options.url</code>，并将 <code>url</code> 设置为 <code>sanitizeUrl</code> 函数处理后的值，<code>sanitizeUrl</code> 函数的作用是处理 URL，使其符合规范。</li>
+<li>调用 <code>defaultOptions</code> 函数，将传入的 <code>options</code> 对象与默认选项进行合并。</li>
+<li>返回一个包含 <code>url</code>、<code>options</code> 和 <code>callback</code> 的数组。</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">verifyOptions</span>(<span class="hljs-params">options, allowedStandards</span>) &#123;<br>	<span class="hljs-keyword">if</span> (!allowedStandards.<span class="hljs-title function_">includes</span>(options.<span class="hljs-property">standard</span>)) &#123;<br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Standard must be one of <span class="hljs-subst">$&#123;allowedStandards.join(<span class="hljs-string">&#x27;, &#x27;</span>)&#125;</span>`</span>);<br>	&#125;<br>	<span class="hljs-keyword">if</span> (options.<span class="hljs-property">page</span> &amp;&amp; !options.<span class="hljs-property">browser</span>) &#123;<br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;The page option must only be set alongside the browser option&#x27;</span>);<br>	&#125;<br>	<span class="hljs-keyword">if</span> (options.<span class="hljs-property">ignoreUrl</span> &amp;&amp; !options.<span class="hljs-property">page</span>) &#123;<br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;The ignoreUrl option must only be set alongside the page option&#x27;</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>verifyOption()主要是检查option的合规性，主要过程如下：</p>
+<ul>
+<li>检查 <code>options.standard</code> 是否包含在允许的标准列表 <code>allowedStandards</code> 中</li>
+<li>检查 <code>options.page</code> 是否存在且 <code>options.browser</code> 不存在</li>
+<li>检查 <code>options.ignoreUrl</code> 是否存在且 <code>options.page</code> 不存在</li>
+</ul>
+<h2 id="五、解析-lib-action-js中核心函数runAction"><a href="#五、解析-lib-action-js中核心函数runAction" class="headerlink" title="五、解析/lib/action.js中核心函数runAction()"></a>五<strong>、解析<code>/lib/action.js</code>中核心函数<code>runAction()</code></strong></h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">runAction</span>(<span class="hljs-params">browser, page, options, actionString</span>) &#123;<br><br>	<span class="hljs-keyword">const</span> action = <span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span>.<span class="hljs-property">actions</span>.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">foundAction</span> =&gt;</span> &#123;<br>		<span class="hljs-keyword">return</span> foundAction.<span class="hljs-property">match</span>.<span class="hljs-title function_">test</span>(actionString);<br>	&#125;);<br><br>	<span class="hljs-keyword">if</span> (!action) &#123;<br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Failed action: &quot;<span class="hljs-subst">$&#123;actionString&#125;</span>&quot; cannot be resolved`</span>);<br>	&#125;<br><br>	options.<span class="hljs-property">log</span>.<span class="hljs-title function_">debug</span>(<span class="hljs-string">`Running action: <span class="hljs-subst">$&#123;actionString&#125;</span>`</span>);<br><br>	<span class="hljs-keyword">await</span> action.<span class="hljs-title function_">run</span>(browser, page, options, actionString.<span class="hljs-title function_">match</span>(action.<span class="hljs-property">match</span>));<br><br>	options.<span class="hljs-property">log</span>.<span class="hljs-title function_">debug</span>(<span class="hljs-string">`  ✔︎ Action complete: <span class="hljs-subst">$&#123;action.name&#125;</span>`</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>该函数做了以下几件事：</p>
+<ul>
+<li>根据<code>actionString</code>在<code>module.exports.actions</code>数组里找到相应的模拟操作动作赋值给<code>action</code></li>
+<li>找不到相应的<code>action</code>，则抛出错误</li>
+<li>有相应的<code>action</code>，则执行动作的执行函数<code>run()</code></li>
+</ul>
+<p>接下来我们看一下<code>module.exports.actions</code>，我们拿其中两个作为参考：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span>.<span class="hljs-property">actions</span> = [<br><br>	<span class="hljs-comment">// Action to navigate to a url</span><br>	&#123;<br>		<span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;navigate-url&#x27;</span>,<br>		<span class="hljs-attr">match</span>: <span class="hljs-regexp">/^navigate to( url)? (.+)$/i</span>,<br>		<span class="hljs-attr">run</span>: <span class="hljs-title function_">async</span> (browser, page, options, matches) =&gt; &#123;<br>			<span class="hljs-keyword">const</span> navigateTo = matches[<span class="hljs-number">2</span>];<br>			<span class="hljs-keyword">try</span> &#123;<br>				<span class="hljs-keyword">await</span> page.<span class="hljs-title function_">goto</span>(navigateTo);<br>			&#125; <span class="hljs-keyword">catch</span> (error) &#123;<br>				<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Failed action: Could not navigate to &quot;<span class="hljs-subst">$&#123;navigateTo&#125;</span>&quot;`</span>);<br>			&#125;<br>		&#125;<br>	&#125;,<br><br>	<span class="hljs-comment">// Action to click an element</span><br>	&#123;<br>		<span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;click-element&#x27;</span>,<br>		<span class="hljs-attr">match</span>: <span class="hljs-regexp">/^click( element)? (.+)$/i</span>,<br>		<span class="hljs-attr">run</span>: <span class="hljs-title function_">async</span> (browser, page, options, matches) =&gt; &#123;<br>			<span class="hljs-keyword">const</span> selector = matches[<span class="hljs-number">2</span>];<br>			<span class="hljs-keyword">try</span> &#123;<br>				<span class="hljs-keyword">await</span> page.<span class="hljs-title function_">click</span>(selector);<br>			&#125; <span class="hljs-keyword">catch</span> (error) &#123;<br>				<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Failed action: no element matching selector &quot;<span class="hljs-subst">$&#123;selector&#125;</span>&quot;`</span>);<br>			&#125;<br>		&#125;<br>	&#125;,......]<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>name</code>：是动作的名称，也是模拟动作的规则</li>
+<li><code>match</code>：用于匹配相应的动作</li>
+<li><code>run</code>：当前名称的动作的执行函数</li>
+</ul>
+<p>我们看一个使用案例：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">runExample</span>(<span class="hljs-params"></span>) &#123;<br>	<span class="hljs-keyword">try</span> &#123;<br><br>		<span class="hljs-comment">// Test http://example.com/</span><br>		<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> <span class="hljs-title function_">pa11y</span>(<span class="hljs-string">&#x27;http://example.com/&#x27;</span>, &#123;<br><br>			<span class="hljs-comment">// Run some actions before the tests</span><br>			<span class="hljs-attr">actions</span>: [<br>				<span class="hljs-string">&#x27;set field #username to exampleUser&#x27;</span>,<br>				<span class="hljs-string">&#x27;set field #password to password1234&#x27;</span>,<br>				<span class="hljs-string">&#x27;click element #submit&#x27;</span>,<br>				<span class="hljs-string">&#x27;wait for url to be http://example.com/myaccount&#x27;</span><br>			],<br><br>			<span class="hljs-attr">log</span>: &#123;<br>				<span class="hljs-attr">debug</span>: <span class="hljs-variable language_">console</span>.<span class="hljs-property">log</span>,<br>				<span class="hljs-attr">error</span>: <span class="hljs-variable language_">console</span>.<span class="hljs-property">error</span>,<br>				<span class="hljs-attr">info</span>: <span class="hljs-variable language_">console</span>.<span class="hljs-property">log</span><br>			&#125;<br><br>		&#125;);<br><br>		<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(result);<br><br>	&#125; <span class="hljs-keyword">catch</span> (error) &#123;<br>		<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(error.<span class="hljs-property">message</span>);<br><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们发现<code>actions</code>里面的<code>actionString</code>都是严格按照<code>name</code>和<code>match</code>的规则编写的，只有这样才能使得<code>run</code>函数顺利执行。</p>
+<h2 id="六、解析-lib-runner-js中核心函数runPa11y"><a href="#六、解析-lib-runner-js中核心函数runPa11y" class="headerlink" title="六、解析/lib/runner.js中核心函数runPa11y()"></a>六<strong>、解析<code>/lib/runner.js</code>中核心函数<code>runPa11y()</code></strong></h2><p><img src="/img/Untitled5423256246535.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>通过上面流程图我们大致了解了runPa11y的执行过程，然后我们详细了解下processIssues函数：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">processIssues</span>(<span class="hljs-params">issues</span>) &#123;<br>			<span class="hljs-keyword">if</span> (options.<span class="hljs-property">rootElement</span>) &#123;<br>				issues = issues.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">issue</span> =&gt;</span> <span class="hljs-title function_">isElementInTestArea</span>(issue.<span class="hljs-property">element</span>));<br>			&#125;<br>			<span class="hljs-keyword">if</span> (options.<span class="hljs-property">hideElements</span>) &#123;<br>				issues = issues.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">issue</span> =&gt;</span> <span class="hljs-title function_">isElementOutsideHiddenArea</span>(issue.<span class="hljs-property">element</span>));<br>			&#125;<br>			<span class="hljs-keyword">return</span> issues.<span class="hljs-title function_">map</span>(processIssue).<span class="hljs-title function_">filter</span>(isIssueNotIgnored);<br>		&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>processIssues大致做了以下几件事情：</p>
+<ul>
+<li>options中是否存在rootElement元素（页面根元素），如果存在，则过滤掉issues中不在rootElement范围里的元素</li>
+<li>options中是否存在hideElements元素（页面隐藏的元素），如果存在，则过滤掉issues不在hideElements范围里的元素</li>
+<li>通过processIssue()格式化issues，并过滤掉issue中被ignore的元素，并返回新数组。</li>
+</ul>
+<p>涉及函数如下，请看：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">processIssue</span>(<span class="hljs-params">issue</span>) &#123;<br>			<span class="hljs-keyword">return</span> &#123;<br>				<span class="hljs-attr">code</span>: issue.<span class="hljs-property">code</span>,<br>				<span class="hljs-attr">type</span>: issue.<span class="hljs-property">type</span>,<br>				<span class="hljs-attr">typeCode</span>: issueCodeMap[issue.<span class="hljs-property">type</span>] || <span class="hljs-number">0</span>,<br>				<span class="hljs-attr">message</span>: issue.<span class="hljs-property">message</span>,<br>				<span class="hljs-attr">context</span>: (issue.<span class="hljs-property">element</span> ? <span class="hljs-title function_">getElementContext</span>(issue.<span class="hljs-property">element</span>) : <span class="hljs-string">&#x27;&#x27;</span>),<br>				<span class="hljs-attr">selector</span>: (issue.<span class="hljs-property">element</span> ? <span class="hljs-title function_">getElementSelector</span>(issue.<span class="hljs-property">element</span>) : <span class="hljs-string">&#x27;&#x27;</span>),<br>				<span class="hljs-attr">runner</span>: issue.<span class="hljs-property">runner</span>,<br>				<span class="hljs-attr">runnerExtras</span>: issue.<span class="hljs-property">runnerExtras</span> || &#123;&#125;<br>			&#125;;<br>		&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">isIssueNotIgnored</span>(<span class="hljs-params">issue</span>) &#123;<br>			<span class="hljs-keyword">if</span> (options.<span class="hljs-property">ignore</span>.<span class="hljs-title function_">indexOf</span>(issue.<span class="hljs-property">code</span>.<span class="hljs-title function_">toLowerCase</span>()) !== -<span class="hljs-number">1</span>) &#123;<br>				<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>			&#125;<br>			<span class="hljs-keyword">if</span> (options.<span class="hljs-property">ignore</span>.<span class="hljs-title function_">indexOf</span>(issue.<span class="hljs-property">type</span>) !== -<span class="hljs-number">1</span>) &#123;<br>				<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>			&#125;<br>			<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>		&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="七、解析axe-js中核心函数runAxeCore"><a href="#七、解析axe-js中核心函数runAxeCore" class="headerlink" title="七、解析axe.js中核心函数runAxeCore()"></a>七、解析<code>axe.js</code>中核心函数<code>runAxeCore()</code></h2><p>我们先了解下<code>axe-core</code>包的<code>API</code></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><br><span class="hljs-number">1.</span> axe.<span class="hljs-title function_">run</span>(params, callback)：执行无障碍测试并返回测试结果。<br>	返回一个对象基本结构如下：<br>	&#123;<br>	  <span class="hljs-string">&quot;violations&quot;</span>: [<span class="hljs-title class_">Array</span>],    <span class="hljs-comment">// 所有违规的无障碍规则对象</span><br>	  <span class="hljs-string">&quot;passes&quot;</span>: [<span class="hljs-title class_">Array</span>],        <span class="hljs-comment">// 所有通过的无障碍规则对象</span><br>	  <span class="hljs-string">&quot;incomplete&quot;</span>: [<span class="hljs-title class_">Array</span>],    <span class="hljs-comment">// 无障碍测试未完成的规则所在的对象</span><br>	  <span class="hljs-string">&quot;inapplicable&quot;</span>: [<span class="hljs-title class_">Array</span>],  <span class="hljs-comment">// 所有无障碍测试不适用的规则对象</span><br>	  <span class="hljs-string">&quot;url&quot;</span>: <span class="hljs-title class_">String</span>,            <span class="hljs-comment">// 被测试页面的URL</span><br>	  <span class="hljs-string">&quot;timestamp&quot;</span>: <span class="hljs-title class_">String</span>,      <span class="hljs-comment">// 测试时间戳</span><br>	  <span class="hljs-string">&quot;testEngine&quot;</span>: &#123;<span class="hljs-title class_">Object</span>&#125;,   <span class="hljs-comment">// 测试引擎信息</span><br>	  <span class="hljs-string">&quot;toolOptions&quot;</span>: &#123;<span class="hljs-title class_">Object</span>&#125;   <span class="hljs-comment">// 测试工具选项</span><br>	&#125;<br><span class="hljs-number">2.</span> axe.<span class="hljs-property">configure</span>：配置<span class="hljs-title class_">Axe</span> <span class="hljs-title class_">Core</span>的行为和规则。<br><span class="hljs-number">3.</span> axe.<span class="hljs-property">getRules</span>：获取<span class="hljs-title class_">Axe</span> <span class="hljs-title class_">Core</span>中定义的所有无障碍规则。<br><span class="hljs-number">4.</span> axe.<span class="hljs-property">getPlugin</span>：获取已加载的<span class="hljs-title class_">Axe</span> <span class="hljs-title class_">Core</span>插件列表。<br></code></pre></td></tr></table></figure>
+
+<p>接下来我们详细了解下<code>runAxeCore()</code>函数</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">runAxeCore</span>(<span class="hljs-params"></span>) &#123;<br>		<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">window</span>.<span class="hljs-property">axe</span>.<span class="hljs-title function_">run</span>(<br>			<span class="hljs-title function_">getAxeContext</span>(),<br>			<span class="hljs-title function_">getAxeOptions</span>()<br>		);<br>		<span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<br>			...result.<span class="hljs-property">violations</span>.<span class="hljs-title function_">map</span>(processViolation),<br>			...result.<span class="hljs-property">incomplete</span>.<span class="hljs-title function_">map</span>(processIncomplete)<br>		);<br>	&#125;<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/WCAG/" class="category-chain-item">WCAG</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%B7%A5%E5%85%B7/" class="print-no-link">#工具</a>
+      
+        <a href="/tags/pa11y/" class="print-no-link">#pa11y</a>
+      
+        <a href="/tags/WCAG/" class="print-no-link">#WCAG</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>pa11y源码分享</div>
+      <div>http://example.com/2023/08/22/pa11y源码分享/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年8月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/09/01/%E5%89%8D%E7%AB%AF%E4%B8%BB%E9%A2%98%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94%E6%80%BB%E7%BB%93/" title="前端主题方案对比总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">前端主题方案对比总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/02/%E5%90%91Nexus%E4%B8%8A%E4%BC%A0%E6%9C%AC%E5%9C%B0%E7%9A%84npm%E4%BE%9D%E8%B5%96/" title="向Nexus上传本地的npm依赖">
+                        <span class="hidden-mobile">向Nexus上传本地的npm依赖</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,721 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一次掌握JS中的this一、this指向问题知识点： this是在运行时绑定的，不是在编写时绑定，也就是运行才能知道this指向谁 this指向永远是其调用者（除了箭头函数它没有自己的this） 箭头函数没有自己的this，所以箭头函数this指的是他所在最近作用域的this 全局直接调用，this就指的全局的根对象，在浏览器环境中全局对象是 Window，在 Node.js 环境中是 Globa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次掌握JS中的this">
+<meta property="og:url" content="http://example.com/2022/11/21/%E4%B8%80%E6%AC%A1%E6%8E%8C%E6%8F%A1JS%E4%B8%AD%E7%9A%84this/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="一次掌握JS中的this一、this指向问题知识点： this是在运行时绑定的，不是在编写时绑定，也就是运行才能知道this指向谁 this指向永远是其调用者（除了箭头函数它没有自己的this） 箭头函数没有自己的this，所以箭头函数this指的是他所在最近作用域的this 全局直接调用，this就指的全局的根对象，在浏览器环境中全局对象是 Window，在 Node.js 环境中是 Globa">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-21T12:54:09.000Z">
+<meta property="article:modified_time" content="2024-10-21T14:37:58.050Z">
+<meta property="article:author" content="Vito">
+<meta property="article:tag" content="JS基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>一次掌握JS中的this - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="一次掌握JS中的this"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-21 20:54" pubdate>
+          2022年11月21日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">一次掌握JS中的this</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一次掌握JS中的this"><a href="#一次掌握JS中的this" class="headerlink" title="一次掌握JS中的this"></a>一次掌握JS中的this</h1><h2 id="一、this指向问题"><a href="#一、this指向问题" class="headerlink" title="一、this指向问题"></a>一、this指向问题</h2><h3 id="知识点："><a href="#知识点：" class="headerlink" title="知识点："></a>知识点：</h3><ul>
+<li>this是在运行时绑定的，不是在编写时绑定，也就是运行才能知道this指向谁</li>
+<li><strong>this指向永远是其调用者</strong>（除了箭头函数它没有自己的this）</li>
+<li><strong>箭头函数没有自己的this</strong>，所以箭头函数this指的是他所在最近作用域的this</li>
+<li><strong>全局直接调用，this就指的全局的根对象</strong>，在浏览器环境中全局对象是 Window，在 Node.js 环境中是 Global。</li>
+<li><strong>当使用 new 关键字调用函数时，函数中的 this 一定是 JS 创建的新对象。</strong></li>
+<li>当函数使用<code>apply、call、bind</code>调用时，<strong>this指向它们的一个参数</strong>，但是bind比较特殊，他改变this指向后并不像apply、call一样立即执行，它会返回一个<strong>一个永久改变<code>this</code>指向的函数。</strong></li>
+</ul>
+<blockquote>
+<p><strong>注意</strong>：一旦函数通过bind绑定了有效的this对象，那么在函数执行过程中this会指向该对象，即使使用call、apply也不能改变this的指向</p>
+</blockquote>
+<h3 id="方法论："><a href="#方法论：" class="headerlink" title="方法论："></a>方法论：</h3><ol>
+<li>观察this中所在函数执行的调用者（前提不是通过bind、call、apply调用执行），那么this即指向这个调用者</li>
+<li>当函数使用apply、call、bind调用时，this指向它们的一个参数</li>
+</ol>
+<h3 id="常考场景："><a href="#常考场景：" class="headerlink" title="常考场景："></a>常考场景：</h3><ol>
+<li>对象中的方法</li>
+<li>事件绑定</li>
+<li>构造函数</li>
+<li>定时器</li>
+<li>函数对象的<code>call()、apply()、bind()</code> 方法</li>
+</ol>
+<h3 id="QS1：为什么构造函数中this是指向创建的新对象，不是指向运行时的调用对象吗？"><a href="#QS1：为什么构造函数中this是指向创建的新对象，不是指向运行时的调用对象吗？" class="headerlink" title="QS1：为什么构造函数中this是指向创建的新对象，不是指向运行时的调用对象吗？"></a>QS1：<strong>为什么构造函数中this是指向创建的新对象，不是指向运行时的调用对象吗？</strong></h3><p>首先看下简单new的源码， <code>fn.apply(obj, args)</code>  new会将构造函数fn的this绑定到新生成obj的实例上，所以构造函数中的this指向创建的新对象。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">myNew</span>(<span class="hljs-params">fn, ...args</span>) &#123;<br><br>    <span class="hljs-keyword">const</span> obj = &#123;&#125;<br><br>    obj.<span class="hljs-property">__proto__</span> = fn.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span><br><br>    fn.<span class="hljs-title function_">apply</span>(obj, args)<br><br>    <span class="hljs-keyword">return</span> obj<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="QS2-为什么全局调用，this就指向其全局对象？"><a href="#QS2-为什么全局调用，this就指向其全局对象？" class="headerlink" title="QS2:为什么全局调用，this就指向其全局对象？"></a>QS2:<strong>为什么全局调用，this就指向其全局对象？</strong></h3><p>这其实是隐式调用，在浏览器中直接调用fn()等效于Window.fn()，所以浏览器中直接调用this指向Window，node环境同理</p>
+<h2 id="二、改变this指向call-、bind-、apply"><a href="#二、改变this指向call-、bind-、apply" class="headerlink" title="二、改变this指向call()、bind()、apply()"></a>二、改变this指向<code>call()、bind()、apply()</code></h2><h3 id="1-apply"><a href="#1-apply" class="headerlink" title="1. apply()"></a>1. <strong>apply()</strong></h3><p><code>apply</code>接受两个参数，第一个参数是<code>this</code>的指向，第二个参数是函数接受的参数，以数组的形式传入</p>
+<p>改变<code>this</code>指向后原函数会立即执行，且此方法只是临时改变<code>this</code>指向一次</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs actionscript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">fn</span><span class="hljs-params">(<span class="hljs-rest_arg">...args</span>)</span>&#123;<br>    console.log(<span class="hljs-keyword">this</span>,args);<br>&#125;<br>let obj = &#123;<br>    myname:<span class="hljs-string">&quot;张三&quot;</span><br>&#125;<br><br>fn.apply(obj,[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]); <span class="hljs-comment">// this会变成传入的obj，传入的参数必须是一个数组；</span><br>fn(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>) <span class="hljs-comment">// this指向window</span><br><br></code></pre></td></tr></table></figure>
+
+<p>当第一个参数为<code>null</code>、<code>undefined</code>的时候，默认指向<code>window</code>(在浏览器中)</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs actionscript">fn.apply(<span class="hljs-literal">null</span>,[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]); <span class="hljs-comment">// this指向window</span><br>fn.apply(<span class="hljs-literal">undefined</span>,[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]); <span class="hljs-comment">// this指向window</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-call"><a href="#2-call" class="headerlink" title="2. call()"></a>2. call()</h3><p><code>call</code>方法的第一个参数也是<code>this</code>的指向，后面传入的是一个参数列表</p>
+<p>跟<code>apply</code>一样，改变<code>this</code>指向后原函数会立即执行，且此方法只是临时改变<code>this</code>指向一次</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs actionscript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">fn</span><span class="hljs-params">(<span class="hljs-rest_arg">...args</span>)</span>&#123;<br>    console.log(<span class="hljs-keyword">this</span>,args);<br>&#125;<br>let obj = &#123;<br>    myname:<span class="hljs-string">&quot;张三&quot;</span><br>&#125;<br><br>fn.call(obj,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>); <span class="hljs-comment">// this会变成传入的obj，传入的参数必须是一个数组；</span><br>fn(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>) <span class="hljs-comment">// this指向window</span><br><br></code></pre></td></tr></table></figure>
+
+<p>同样的，当第一个参数为<code>null</code>、<code>undefined</code>的时候，默认指向<code>window</code>(在浏览器中)</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs gradle">fn.<span class="hljs-keyword">call</span>(<span class="hljs-keyword">null</span>,[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]); <span class="hljs-comment">// this指向window</span><br>fn.<span class="hljs-keyword">call</span>(undefined,[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]); <span class="hljs-comment">// this指向window</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-bind"><a href="#3-bind" class="headerlink" title="3. bind()"></a>3. <strong>bind()</strong></h3><p>bind方法和call很相似，第一参数也是<code>this</code>的指向，后面传入的也是一个参数列表(但是这个参数列表可以分多次传入)</p>
+<p><strong>改变<code>this</code>指向后不会立即执行，而是返回一个永久改变<code>this</code>指向的函数</strong></p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs actionscript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">fn</span><span class="hljs-params">(<span class="hljs-rest_arg">...args</span>)</span>&#123;<br>    console.log(<span class="hljs-keyword">this</span>,args);<br>&#125;<br>let obj = &#123;<br>    myname:<span class="hljs-string">&quot;张三&quot;</span><br>&#125;<br><br><span class="hljs-keyword">const</span> bindFn = fn.bind(obj); <span class="hljs-comment">// this 也会变成传入的obj ，bind不是立即执行需要执行一次</span><br>bindFn(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>) <span class="hljs-comment">// this指向obj</span><br>fn(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>) <span class="hljs-comment">// this指向window</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p>从上面可以看到，<code>apply</code>、<code>call</code>、<code>bind</code>三者的区别在于：</p>
+<ul>
+<li>三者都可以改变函数的<code>this</code>对象指向</li>
+<li>三者第一个参数都是<code>this</code>要指向的对象，如果如果没有这个参数或参数为<code>undefined</code>或<code>null</code>，则默认指向全局<code>window</code></li>
+<li>三者都可以传参，但是<code>apply</code>是数组，而<code>call</code>是参数列表，且<code>apply</code>和<code>call</code>是一次性传入参数，而<code>bind</code>可以分为多次传入</li>
+<li><code>bind</code>是返回绑定<code>this</code>之后的函数，<code>apply</code>、<code>call</code> 则是立即执行</li>
+</ul>
+<h2 id="三、源码实现"><a href="#三、源码实现" class="headerlink" title="三、源码实现"></a>三、源码实现</h2><h3 id="1-实现call"><a href="#1-实现call" class="headerlink" title="1. 实现call()"></a>1. 实现call()</h3><ul>
+<li>将函数设为对象的属性</li>
+<li>执行和删除这个函数</li>
+<li>指定<code>this</code>到函数并传入给定参数执行函数</li>
+<li>如果不传入参数，默认指向 <code>window</code></li>
+<li>原生<code>call</code>、<code>apply</code>传入的<code>this</code>如果是值类型，会被<code>new Object</code>，如<code>fn.call(&#39;abc&#39;)</code></li>
+</ul>
+<p>整体实现代码如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-title class_">Function</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">myCall</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">context = <span class="hljs-variable language_">window</span>, ...args</span>) &#123;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> context !== <span class="hljs-string">&#x27;object&#x27;</span>) context = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>(context) <span class="hljs-comment">// 值类型，变为对象</span><br><br>  <span class="hljs-comment">// args 传递过来的参数</span><br>  <span class="hljs-comment">// this 表示调用call的函数fn</span><br>  <span class="hljs-comment">// context 是call传入的this</span><br><br>  <span class="hljs-comment">// 在context上加一个唯一值，不会出现属性名称的覆盖</span><br>  <span class="hljs-keyword">let</span> fnKey = <span class="hljs-title class_">Symbol</span>()<br>  <span class="hljs-comment">// 相等于 obj[fnKey] = fn </span><br>  context[fnKey] = <span class="hljs-variable language_">this</span>; <span class="hljs-comment">// this 就是当前的函数</span><br>  <br>  <span class="hljs-comment">// 绑定了this</span><br>  <span class="hljs-keyword">let</span> result = context[fnKey](...args);<span class="hljs-comment">// 相当于 obj.fn()执行 fn内部this指向context(obj)</span><br><br>  <span class="hljs-comment">// 清理掉 fn ，防止污染（即清掉obj上的fnKey属性）</span><br>  <span class="hljs-keyword">delete</span> context[fnKey];<br><br>  <span class="hljs-comment">// 返回结果 </span><br>  <span class="hljs-keyword">return</span> result;<br>&#125;;<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-实现bind"><a href="#2-实现bind" class="headerlink" title="2. 实现bind()"></a>2. 实现bind()</h3><ul>
+<li><code>bind</code> 返回了一个函数，对于函数来说有两种方式调用，一种是直接调用，一种是通过 <code>new</code> 的方式，我们先来说直接调用的方式<ul>
+<li>通过直接调用的方式，这里选择了 <code>apply</code> 的方式实现，但是对于参数需要注意以下情况：因为 <code>bind</code> 可以实现类似这样的代码 <code>f.bind(obj, 1)(2)</code>，所以我们需要将两边的参数拼接起来</li>
+<li>通过 <code>new</code> 的方式，对于 <code>new</code> 的情况来说，不会被任何方式改变 <code>this</code>，所以对于这种情况我们需要忽略传入的 <code>this</code></li>
+</ul>
+</li>
+<li>箭头函数的底层是<code>bind</code>，无法改变<code>this</code>，只能改变参数</li>
+</ul>
+<p>整体实现代码如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-title class_">Function</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">myBind</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">context = <span class="hljs-variable language_">window</span>, ...args</span>) &#123;<br>  <span class="hljs-comment">// context 是 bind 传入的 this</span><br>  <span class="hljs-comment">// args 是 bind 传入的各个参数</span><br>  <span class="hljs-comment">// this表示调用bind的函数</span><br>  <span class="hljs-keyword">let</span> self = <span class="hljs-variable language_">this</span>; <span class="hljs-comment">// fn.bind(obj) self就是fn</span><br><br>  <span class="hljs-comment">//返回了一个函数，...innerArgs为实际调用时传入的参数</span><br>  <span class="hljs-keyword">let</span> fBound = <span class="hljs-keyword">function</span>(<span class="hljs-params">...innerArgs</span>) &#123; <br>      <span class="hljs-comment">//this instanceof fBound为true表示构造函数的情况。如new func.bind(obj)</span><br>      <span class="hljs-comment">// 当作为构造函数时，this 指向实例，此时 this instanceof fBound 结果为 true，可以让实例获得来自绑定函数的值</span><br>      <span class="hljs-comment">// 当作为普通函数时，this 默认指向 window，此时结果为 false，将绑定函数的 this 指向 context</span><br>      <span class="hljs-keyword">return</span> self.<span class="hljs-title function_">apply</span>( <span class="hljs-comment">// 函数执行</span><br>        <span class="hljs-variable language_">this</span> <span class="hljs-keyword">instanceof</span> fBound ? <span class="hljs-variable language_">this</span> : context, <br>        args.<span class="hljs-title function_">concat</span>(innerArgs) <span class="hljs-comment">// 拼接参数</span><br>      );<br>  &#125;<br><br>  <span class="hljs-comment">// 如果绑定的是构造函数，那么需要继承构造函数原型属性和方法：保证原函数的原型对象上的属性不丢失</span><br>  <span class="hljs-comment">// 实现继承的方式: 使用Object.create</span><br>  fBound.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);<br>  <span class="hljs-keyword">return</span> fBound;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-实现apply"><a href="#3-实现apply" class="headerlink" title="3. 实现apply()"></a>3. <strong>实现apply()</strong></h3><p>思路: 利用<code>this</code>的上下文特性。<code>apply</code>其实就是改一下参数的问题</p>
+<p>整体实现代码如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-title class_">Function</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">myApply</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">context = <span class="hljs-variable language_">window</span>, args</span>) &#123;  <span class="hljs-comment">// 这里传参和call传参不一样</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> context !== <span class="hljs-string">&#x27;object&#x27;</span>) context = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>(context) <span class="hljs-comment">// 值类型，变为对象</span><br><br>  <span class="hljs-comment">// args 传递过来的参数</span><br>  <span class="hljs-comment">// this 表示调用call的函数</span><br>  <span class="hljs-comment">// context 是apply传入的this</span><br><br>  <span class="hljs-comment">// 在context上加一个唯一值，不会出现属性名称的覆盖</span><br>  <span class="hljs-keyword">let</span> fnKey = <span class="hljs-title class_">Symbol</span>()<br>  context[fnKey] = <span class="hljs-variable language_">this</span>; <span class="hljs-comment">// this 就是当前的函数</span><br><br>  <span class="hljs-comment">// 绑定了this</span><br>  <span class="hljs-keyword">let</span> result = context[fnKey](...args);<br><br>  <span class="hljs-comment">// 清理掉 fn ，防止污染</span><br>  <span class="hljs-keyword">delete</span> context[fnKey];<br><br>  <span class="hljs-comment">// 返回结果</span><br>  <span class="hljs-keyword">return</span> result;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Javascript/" class="category-chain-item">Javascript</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JS%E5%9F%BA%E7%A1%80/" class="print-no-link">#JS基础</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>一次掌握JS中的this</div>
+      <div>http://example.com/2022/11/21/一次掌握JS中的this/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/28/JS%E6%A8%A1%E5%9D%97%E5%8C%96/" title="JS模块化">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JS模块化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/20/%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" title="事件循环">
+                        <span class="hidden-mobile">事件循环</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,862 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="原型链与继承一、原型链1. 原型对象与原型链的理解当我们访问一个对象的属性时，如果这个对象内部不存在这个属性，那么它就会去它的原型对象里找这个属性，这个原型对象又会有自己的原型，于是就这样一直找下去，也就是原型链的概念。 所以，通过原型链概念我们知道原型链是由原型对象组成的，而这个原型对象是相对的，相对于有这个原型对象的构造函数的实例，它是原型对象，如果相对于它自己的原型对象，它就是它原型对象构造">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原型链与继承">
+<meta property="og:url" content="http://example.com/2022/10/05/%E5%8E%9F%E5%9E%8B%E9%93%BE%E4%B8%8E%E7%BB%A7%E6%89%BF/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="原型链与继承一、原型链1. 原型对象与原型链的理解当我们访问一个对象的属性时，如果这个对象内部不存在这个属性，那么它就会去它的原型对象里找这个属性，这个原型对象又会有自己的原型，于是就这样一直找下去，也就是原型链的概念。 所以，通过原型链概念我们知道原型链是由原型对象组成的，而这个原型对象是相对的，相对于有这个原型对象的构造函数的实例，它是原型对象，如果相对于它自己的原型对象，它就是它原型对象构造">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/proto1.png">
+<meta property="og:image" content="http://example.com/img/proto2.png">
+<meta property="og:image" content="http://example.com/img/proto3.png">
+<meta property="og:image" content="http://example.com/img/proto4.png">
+<meta property="article:published_time" content="2022-10-05T07:07:14.000Z">
+<meta property="article:modified_time" content="2024-10-21T14:37:58.051Z">
+<meta property="article:author" content="Vito">
+<meta property="article:tag" content="JS基础">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/proto1.png">
+  
+  
+  
+  <title>原型链与继承 - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="原型链与继承"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-05 15:07" pubdate>
+          2022年10月5日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          38 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">原型链与继承</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="原型链与继承"><a href="#原型链与继承" class="headerlink" title="原型链与继承"></a>原型链与继承</h1><h2 id="一、原型链"><a href="#一、原型链" class="headerlink" title="一、原型链"></a>一、原型链</h2><h3 id="1-原型对象与原型链的理解"><a href="#1-原型对象与原型链的理解" class="headerlink" title="1. 原型对象与原型链的理解"></a>1. 原型对象与原型链的理解</h3><p>当我们访问一个对象的属性时，如果这个对象内部不存在这个属性，那么它就会去它的原型对象里找这个属性，这个原型对象又会有自己的原型，于是就这样一直找下去，也就是<strong>原型链的概念</strong>。</p>
+<p>所以，通过原型链概念我们知道<strong>原型链是由原型对象组成的，而这个原型对象是相对的，相对于有这个原型对象的构造函数的实例，它是原型对象，如果相对于它自己的原型对象，它就是它原型对象构造函数的一个实例而已，也就是个普通函数。</strong></p>
+<h3 id="2-原型链中对象属性的查找和修改机制"><a href="#2-原型链中对象属性的查找和修改机制" class="headerlink" title="2. 原型链中对象属性的查找和修改机制"></a>2. 原型链中对象属性的查找和修改机制</h3><p> <strong>2.1 对象属性查找机制</strong></p>
+<p>当查找对象的属性时，如果实例对象自身不存在该属性，则沿着原型链往上一级查找，找到时则输出，不存在时，则继续沿着原型链往上一级查找，直至最顶级的原型对象<code>Object.prototype</code>，如还是没找到，则输出<code>undefined</code>；</p>
+<p><strong>2.2对象属性修改机制</strong></p>
+<p>只会修改实例对象本身的属性，如果不存在，则进行添加该属性，如果需要修改原型的属性时，则可以用: fn<code>.prototype.x = 2</code>；但是这样会造成所有继承于该对象的实例的属性发生改变。</p>
+<h3 id="3-原型、构造函数、实例的具体关系"><a href="#3-原型、构造函数、实例的具体关系" class="headerlink" title="3.原型、构造函数、实例的具体关系"></a>3.原型、构造函数、实例的具体关系</h3><p>那么我们具体了解下原型、构造函数、实例的关系是怎样的呢？</p>
+<p><img src="/img/proto1.png" srcset="/img/loading.gif" lazyload></p>
+<p>有图我们知道几个关系：</p>
+<p>关系一：<code>原型.constructor === 构造函数</code></p>
+<p>关系二：<code>构造函数.prototype === 原型</code></p>
+<p>关系三：<code>实例.__proto__ === 原型</code></p>
+<p>关系四：<code>实例.constructor === 构造函数</code> </p>
+<p><strong>此时，我不知道各位有没有注意到，图中有两条划红线的地方</strong></p>
+<p>因为这两条关系比较特殊，我们看下面代码：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">constructor</span> (<span class="hljs-params">attr1,attr2</span>)&#123;<br>	<span class="hljs-variable language_">this</span>.<span class="hljs-property">attr1</span> = attr1<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">attr2</span> = attr2<br>&#125;<br><br><span class="hljs-keyword">const</span> instance = <span class="hljs-keyword">new</span> <span class="hljs-title function_">constructor</span>(<span class="hljs-params"><span class="hljs-string">&quot;属性1&quot;</span>,<span class="hljs-string">&quot;属性2&quot;</span></span>)<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">dir</span>(constructor.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>)<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">dir</span>(constructor)<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">dir</span>(instance)<br></code></pre></td></tr></table></figure>
+
+<p>我们看一下打印结果：</p>
+<p><img src="/img/proto2.png" srcset="/img/loading.gif" lazyload></p>
+<p>从图中的知道，关系一、关系二的属性都可以在对象中找到，而关系三和四中在实例中并找不到<code>__proto__</code>属性和<code>constructor</code>属性。下面我们分析下原因：</p>
+<ul>
+<li><p><code>实例.__proto__ === 原型</code> 我们打印实例并没有直接发现__proto__属性，是因为这个属性不是实例自己的，它是<code>Object.prototype</code>中实现的，里面有<code>get__ptoto__</code>的方法和<code>set__proto__</code>的方法对<code>__proto__</code> 进行监听。所以我们在使用<code>__proto__</code> 属性其实也是用到了原型链的查找机制。所以，__proto__属性其实指向<code>[[Prototype]]</code>中，但是由于是<code>[[Prototype]]</code> 是内部属性，我们是没法直接获取的，所以使用<code>__proto__</code> 来访问。</p>
+<p>【<code>__proto__</code>这个属性，在之前版本是在对象直接可以看到的，而不是通过原型链查找，而现在改版原因，又 <strong>Object</strong> 的原型对象统一实现】</p>
+</li>
+<li><p><code>实例.constructor === 构造函数</code> 我们发现实例对象并没有自己的constuctor，所以他肯定又是通过原型链来获取的这个属性。所以它取的它的原型对象的constructor，<code>实例.constructor === 实例.__proto__.constructor === 构造函数</code>。</p>
+</li>
+</ul>
+<p><strong>我们思考一下为什么实例对象没有自己的constructor?</strong> </p>
+<p>如果对象有自己的constructor，说明它一定有自己的构造函数，而不是它原型对象的构造函数，再直白一点就是这个<strong>对象一定是作为原型对象才会有自己的constructor</strong>，我们看构造函数的原型对象是不是就有自己的constructor属性。所以，<strong>constructor是原型对象的属性，一个普通对象是没有自己的constructor属性的（这里不包括它原型上的），只有作为原型对象的时候有自己的constructor属性。</strong></p>
+<aside>
+💡 现在浏览器中都实现了 proto 属性来让我们访问这个属性，但是我们最好不要使用这个属性，因为它不是规范中规定的。ES5 中新增了一个 `Object.getPrototypeOf()`方法，我们可以通过这个方法来获取对象的原型。
+
+
+</aside>
+
+<p><strong>最后放出原型链的终极关系图：</strong></p>
+<p><img src="/img/proto3.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>总结：</strong></p>
+<ul>
+<li><code>prototype</code>属性是<strong>函数</strong>独有的，<code>__proto__</code>和<code>constructor</code>是<strong>对象</strong>独有的</li>
+<li>对象可以通过 <code>__proto__</code> 来寻找不属于该对象的属性，<code>__proto__</code> 将对象连接起来组成了原型链。</li>
+<li>原型、构造函数、实例三者关系<ul>
+<li>关系一：<code>原型.constructor === 构造函数</code></li>
+<li>关系二：<code>构造函数.prototype === 原型</code></li>
+<li>关系三：<code>实例.__proto__ === 原型</code></li>
+<li>关系四：<code>实例.constructor === 构造函数</code></li>
+</ul>
+</li>
+<li>获取原型对象不推荐用<code>__proto__</code> ，只推荐使用 <code>Object.getPrototypeOf(实例对象)</code></li>
+<li>当对象拥有自己的constructor属性说明对象是作为原型对象的存在；当对象没有自己的constructor属性是作为某个构造函数的实例的存在</li>
+</ul>
+<h2 id="二、继承"><a href="#二、继承" class="headerlink" title="二、继承"></a>二、继承</h2><p>首先我们知道ES6支持了Class，但是在JS中并不存在类。Class只是语法糖，其<strong>本质还是函数</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> &#123;&#125;<br><span class="hljs-title class_">Person</span> <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Function</span> <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+
+<p><code>class</code>实现继承的核心在于使用 <code>extends</code>表明继承自哪个父类，并且在子类构造函数中必须调用 <code>super</code>，<code>super</code>本质还是改变this指向。</p>
+<p>下面我们先用一张图了解下继承有哪些实现方式以及继承的发展过程</p>
+<p><img src="/img/proto4.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="1-构造函数继承-（-借助call）"><a href="#1-构造函数继承-（-借助call）" class="headerlink" title="1.  构造函数继承 （ 借助call）"></a><strong>1.  构造函数继承 （ 借助call）</strong></h3><p>子类构造函数中使用<code>call()</code>和<code>apply()</code>方法<strong>改变父类构造函数的<code>this</code>指向</strong>来达到继承</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent1</span>(<span class="hljs-params"></span>)&#123;<br>   <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent1&#x27;</span>;<br> &#125;<br> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Child1</span>(<span class="hljs-params"></span>)&#123;<br>   <span class="hljs-title class_">Parent1</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<br>   <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child1&#x27;</span><br> &#125;<br> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Child1</span>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>优点:</strong></p>
+<ul>
+<li>可以在子类构造函数通过<code>call</code>可以<strong>向父类传参数</strong></li>
+<li><strong>父类的引用属性不会被共享</strong></li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li><p>子类不能访问父类<strong>原型</strong>上定义的<strong>方法</strong>（即不能访问Parent1.prototype上定义的方法）</p>
+</li>
+<li><p>所有方法属性都只能写在构造函数中，每次创建实例都会初始化</p>
+<p>例子：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-title class_">Parent1</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">work</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;work&#x27;</span><br>&#125;<br><br><span class="hljs-keyword">var</span> s1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child1</span>()<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s1.<span class="hljs-title function_">work</span>()) <span class="hljs-comment">// Uncaught TypeError: s1.work is not a function</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-原型链继承-（借助原型链）"><a href="#2-原型链继承-（借助原型链）" class="headerlink" title="2. 原型链继承 （借助原型链）"></a>2. 原型链继承 （借助原型链）</h3><p>将父类的实例作为子类的原型</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent2</span>(<span class="hljs-params"></span>) &#123;<br>   <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent2&#x27;</span>;<br>   <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br> &#125;<br> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Child2</span>(<span class="hljs-params"></span>) &#123;<br>   <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child2&#x27;</span>;<br> &#125;<br> <span class="hljs-title class_">Child2</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent2</span>();<br><br> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Child2</span>());<br></code></pre></td></tr></table></figure>
+
+<p><strong>优点：</strong></p>
+<ul>
+<li>父类方法可以复用，<strong>解决构造函数继承的缺点</strong></li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li><p>父类的所有引用属性会被所有子类共享，如果更改一个子类的引用属性，其他子类也会受影响子类型</p>
+</li>
+<li><p>实例不能给父类型构造函数传参</p>
+<p>例子：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> s1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child2</span>();<br><span class="hljs-keyword">var</span> s2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child2</span>();<br>s1.<span class="hljs-property">play</span>.<span class="hljs-title function_">push</span>(<span class="hljs-number">4</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s1.<span class="hljs-property">play</span>, s2.<span class="hljs-property">play</span>); <span class="hljs-comment">// [1,2,3,4]  [1,2,3,4]</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="3-组合继承-（原型链-构造函数）"><a href="#3-组合继承-（原型链-构造函数）" class="headerlink" title="3. 组合继承 （原型链 + 构造函数）"></a>3. <strong>组合继承 （</strong>原型链 + 构造函数<strong>）</strong></h3><p>组合继承综合了<code>原型链继承</code>和<code>盗用构造函数继承(构造函数继承)</code>，将两者的优点结合了起来，</p>
+<p>基本的思路：<strong>使用原型链继承父类原型上的属性和方法</strong>，而<strong>通过构造函数继承实例属性</strong>，这样既可以把方法定义在原型上以实现重用，又可以让每个实例都有自己的属性</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs jsx"> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent3</span> (<span class="hljs-params"></span>) &#123;<br>   <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent3&#x27;</span>;<br>   <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br> &#125;<br> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Child3</span>(<span class="hljs-params"></span>) &#123;<br>   <span class="hljs-title class_">Parent3</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<br>   <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child3&#x27;</span>;<br> &#125;<br> <span class="hljs-title class_">Child3</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent3</span>();<br><span class="hljs-title class_">Child3</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span> = <span class="hljs-title class_">Child3</span><br><br> <span class="hljs-keyword">var</span> s3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child3</span>();<br> <span class="hljs-keyword">var</span> s4 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child3</span>();<br> s3.<span class="hljs-property">play</span>.<span class="hljs-title function_">push</span>(<span class="hljs-number">4</span>);<br> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s3.<span class="hljs-property">play</span>, s4.<span class="hljs-property">play</span>); <span class="hljs-comment">// [1,2,3,4]  [1,2,3]</span><br></code></pre></td></tr></table></figure>
+
+<p> <strong>优点：</strong></p>
+<ul>
+<li>父类方法可以复用</li>
+<li>子类构造函数中向父类传参数<strong>父类的引用属性不会被共享</strong></li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>父类的构造函数<code>Parent3</code>会执行两次（<code>Parent3.call(this)</code>和<code>Child3.prototype = new Parent3();</code>）。</li>
+</ul>
+<p><strong>注意：</strong></p>
+<p><code>Child3.prototype.constructor = Child3</code> 由于Child3的原型对象被重写，所以<code>Child3.prototype</code> 原本默认的constructor会被丢失。所以我们需要手动指定下原型对象的构造函数指向。</p>
+<h3 id="4-原型式继承"><a href="#4-原型式继承" class="headerlink" title="4.原型式继承"></a>4.原型式继承</h3><p>原型式继承是不涉及严格意义上构造函数的继承方法，<strong>基于已有的对象</strong>（不是构造函数哦！）创建一个新对象，该新对象的原型指向已有的对象</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> parent4 = &#123;<br>    <span class="hljs-attr">name</span>:<span class="hljs-string">&#x27;parent4&#x27;</span>,<br>    <span class="hljs-attr">play</span>:[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br>  &#125;<br><br><span class="hljs-keyword">var</span> child4 = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(parent4,&#123;<br>	<span class="hljs-attr">type</span>:&#123;<span class="hljs-attr">value</span>:<span class="hljs-string">&#x27;child4&#x27;</span>&#125;<br>&#125;)<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child4);<br></code></pre></td></tr></table></figure>
+
+<p><strong>优点：</strong></p>
+<ul>
+<li>父类方法可复用</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li><p>父类的引用会被所有子类所共享</p>
+</li>
+<li><p>子类实例不能向父类传参</p>
+<p>例子：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> child5 = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(parent4)<br>child4.<span class="hljs-property">play</span>.<span class="hljs-title function_">push</span>(<span class="hljs-number">4</span>)<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child4.<span class="hljs-property">play</span>) <span class="hljs-comment">//[1,2,3,4]</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child5.<span class="hljs-property">play</span>) <span class="hljs-comment">//[1,2,3,4]</span><br><br></code></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>注意：<code>Object.create()</code> 是原型式继承的核心，</strong>是ES5为了<strong>规范原型式继承</strong>而出的方法，可以理解为<code>Object.create()</code>就是原型式继承，而这个方法核心原理如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">create</span>(<span class="hljs-params">superInstance</span>)&#123;<br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">Fn</span>(<span class="hljs-params"></span>)&#123;&#125;<br>	<span class="hljs-title class_">Fn</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = superInstance<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Fn</span>() <br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-寄生式继承"><a href="#5-寄生式继承" class="headerlink" title="5. 寄生式继承"></a>5. 寄生式继承</h3><p>寄生式继承是和原型式继承比较接近的一种继承方式，是一个类似于工厂函数的继承方式：创建一个实现继承的函数，在函数里以某种方法进行增强（加工）对象，然后返回一个对象。</p>
+<p>【寄生式继承同样适合主要关注对象，而不在乎类型和构造函数的场景】</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> parent5 = &#123;<br>    <span class="hljs-attr">name</span>:<span class="hljs-string">&#x27;parent2&#x27;</span>,<br>    <span class="hljs-attr">play</span>:[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br>  &#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">createChild</span>(<span class="hljs-params">parent</span>) &#123;<br>  <span class="hljs-keyword">let</span> child = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(parent);<br>  child.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child5&#x27;</span>;<br>	child.<span class="hljs-property">work</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;work&#x27;</span><br>	&#125;<br>  <span class="hljs-keyword">return</span> child;<br>&#125;<br><br><span class="hljs-keyword">var</span> child5 = <span class="hljs-title function_">createChild</span>(parent5);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child5);<br><br></code></pre></td></tr></table></figure>
+
+<p><strong>优点：</strong></p>
+<ul>
+<li>父类方法可复用</li>
+<li>在不修改原型对象情况下，对新对象进行扩展</li>
+<li>通过寄生继承实现混入、单例等功能</li>
+<li>代码简洁，易于维护。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>父类的引用会被所有子类所共享</li>
+<li>子类实例不能向父类传参</li>
+<li>调用一次函数<code>createChild</code>就得<strong>重新创建一遍方法</strong>，无法实现函数复用，效率较低</li>
+</ul>
+<p>例子：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> child6= <span class="hljs-title function_">createChild</span>(parent5);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child6.<span class="hljs-property">work</span> === child6.<span class="hljs-property">work</span>) <span class="hljs-comment">// false</span><br><br></code></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<p>Object.create()方法并不是寄生式继承所必需的，任何可以返回新对象的函数都可以在这使用。</p>
+<aside>
+💡 在没有必要兴师动众地创建构造函数，而只想让一个对象和另一个对象保持类似的情况下，原型式继承是完全可以胜任的。不过别忘了，包含引用类型值的属性始终都会共享相应的值，就像使用原型模式一样。
+</aside>
+
+<h3 id="6-方式5-最推荐使用-寄生组合继承-———-最接近extends实现方法"><a href="#6-方式5-最推荐使用-寄生组合继承-———-最接近extends实现方法" class="headerlink" title="6. 方式5(最推荐使用): 寄生组合继承 ——— 最接近extends实现方法"></a>6. 方式5(最推荐使用): 寄生组合继承 ——— 最接近extends实现方法</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">inheritPrototype</span> (<span class="hljs-params">subClass,superClass</span>)&#123;<br>	<span class="hljs-keyword">let</span> prototype = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(superClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>) <span class="hljs-comment">//通过create方法将父类浅复制一份，引用类型依旧是原来的引用</span><br>	subClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = prototype <span class="hljs-comment">//解决组合继承父类调用两次的问题，由于call已经解决继承父类的问题，那就直接将父类原型继承过去就行了</span><br>	subClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span> = subClass <span class="hljs-comment">//修改原型会导致原型对象的constructor属性失效，需要是手动指定</span><br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent6</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent6&#x27;</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child5</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-title class_">Parent5</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<span class="hljs-comment">//用于继承父类自己的属性和传参</span><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child6&#x27;</span>;<br>&#125;<br><br><span class="hljs-title function_">inheritPrototype</span> (<span class="hljs-title class_">Child6</span>,<span class="hljs-title class_">Parent6</span>)<br><br></code></pre></td></tr></table></figure>
+
+<p>这是标准的寄生组合继承，有着寄生式继承的标志性的工厂函数，也有组合式继承的特点，所以这就是集聚所有继承方法的优点，解决了以下问题：</p>
+<ol>
+<li>方法共享（复用）</li>
+<li>引用值修改不会产生副作用</li>
+<li>可以传参数到父类构造函数</li>
+<li>效率提升，只调用了一次父类构造函数，避免了<code>Sub.prototype</code>上不必要也用不到的属性</li>
+</ol>
+<p><strong>下面我们复盘分析下，我们如何实现这些功能的</strong>：</p>
+<ol>
+<li><p><strong>方法的共享，不用频繁的创建方法</strong><br>方法一定是放在原型上，而不是构造函数里，这样就避免频繁创建方法。</p>
+</li>
+<li><p><strong>引用值修改不会产生副作用，这里副作用指的是影响其他对象。</strong><br>想要产生不会产生副作用的引用，那我们不可以直接引用我们想要继承的对象，而是通过新建个拷贝，间接引用。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent5</span> (<span class="hljs-params"></span>) &#123;<br> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent3&#x27;</span>;<br> <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br> &#125;<br> <br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child5</span>(<span class="hljs-params"></span>) &#123;<br> <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child3&#x27;</span>;<br>&#125;<br><br><span class="hljs-comment">//方式一 </span><br><span class="hljs-title class_">Child5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent5</span>()<br><span class="hljs-comment">//方式二</span><br><span class="hljs-title class_">Child5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Parent5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span><br><span class="hljs-comment">//方式三</span><br><span class="hljs-title class_">Child5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent5</span>)<br><span class="hljs-comment">//方式四</span><br><span class="hljs-title class_">Child5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Parent5</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>)<br><br></code></pre></td></tr></table></figure>
+<p><strong>方式一</strong>：这个可以看<code>原型链继承</code>,这个主要是为了Child5继承Parent5本身以及原型上的属性和方法，不过这样会产生引用的副作用，如果实例更改Parent本身或者原型属性，都会导致其他实例的属性改变。</p>
+<p><strong>方式二</strong>：这个方式只是继承了Parent5原型上的属性和方法，没有继承Parent5本身的属性和方法，但是这个同样存在一个缺点就是会产生引用的副作用,Child5的实例只要改其原型上的方法和属性，会直接影响到Person5本身</p>
+<p><strong>方式三</strong>：这个方法通过Obect.create()让一个中间空对象的承担Child5原型,再把Parent5的实例绑到中间空对象上，修改Child5.prototype不会影响到Parent本身，但是有一个缺点就是如果使用Parent5的属性还是会产生饮用的副作用，具体后面做总结</p>
+<p><strong>方式四</strong>：这个与方式三优点相同，修改Child5.prototype不会影响到Parent本身，因为Child5.prototype绑定是一个空对象，而空对象的原型才是Parent5,同时，方式四还弥补了方式三的缺点就是修改Parent5自身属性是不会产生引用的副作用的，除非你去修改Parent5原型的属性和方法，肯定会有引用副作用，这个是避免不了的。</p>
+<p> <strong>总的来说，根据这四种方式总结下</strong>，<strong>只要我想要绑定到Child5.prototype的对象就一定存在引用的副作用，所以就需要我们选择用谁来绑定，是它的实例还是原型等</strong>。一般情况下构造函数里放属性，构造函数的原型放方法，这也是现代Class继承的原理，所以我们通过原型链的实现继承，就不能让引用类型副作用影响继承的属性，这时，继承构造函数的属性就不能通过原型链方式，只能通过<code>构造函数继承</code>来继承自身属性，而构造函数的原型属性方法再通过原型链的方式继承，并且不能是方式二的直接继承，这样会直接影响到Parent5对象本身，我们需要一个空对象来做中介，这样，通过<code>Child5.prototype</code>来操作的就不是Parent.peototype本身，而是’隔着一个墙’的空对象,除非你通过<code>Child5.prototype.__proto__</code>才能影响到Parent5.prototype本身。</p>
+</li>
+<li><p><strong>可以传参数到父类构造函数</strong><br>这个主要是通过构造函数继承的特性，通过call函数技能改变Parent5中this指向，又可以传参的特性。</p>
+</li>
+<li><p><strong>效率提升，只调用了一次父类构造函数</strong><br>像<code>组合式继承</code>的缺点就是通过call方式继承Parent5自身属性和通过<code>Child5.prototype = new Parent5()</code>方式,会导致Parent5执行两次，所以，加上寄生继承的优势Child5.prototype = Object.create(Parent5)减少一次Parent5的调用。</p>
+</li>
+</ol>
+<p>最后我们来探讨一个问题：<code>inheritPrototype()</code>是复制父类的原型到子类身上，那为什么不直接用<code>SubClass.prototype=Super.prototype</code>呢，这样也达到了复制的目的啊？</p>
+<p>这是因为，这样做是一种浅拷贝，如果我们改变<code>SubClass.prototype</code>的某个属性或者方法，<code>SuperClass.prototype</code>也会跟着变，看以下代码：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent6</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent5&#x27;</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child6</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-title class_">Parent5</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child6&#x27;</span>;<br>&#125;<br><span class="hljs-title class_">Child6</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Parent6</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span><br><span class="hljs-title class_">Child6</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span> = <span class="hljs-title class_">Child6</span>;<br><br><span class="hljs-title class_">Child6</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">sayHi</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;sayHi&quot;</span><br>&#125;<br><br><span class="hljs-keyword">var</span> s1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child6</span>()<br><span class="hljs-keyword">var</span> s2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent6</span>()<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s1.<span class="hljs-property">constructor</span> ===s2.<span class="hljs-property">constructor</span>) <span class="hljs-comment">// true</span><br><br></code></pre></td></tr></table></figure>
+
+
+<p>从这个例子得之，<code>Child5.prototype.constructor = Child5</code> 将 <code>Parent5.prototype</code> 原型中的constructor 也修改了，所以我们需要用Object.create() 避免对 <code>Parent5.prototype</code> 的直接引用。</p>
+<h3 id="7-ES6的extends被编译后的JavaScript代码"><a href="#7-ES6的extends被编译后的JavaScript代码" class="headerlink" title="7.ES6的extends被编译后的JavaScript代码"></a>7.<strong>ES6的extends被编译后的JavaScript代码</strong></h3><p>我们通过babel将<code>extends</code>从ES6转换成ES5：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">_possibleConstructorReturn</span>(<span class="hljs-params">self, call</span>) &#123;<br>    <span class="hljs-comment">// ...</span><br>    <span class="hljs-keyword">return</span> call &amp;&amp; (<span class="hljs-keyword">typeof</span> call === <span class="hljs-string">&#x27;object&#x27;</span> || <span class="hljs-keyword">typeof</span> call === <span class="hljs-string">&#x27;function&#x27;</span>) ? call : self;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">_inherits</span>(<span class="hljs-params">subClass, superClass</span>) &#123;<br>    <span class="hljs-comment">// ...</span><br>    <span class="hljs-comment">//看到没有</span><br>    subClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(superClass &amp;&amp; superClass.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, &#123;<br>        <span class="hljs-attr">constructor</span>: &#123;<br>            <span class="hljs-attr">value</span>: subClass,<br>            <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">false</span>,<br>            <span class="hljs-attr">writable</span>: <span class="hljs-literal">true</span>,<br>            <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span><br>        &#125;<br>    &#125;);<br>    <span class="hljs-keyword">if</span> (superClass) <span class="hljs-title class_">Object</span>.<span class="hljs-property">setPrototypeOf</span> ? <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">setPrototypeOf</span>(subClass, superClass) : subClass.<span class="hljs-property">__proto__</span> = superClass;<br>&#125;<br><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">Parent</span> = <span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// 验证是否是 Parent 构造出来的 this</span><br>    <span class="hljs-title function_">_classCallCheck</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-title class_">Parent</span>);<br>&#125;;<br><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">Child</span> = (<span class="hljs-keyword">function</span> (<span class="hljs-params">_Parent</span>) &#123;<br>    <span class="hljs-title function_">_inherits</span>(<span class="hljs-title class_">Child</span>, _Parent);<br><br>    <span class="hljs-keyword">function</span> <span class="hljs-title function_">Child</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-title function_">_classCallCheck</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-title class_">Child</span>);<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">_possibleConstructorReturn</span>(<span class="hljs-variable language_">this</span>, (<span class="hljs-title class_">Child</span>.<span class="hljs-property">__proto__</span> || <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getPrototypeOf</span>(<span class="hljs-title class_">Child</span>)).<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>));<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Child</span>;<br>&#125;(<span class="hljs-title class_">Parent</span>));<br><br></code></pre></td></tr></table></figure>
+
+<p>这段代码的核心是<code>_inherits</code>函数，可以看到它采用的依然也是寄生组合继承方式。其中，<code>Object.setPrototypeOf(subClass, superClass)</code> 作用是用来继承父类静态方法，这也是原来的继承方式疏忽掉的地方。</p>
+<h2 id="三、补充："><a href="#三、补充：" class="headerlink" title="三、补充："></a>三、补充：</h2><h3 id="梳理上文Object对象的相关方法"><a href="#梳理上文Object对象的相关方法" class="headerlink" title="梳理上文Object对象的相关方法"></a>梳理上文Object对象的相关方法</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Object.setPrototypeOf()</td>
+<td>设置一个指定的对象的原型（即，内部 [[Prototype]]属性）到另一个对象或 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/null">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/null</a></td>
+</tr>
+<tr>
+<td>Object.getPrototypeOf()</td>
+<td>返回指定对象的原型（内部[[Prototype]]属性的值）。</td>
+</tr>
+<tr>
+<td>Object.create(proto, propertiesObject?)</td>
+<td>用于创建一个新对象，使用现有的对象来作为新创建对象的原型</td>
+</tr>
+</tbody></table>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><ul>
+<li><strong>继承对象自身属性</strong>，我们需要<code>构造函数继承</code>的方式，通过call改变对象的构造函数this和传参</li>
+<li><strong>继承对象原型的属性和方式</strong>，我们需要<code>原型链继承</code>的方式，将对象原型的属性和方法绑定到需要继承的对象上</li>
+<li><strong>继承对象原型属性和方式又不想影响继承对象原型本身</strong>，我们需要通过<code>原型式继承</code>，通过<code>Object.create()</code>将继承对象绑定到这个空对象上，从而实现继承后的类通过prototype直接修改到继承对象的原型</li>
+<li><strong>修改原型对象之后会丢失constructor属性，注意重新增加其继承的构造函数的constructor</strong></li>
+<li>方便自己的扩展性的话，再利用<code>寄生继承</code>封装成工厂函数，方便继承。</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Javascript/" class="category-chain-item">Javascript</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JS%E5%9F%BA%E7%A1%80/" class="print-no-link">#JS基础</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>原型链与继承</div>
+      <div>http://example.com/2022/10/05/原型链与继承/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/01/JS%E7%9A%84%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%98%BE%E5%BC%8F%E5%92%8C%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2/" title="JS的类型的显式和隐式转换">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JS的类型的显式和隐式转换</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/02/JS%E9%98%B2%E6%8A%96%E4%B8%8E%E8%8A%82%E6%B5%81/" title="JS防抖与节流">
+                        <span class="hidden-mobile">JS防抖与节流</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,737 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="JS深拷贝与浅拷贝一、浅拷贝浅拷贝是一种复制对象的方法，它只复制对象第一层的属性（只要不是复制所有层就算浅拷贝），如果对象中有嵌套对象，只会复制嵌套对象的引用，而不是嵌套对象本身。 方法1：object.assign()object.assign是 ES6 中 object的一个方法，该方法可以用于 JS 对象的合并等多个用途，其中一个用途就是可以进行浅拷贝。该方法的第一个参数是拷贝的目标对象，后">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS深拷贝与浅拷贝">
+<meta property="og:url" content="http://example.com/2022/10/01/JS%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="JS深拷贝与浅拷贝一、浅拷贝浅拷贝是一种复制对象的方法，它只复制对象第一层的属性（只要不是复制所有层就算浅拷贝），如果对象中有嵌套对象，只会复制嵌套对象的引用，而不是嵌套对象本身。 方法1：object.assign()object.assign是 ES6 中 object的一个方法，该方法可以用于 JS 对象的合并等多个用途，其中一个用途就是可以进行浅拷贝。该方法的第一个参数是拷贝的目标对象，后">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/copy1.png">
+<meta property="og:image" content="http://example.com/img/copy2.png">
+<meta property="og:image" content="http://example.com/img/copy3.png">
+<meta property="article:published_time" content="2022-10-01T05:36:50.000Z">
+<meta property="article:modified_time" content="2024-10-21T14:37:58.050Z">
+<meta property="article:author" content="Vito">
+<meta property="article:tag" content="JS基础">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/copy1.png">
+  
+  
+  
+  <title>JS深拷贝与浅拷贝 - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JS深拷贝与浅拷贝"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-01 13:36" pubdate>
+          2022年10月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JS深拷贝与浅拷贝</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="JS深拷贝与浅拷贝"><a href="#JS深拷贝与浅拷贝" class="headerlink" title="JS深拷贝与浅拷贝"></a>JS深拷贝与浅拷贝</h1><h2 id="一、浅拷贝"><a href="#一、浅拷贝" class="headerlink" title="一、浅拷贝"></a>一、浅拷贝</h2><p>浅拷贝是一种复制对象的方法，它只复制对象第一层的属性（只要不是复制所有层就算浅拷贝），如果对象中有嵌套对象，只会复制嵌套对象的引用，而不是嵌套对象本身。</p>
+<h3 id="方法1：object-assign"><a href="#方法1：object-assign" class="headerlink" title="方法1：object.assign()"></a>方法1：<strong>object.assign()</strong></h3><p><code>object.assign</code>是 ES6 中 <code>object</code>的一个方法，该方法可以用于 JS 对象的合并等多个用途，<code>其中一个用途就是可以进行浅拷贝</code>。该方法的第一个参数是拷贝的目标对象，后面的参数是拷贝的来源对象（也可以是多个来源）。</p>
+<p><strong>object.assign 的示例代码如下：</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">let</span> target = &#123;&#125;;<br><span class="hljs-keyword">let</span> source = &#123; <span class="hljs-attr">a</span>: &#123; <span class="hljs-attr">b</span>: <span class="hljs-number">1</span> &#125; &#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(target, source);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(target); <span class="hljs-comment">// &#123; a: &#123; b: 1 &#125; &#125;;</span><br></code></pre></td></tr></table></figure>
+
+<p>适用：对象</p>
+<p>特点：</p>
+<ul>
+<li>它不会拷贝对象的继承属性；</li>
+<li>它不会拷贝对象的不可枚举的属性；</li>
+<li>可以拷贝 <code>Symbol</code> 类型的属性。</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">let</span> obj1 = &#123; <span class="hljs-attr">a</span>:&#123; <span class="hljs-attr">b</span>:<span class="hljs-number">1</span> &#125;, <span class="hljs-attr">sym</span>:<span class="hljs-title class_">Symbol</span>(<span class="hljs-number">1</span>)&#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperty</span>(obj1, <span class="hljs-string">&#x27;innumerable&#x27;</span> ,&#123;<br>    <span class="hljs-attr">value</span>:<span class="hljs-string">&#x27;不可枚举属性&#x27;</span>,<br>    <span class="hljs-attr">enumerable</span>:<span class="hljs-literal">false</span><br>&#125;);<br><span class="hljs-keyword">let</span> obj2 = &#123;&#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(obj2,obj1)<br>obj1.<span class="hljs-property">a</span>.<span class="hljs-property">b</span> = <span class="hljs-number">2</span>;<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;obj1&#x27;</span>,obj1);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;obj2&#x27;</span>,obj2);<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/copy1.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="方法2：扩展运算符"><a href="#方法2：扩展运算符" class="headerlink" title="方法2：扩展运算符"></a>方法2：扩展运算符</h3><p>以利用 JS 的扩展运算符，在构造对象的同时完成浅拷贝的功能。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-comment">/* 对象的拷贝 */</span><br><span class="hljs-keyword">let</span> obj1 = &#123;<span class="hljs-attr">a</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">b</span>:&#123;<span class="hljs-attr">c</span>:<span class="hljs-number">1</span>&#125;&#125;<br><span class="hljs-keyword">let</span> obj2 = &#123;...obj1&#125;<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(obj2.<span class="hljs-property">b</span> === obj1.<span class="hljs-property">b</span>)  <span class="hljs-comment">// true</span><br><br><span class="hljs-comment">/* 数组的拷贝 */</span><br><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">1</span>,[<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]];<br><span class="hljs-keyword">let</span> newArr = [...arr]; <span class="hljs-comment">//跟arr.slice()是一样的效果</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(newArr[<span class="hljs-number">1</span>] === arr[<span class="hljs-number">1</span>])<br></code></pre></td></tr></table></figure>
+
+<p>适用：数组、对象</p>
+<p>特点：</p>
+<ul>
+<li>它不会拷贝对象的继承属性；</li>
+<li>它不会拷贝对象的不可枚举的属性；</li>
+<li>可以拷贝 <code>Symbol</code> 类型的属性。</li>
+</ul>
+<h3 id="方法3：concat方法"><a href="#方法3：concat方法" class="headerlink" title="方法3：concat方法"></a>方法3：<strong>concat方法</strong></h3><p><code>concat</code>只能用于数组的浅拷贝，使用场景比较局限</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br><span class="hljs-keyword">let</span> newArr = arr.<span class="hljs-title function_">concat</span>();<br>newArr[<span class="hljs-number">1</span>] = <span class="hljs-number">100</span>;<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(arr);  <span class="hljs-comment">// [ 1, 2, 3 ]</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(newArr); <span class="hljs-comment">// [ 1, 100, 3 ]</span><br></code></pre></td></tr></table></figure>
+
+<p>适用：数组</p>
+<h3 id="方法4：slice方法"><a href="#方法4：slice方法" class="headerlink" title="方法4：slice方法"></a>方法4：<strong>slice方法</strong></h3><p><code>slice</code>方法也比较有局限性，因为<code>它仅仅针对数组类型</code>。slice方法会返回一个新的数组对象，并且不会修改原数组。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, &#123;<span class="hljs-attr">val</span>: <span class="hljs-number">4</span>&#125;];<br><span class="hljs-keyword">let</span> newArr = arr.<span class="hljs-title function_">slice</span>();<br>newArr[<span class="hljs-number">2</span>].<span class="hljs-property">val</span> = <span class="hljs-number">1000</span>;<br>newArr[<span class="hljs-number">1</span>].<span class="hljs-property">val</span> = <span class="hljs-number">1000</span>;<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(arr);  <span class="hljs-comment">//[ 1, 2, &#123; val: 1000 &#125; ]</span><br></code></pre></td></tr></table></figure>
+
+<p>适用：数组</p>
+<h3 id="方法5：手工实现一个浅拷贝"><a href="#方法5：手工实现一个浅拷贝" class="headerlink" title="方法5：手工实现一个浅拷贝"></a>方法5：手工实现一个浅拷贝</h3><p>思路：</p>
+<ul>
+<li>对基础类型做一个最基本的一个拷贝；</li>
+<li>对引用类型开辟一个新的存储，并且拷贝一层对象属性。</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">const</span> <span class="hljs-title function_">shallowClone</span> = (<span class="hljs-params">target</span>) =&gt; &#123;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> target === <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; target !== <span class="hljs-literal">null</span>) &#123;<br>    <span class="hljs-keyword">const</span> cloneTarget = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(target) ? []: &#123;&#125;;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> prop <span class="hljs-keyword">in</span> target) &#123; <span class="hljs-comment">// 会遍历除Symbol以外的所有可枚举类型（包括继承属性）</span><br>      <span class="hljs-keyword">if</span> (target.<span class="hljs-title function_">hasOwnProperty</span>(prop)) &#123; <span class="hljs-comment">// 判断是否是自己的属性，而不是继承的</span><br>          cloneTarget[prop] = target[prop];<br>      &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> cloneTarget;<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">return</span> target;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>适用：对象、数组</p>
+<p>特点：</p>
+<ul>
+<li>它不会拷贝对象的继承属性；</li>
+<li>它不会拷贝对象的不可枚举的属性；</li>
+<li>它不会拷贝 <code>Symbol</code> 类型的属性。</li>
+</ul>
+<h2 id="二、深拷贝"><a href="#二、深拷贝" class="headerlink" title="二、深拷贝"></a>二、深拷贝</h2><h3 id="方式1：JSON-parse-JSON-stringify-XXX-（最简单的深拷贝）"><a href="#方式1：JSON-parse-JSON-stringify-XXX-（最简单的深拷贝）" class="headerlink" title="方式1：JSON.parse(JSON.stringify(XXX))（最简单的深拷贝）"></a>方式1：JSON.parse(JSON.stringify(XXX))<strong>（最简单的深拷贝）</strong></h3><p><code>JSON.parse(JSON.stringify(XXX))</code>是目前开发过程中最简单的深拷贝方法，其实就是把一个对象序列化成为 <code>JSON</code>的字符串，并将对象里面的内容转换成字符串，最后再用 <code>JSON.parse()</code>的方法将 <code>JSON</code>字符串生成一个新的对象。看示例：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">let</span> a = &#123;<br>    <span class="hljs-attr">age</span>: <span class="hljs-number">1</span>,<br>    <span class="hljs-attr">jobs</span>: &#123;<br>        <span class="hljs-attr">first</span>: <span class="hljs-string">&#x27;FE&#x27;</span><br>    &#125;<br>&#125;<br><span class="hljs-keyword">let</span> b = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(a))<br>a.<span class="hljs-property">jobs</span>.<span class="hljs-property">first</span> = <span class="hljs-string">&#x27;native&#x27;</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(b.<span class="hljs-property">jobs</span>.<span class="hljs-property">first</span>) <span class="hljs-comment">// FE</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>但是该方法也是有局限性的</strong>：</p>
+<ul>
+<li>会忽略 <code>undefined</code></li>
+<li>会忽略 <code>symbol</code></li>
+<li>不能序列化函数</li>
+<li>无法拷贝不可枚举的属性</li>
+<li>无法拷贝对象的原型链</li>
+<li>拷贝 <code>RegExp</code> 引用类型会变成空对象</li>
+<li>拷贝 <code>Date</code> 引用类型会变成字符串</li>
+<li>对象中含有 <code>NaN</code>、<code>Infinity</code> 以及 <code>Infinity</code>，<code>JSON</code> 序列化的结果会变成 <code>null</code></li>
+<li>不能解决循环引用的对象，即对象成环 (<code>obj[key] = obj</code>)。</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Obj</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">func</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123; <span class="hljs-title function_">alert</span>(<span class="hljs-number">1</span>) &#125;;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">obj</span> = &#123;<span class="hljs-attr">a</span>:<span class="hljs-number">1</span>&#125;;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">arr</span> = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>];<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">und</span> = <span class="hljs-literal">undefined</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">reg</span> = <span class="hljs-regexp">/123/</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">date</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-number">0</span>);<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">NaN</span> = <span class="hljs-title class_">NaN</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">infinity</span> = <span class="hljs-title class_">Infinity</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">sym</span> = <span class="hljs-title class_">Symbol</span>(<span class="hljs-number">1</span>);<br>&#125;<br><span class="hljs-keyword">let</span> obj1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Obj</span>();<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperty</span>(obj1,<span class="hljs-string">&#x27;innumerable&#x27;</span>,&#123;<br>  <span class="hljs-attr">enumerable</span>:<span class="hljs-literal">false</span>,<br>  <span class="hljs-attr">value</span>:<span class="hljs-string">&#x27;innumerable&#x27;</span><br>&#125;);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;obj1&#x27;</span>,obj1);<br><span class="hljs-keyword">let</span> str = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(obj1);<br><span class="hljs-keyword">let</span> obj2 = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(str);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;obj2&#x27;</span>,obj2);<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/copy2.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用 <code>JSON.parse(JSON.stringify(XXX))</code>方法实现深拷贝对象，虽然到目前为止还有很多无法实现的功能，但是这种方法足以满足日常的开发需求，并且是最简单和快捷的。</p>
+<h3 id="方式2：基础班（手写递归实现）"><a href="#方式2：基础班（手写递归实现）" class="headerlink" title="方式2：基础班（手写递归实现）"></a>方式2：基础班（<strong>手写递归实现</strong>）</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">deepClone</span>(<span class="hljs-params">obj</span>) &#123; <br>  <span class="hljs-keyword">let</span> cloneObj = &#123;&#125;<br>  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> obj) &#123;           <span class="hljs-comment">//会遍历除Symbol以外的所有可枚举类型（包括继承属性）</span><br>    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> obj[key] ===<span class="hljs-string">&#x27;object&#x27;</span>) &#123; <br>      cloneObj[key] = <span class="hljs-title function_">deepClone</span>(obj[key])  <span class="hljs-comment">//是对象就再次调用该函数递归</span><br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      cloneObj[key] = obj[key]  <span class="hljs-comment">//基本类型的话直接复制值</span><br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> cloneObj<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>缺点：</p>
+<ul>
+<li>这个深拷贝函数并不能复制不可枚举的属性以及 <code>Symbol</code> 类型；</li>
+<li>这种方法<code>只是针对普通的引用类型的值做递归复制</code>，而对于 <code>Array、Date、RegExp、Error、Function</code> 这样的引用类型并不能正确地拷贝；</li>
+<li>对象的属性里面成环，即<code>循环引用没有解决</code>。</li>
+</ul>
+<h3 id="方法3：改进版（改进后递归实现）"><a href="#方法3：改进版（改进后递归实现）" class="headerlink" title="方法3：改进版（改进后递归实现）"></a><strong>方法3：改进版（改进后递归实现）</strong></h3><p>针对基础版的缺点，我们通过一下方式解决</p>
+<ul>
+<li>针对能够遍历对象的不可枚举属性以及 <code>Symbol</code> 类型，我们可以使用 <code>Reflect.ownKeys</code> 方法；</li>
+<li>当参数为 <code>Date、RegExp</code> 类型，则直接生成一个新的实例返回；</li>
+<li>利用 <code>Object.getOwnPropertyDescriptors()</code> 方法可以获得对象的所有属性（包括其原型上的），以及对应的特性，顺便结合 <code>Object.create</code> 方法创建一个新对象，并继承传入原对象的原型链；</li>
+<li>利用 <code>WeakMap</code> 类型作为 <code>Hash</code> 表，因为 <code>WeakMap</code> 是弱引用类型，可以有效防止内存泄漏（你可以关注一下 <code>Map</code> 和 <code>weakMap</code> 的关键区别，这里要用 <code>weakMap</code>），作为检测循环引用很有帮助，如果存在循环，则引用直接返回 <code>WeakMap</code> 存储的值</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">const</span> <span class="hljs-title function_">isComplexDataType</span> = obj =&gt; (<span class="hljs-keyword">typeof</span> obj === <span class="hljs-string">&#x27;object&#x27;</span> || <span class="hljs-keyword">typeof</span> obj === <span class="hljs-string">&#x27;function&#x27;</span>) &amp;&amp; (obj !== <span class="hljs-literal">null</span>)<br><br><span class="hljs-keyword">const</span> deepClone = <span class="hljs-keyword">function</span> (<span class="hljs-params">obj, hash = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>()</span>) &#123;<br>  <span class="hljs-keyword">if</span> (obj.<span class="hljs-property">constructor</span> === <span class="hljs-title class_">Date</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(obj)       <span class="hljs-comment">// 日期对象直接返回一个新的日期对象</span><br>  &#125;<br><br>  <span class="hljs-keyword">if</span> (obj.<span class="hljs-property">constructor</span> === <span class="hljs-title class_">RegExp</span>)&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RegExp</span>(obj)     <span class="hljs-comment">//正则对象直接返回一个新的正则对象</span><br>  &#125;<br><br>  <span class="hljs-comment">//如果循环引用了就用 weakMap 来解决</span><br>  <span class="hljs-keyword">if</span> (hash.<span class="hljs-title function_">has</span>(obj)) &#123;<br>    <span class="hljs-keyword">return</span> hash.<span class="hljs-title function_">get</span>(obj)<br>  &#125;<br><span class="hljs-comment">// 获取obj对象包括原型对象的所有属性</span><br>  <span class="hljs-keyword">let</span> allDesc = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptors</span>(obj)<br><br>  <span class="hljs-comment">//遍历传入参数所有键的特性</span><br>  <span class="hljs-keyword">let</span> cloneObj = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getPrototypeOf</span>(obj), allDesc)<br><br>  <span class="hljs-comment">// 把cloneObj原型复制到obj上</span><br>  hash.<span class="hljs-title function_">set</span>(obj, cloneObj)<br><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">of</span> <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">ownKeys</span>(obj)) &#123; <span class="hljs-comment">//会遍历所有自身所有属性</span><br>    cloneObj[key] = (<span class="hljs-title function_">isComplexDataType</span>(obj[key]) &amp;&amp; <span class="hljs-keyword">typeof</span> obj[key] !== <span class="hljs-string">&#x27;function&#x27;</span>) ? <span class="hljs-title function_">deepClone</span>(obj[key], hash) : obj[key]<br>  &#125;<br>  <span class="hljs-keyword">return</span> cloneObj<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接下来验证下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">let</span> obj = &#123;<br>  <span class="hljs-attr">num</span>: <span class="hljs-number">0</span>,<br>  <span class="hljs-attr">str</span>: <span class="hljs-string">&#x27;&#x27;</span>,<br>  <span class="hljs-attr">boolean</span>: <span class="hljs-literal">true</span>,<br>  <span class="hljs-attr">unf</span>: <span class="hljs-literal">undefined</span>,<br>  <span class="hljs-attr">nul</span>: <span class="hljs-literal">null</span>,<br>  <span class="hljs-attr">obj</span>: &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;我是一个对象&#x27;</span>, <span class="hljs-attr">id</span>: <span class="hljs-number">1</span> &#125;,<br>  <span class="hljs-attr">arr</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>],<br>  <span class="hljs-attr">func</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123; <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;我是一个函数&#x27;</span>) &#125;,<br>  <span class="hljs-attr">date</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-number">0</span>),<br>  <span class="hljs-attr">reg</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">RegExp</span>(<span class="hljs-string">&#x27;/我是一个正则/ig&#x27;</span>),<br>  [<span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;1&#x27;</span>)]: <span class="hljs-number">1</span>,<br>&#125;;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperty</span>(obj, <span class="hljs-string">&#x27;innumerable&#x27;</span>, &#123;<br>  <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">value</span>: <span class="hljs-string">&#x27;不可枚举属性&#x27;</span> &#125;<br>);<br>obj = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(obj, <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptors</span>(obj))<br>obj.<span class="hljs-property">loop</span> = obj    <span class="hljs-comment">// 设置loop成循环引用的属性</span><br><span class="hljs-keyword">let</span> cloneObj = <span class="hljs-title function_">deepClone</span>(obj)<br>cloneObj.<span class="hljs-property">arr</span>.<span class="hljs-title function_">push</span>(<span class="hljs-number">4</span>)<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;obj&#x27;</span>, obj)<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;cloneObj&#x27;</span>, cloneObj)<br></code></pre></td></tr></table></figure>
+<p><img src="/img/copy3.png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Javascript/" class="category-chain-item">Javascript</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JS%E5%9F%BA%E7%A1%80/" class="print-no-link">#JS基础</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JS深拷贝与浅拷贝</div>
+      <div>http://example.com/2022/10/01/JS深拷贝与浅拷贝/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/02/JS%E9%98%B2%E6%8A%96%E4%B8%8E%E8%8A%82%E6%B5%81/" title="JS防抖与节流">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JS防抖与节流</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/30/JS%E4%BC%98%E5%8C%96/" title="JS优化">
+                        <span class="hidden-mobile">JS优化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

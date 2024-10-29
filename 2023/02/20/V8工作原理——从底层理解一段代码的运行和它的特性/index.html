@@ -1,0 +1,825 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="V8工作原理——从底层理解一段代码的运行和它的特性一、编译器和解释器：V8执行JS的基本流程我们首先介绍下编译器和解释器的概念： 由于机器不能理解我们写的代码，所以在代码执行前，需要将代码翻译成机器能懂得机器语言。这时，由于语言又分为编译型语言和解释型语言。 所以编译器就是编译型语言的翻译机，解释器就是解释型语言的翻译机。 这两种不同语言在“翻译”过程中也是有些许区别：  所以我们知道JS的动态类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="V8工作原理——从底层理解一段代码的运行和它的特性">
+<meta property="og:url" content="http://example.com/2023/02/20/V8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E4%BB%8E%E5%BA%95%E5%B1%82%E7%90%86%E8%A7%A3%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81%E7%9A%84%E8%BF%90%E8%A1%8C%E5%92%8C%E5%AE%83%E7%9A%84%E7%89%B9%E6%80%A7/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="V8工作原理——从底层理解一段代码的运行和它的特性一、编译器和解释器：V8执行JS的基本流程我们首先介绍下编译器和解释器的概念： 由于机器不能理解我们写的代码，所以在代码执行前，需要将代码翻译成机器能懂得机器语言。这时，由于语言又分为编译型语言和解释型语言。 所以编译器就是编译型语言的翻译机，解释器就是解释型语言的翻译机。 这两种不同语言在“翻译”过程中也是有些许区别：  所以我们知道JS的动态类">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/V8-exe1.png">
+<meta property="og:image" content="http://example.com/img/V8-exe2.png">
+<meta property="og:image" content="http://example.com/img/V8-exe3.png">
+<meta property="og:image" content="http://example.com/img/V8-exe4.png">
+<meta property="og:image" content="http://example.com/img/V8-exe5.png">
+<meta property="og:image" content="http://example.com/img/V8-exe6.png">
+<meta property="og:image" content="http://example.com/img/V8-exe7.png">
+<meta property="og:image" content="http://example.com/img/V8-exe8.png">
+<meta property="og:image" content="http://example.com/img/V8-exe9.png">
+<meta property="og:image" content="http://example.com/img/V8-exe10.png">
+<meta property="og:image" content="http://example.com/img/V8-exe11.png">
+<meta property="og:image" content="http://example.com/img/V8-exe12.png">
+<meta property="og:image" content="http://example.com/img/V8-exe13.png">
+<meta property="article:published_time" content="2023-02-20T10:48:07.000Z">
+<meta property="article:modified_time" content="2024-10-21T14:37:58.050Z">
+<meta property="article:author" content="Vito">
+<meta property="article:tag" content="浏览器">
+<meta property="article:tag" content="V8引擎">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/V8-exe1.png">
+  
+  
+  
+  <title>V8工作原理——从底层理解一段代码的运行和它的特性 - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="V8工作原理——从底层理解一段代码的运行和它的特性"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-20 18:48" pubdate>
+          2023年2月20日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          41 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">V8工作原理——从底层理解一段代码的运行和它的特性</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="V8工作原理——从底层理解一段代码的运行和它的特性"><a href="#V8工作原理——从底层理解一段代码的运行和它的特性" class="headerlink" title="V8工作原理——从底层理解一段代码的运行和它的特性"></a>V8工作原理——从底层理解一段代码的运行和它的特性</h1><h2 id="一、编译器和解释器：V8执行JS的基本流程"><a href="#一、编译器和解释器：V8执行JS的基本流程" class="headerlink" title="一、编译器和解释器：V8执行JS的基本流程"></a>一、<strong>编译器和解释器：V8</strong>执行JS的基本流程</h2><p><strong>我们首先介绍下编译器和解释器的概念：</strong></p>
+<p>由于机器不能理解我们写的代码，所以在代码执行前，需要将代码翻译成机器能懂得机器语言。这时，由于语言又分为编译型语言和解释型语言。</p>
+<p>所以编译器就是编译型语言的翻译机，解释器就是解释型语言的翻译机。</p>
+<p>这两种不同语言在“翻译”过程中也是有些许区别：</p>
+<p><img src="/img/V8-exe1.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以我们知道JS的动态类型的弱类型语言，按照编译方式分类它也属于解释类型语言。</p>
+<p><strong>解释类型语言在编译时就需要我们的解释器来编译</strong>，流程大致为：</p>
+<p><img src="/img/V8-exe2.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li><strong>词法分析（Tokenizing）</strong>：词法分析器（Lexer）将JavaScript代码转换为一系列Token。</li>
+<li><strong>语法分析（Parsing）</strong>：语法分析器（Parser）将Token序列转换为抽象语法树（AST），在，生成AST的过程中，会判断语法是否正确，同时根据语法结构构建出代码的逻辑结构。</li>
+<li><strong>预处理器（Preprocessor）：</strong>在AST上进行变量声明提升、函数声明提升等操作。</li>
+<li><strong>执行上下文的生成（Execution Context）：</strong>V8会在执行上下文中生成变量环境和词法环境，并将他们连接起来形成作用域链，并将其保存在执行上下文中以便在程序执行时使用。</li>
+<li><strong>字节码生成（Bytecode Generation）</strong>：将语法树转换成字节码。字节码是一种类似于汇编语言的中间代码，它比源代码更加容易执行。</li>
+<li><strong>优化（Optimization）</strong>：V8引擎会通过执行上下文信息对字节码进行优化，以提高代码的执行效率。优化的方式包括内联函数、去除冗余代码等。</li>
+<li><strong>解释执行（Interpreter）：</strong>V8引擎会先使用解释器对字节码进行执行。解释器是一种逐行执行字节码的方式，它可以快速执行代码，但效率较低。</li>
+<li><strong>JIT编译（Just-In-Time Compilation）</strong>：V8引擎会在解释器的基础上，使用TurboFan编译器对热点代码进行JIT编译( 即时编译 )，直接生成机器码，方便下次遇见相同代码可以直接<strong>热点代码是指经常被执行的代码，它们会被优先编译，以提高执行效率。</strong></li>
+<li><strong>优化编译（Optimized Compilation）</strong>：V8引擎会对热点代码进行深度优化，以进一步提高执行效率。</li>
+</ul>
+<p><img src="/img/V8-exe3.png" srcset="/img/loading.gif" lazyload></p>
+<blockquote>
+<ol>
+<li>token：指的是语法上不可能再分的、最小的单个字符或字符串。例如如下代码：**<code>var myBlog = &quot;Vito&quot;</code>**，这段代码的token就分别为：“var”、”myBlog”、“=”、“Vito”</li>
+</ol>
+</blockquote>
+<ol>
+<li>字节码：它是介于 AST 和机器码之间的一种代码，换句话说字节码就是解释器自己能懂得语言，而如果想要机器也能懂，就需要通过解释器将字节码转换为机器码后才能执行</li>
+<li>热点代码：一段代码被重复执行多次，这种就称为热点代码。</li>
+<li>解释器 Ignition 是点火器的意思。编译器 TurboFan 是涡轮增压的意思。寓意着代码启动时通过点火器慢慢发动，一旦启动，涡轮增压介入，其执行效率随着执行时间越来越高效率，因为热点代码都被编译器 TurboFan 转换了机器码，直接执行机器码就省去了字节码“翻译”为机器码的过程。</li>
+</ol>
+<blockquote>
+</blockquote>
+<p><strong>疑问：JS为何在执行阶段会有编译器的参与，不应该是解释器来对JS进行执行吗？</strong></p>
+<p>没错，JS是一门解释类型原因，自然它的编辑器肯定也是解释器，原本也是没有编译机来参与的，是因为后期随着时间推移，为了用户的体验，所以通过增加编译器对多次执行的代码块的优化来提升代码编译速度，因此才会有编译器参与。</p>
+<h2 id="二、执行上下文概述"><a href="#二、执行上下文概述" class="headerlink" title="二、执行上下文概述"></a>二、执行上下文概述</h2><p>执行上下文是JavaScript执行一段代码时的运行环境，也可以理解为“容器”，比如调用一个函数，就会进入这个函数的执行上下文，确定该函数在执行期间用到的诸如this、变量、对象以及函数等。</p>
+<p><strong>1.  执行上下文存的类型</strong></p>
+<ul>
+<li>全局执行上下文——全局有且只有一个全局执行上下文，任何不在函数内部的代码都在全局执行上下文中。默认做两件事：1.创建全局window对象；2.设置this的值等于window</li>
+<li>函数执行上下文——每当一个函数被调用，就会为这个函数创建一个函数自己的执行上下文。每当一个新的执行上下文被创建，他会按定义的舜玉执行一系列步骤（后文讨论）。</li>
+<li>Eval 函数执行上下文—— 执行在 <code>eval</code> 函数内部的代码也会有它属于自己的执行上下文，但由于 并不经常使用 <code>eval</code>，所以在这里不作讨论。</li>
+</ul>
+<p><strong>2.  执行上下文中的具体结构</strong></p>
+<p>执行上下文一般会包括<strong>变量环境、词法环境、outer指针、This</strong>等内容。如图所示：</p>
+<p><img src="/img/V8-exe4.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li><strong>词法环境：</strong>它主要用于存储变量标识、函数、对象等各种标识符以及它们的值的<strong>栈结构</strong>，每个词法环境都是由一个<strong>环境记录器</strong>和一个可能的<strong>引用外部词法环境的空值</strong>组成。<ul>
+<li><strong>环境记录器</strong>是存储变量和函数声明的实际位置。</li>
+<li><strong>外部环境的引用</strong>意味着它可以访问其父级词法环境（作用域）。</li>
+</ul>
+</li>
+<li><strong>变量环境：</strong>它是一个特殊的词法环境，所以它具有词法环境所具有的所有组件和结构。</li>
+<li><strong>outer指针：</strong>它指向当前执行上下文所在的<strong>外部执行上下文</strong>，具体来说就是，<strong>指向父级的词法作用域</strong>，所以由它实现了JS的作用域链，以及决定了变量和函数的查找顺序。</li>
+<li><strong>this指针：</strong>它主要用于引用当前执行上下文中的对象，具体作用取决于他在哪里使用，后面会做详细讲解。</li>
+</ul>
+<aside>
+💡 **那“词法环境”和“变量环境”区别是什么呢？
+
+
+<p>区别1：<strong>变量环境主要负责</strong>var声明的变量<strong>和</strong>具名函数<strong>以及</strong>用var声明的函数表达式**，而词法环境主要负责 <strong>let、const 声明的变量</strong>以及 <strong>let 或 const 声明的函数表达式。</strong></p>
+<p><strong>区别2：</strong>变量环境是<strong>动态</strong>，而词法环境是<strong>静态</strong>的，也就是在函数上下文创建时，JS会把所有var声明的变量汇聚到变量环境中，并赋予初始值 undefinded ,而词法环境是依据代码的静态结构创建的，不会有变量环境这种收集声明变量的动态行为，这也是var变量存在<strong>变量提升</strong>的一个底层原理。</p>
+</aside>
+
+<p><strong>3. 执行上下文存在什么数据结构里呢？</strong></p>
+<p>答案——<strong>栈结构（先进后出）</strong></p>
+<p>我们一般成这个存储执行上下文的栈结构称之为<strong>执行栈（调用栈）。</strong></p>
+<h2 id="三、执行上下文的创建过程"><a href="#三、执行上下文的创建过程" class="headerlink" title="三、执行上下文的创建过程"></a>三、执行上下文的创建过程</h2><p>当JS引擎第一次遇到脚本，它会创建一个唯一的的<strong>全局执行上下文</strong>处在栈底位置。然后每当发现一个函数调用时，它就会把这个函数的执行上下文推进栈里，后面以此类推。</p>
+<p>引擎会优先执行处在栈顶的函数，当函数执行结束，他就会从执行栈中弹出，然后继续执行当前处在栈顶的函数以此类推。</p>
+<p>通过一个例子来理解下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">let</span> a = <span class="hljs-string">&#x27;Hello World!&#x27;</span>;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">first</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;在first函数执行上下文里&#x27;</span>);<br>  <span class="hljs-title function_">second</span>();<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;还是在first函数执行上下文里&#x27;</span>);<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">second</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;在second函数执行上下文里&#x27;</span>);<br>&#125;<br><span class="hljs-title function_">first</span>();<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;在全局执行上下文里);</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/V8-exe5.png" srcset="/img/loading.gif" lazyload></p>
+<p>当函数执行上述代码时，首先在调用栈中生成全局执行上下文并把它压入当前执行栈。当遇到 <code>first()</code> 函数调用时，JavaScript 引擎为该函数创建一个新的执行上下文并把它压入当前执行栈的顶部。</p>
+<p>当从 <code>first()</code> 函数内部调用 <code>second()</code> 函数时，JavaScript 引擎为 <code>second()</code> 函数创建了一个新的执行上下文并把它压入当前执行栈的顶部。当 <code>second()</code> 函数执行完毕，它的执行上下文会从当前栈弹出，并且控制流程到达下一个执行上下文，即 <code>first()</code> 函数的执行上下文。</p>
+<p>当 <code>first()</code> 执行完毕，它的执行上下文从栈弹出，控制流程到达全局执行上下文。一旦所有代码执行完毕，JavaScript 引擎从当前栈中移除全局执行上下文。</p>
+<h2 id="四、从执行上下文角度看“块级作用域”"><a href="#四、从执行上下文角度看“块级作用域”" class="headerlink" title="四、从执行上下文角度看“块级作用域”"></a>四、从执行上下文角度看“块级作用域”</h2><p>块级作用域主要是依赖词法环境的栈结构来实现，当JS引擎扫描到函数、if语句、for循环等存在大括号包裹的，会把里面用 let 或者 const 声明的变量包裹在一个新的作用域，并推入到词法环境的栈结构里，以此类推。</p>
+<p>在执行代码的时候，如果遇到变量引用，就从词法作用域的栈顶依次查找变量，直到找到该变量或者到达全局作用域为止。</p>
+<p>下面看一段例子来理解下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span><br>    <span class="hljs-keyword">let</span> b = <span class="hljs-number">2</span><br>    &#123;<br>      <span class="hljs-keyword">let</span> b = <span class="hljs-number">3</span><br>      <span class="hljs-keyword">var</span> c = <span class="hljs-number">4</span><br>      <span class="hljs-keyword">let</span> d = <span class="hljs-number">5</span><br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a)<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(b)<br>    &#125;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(b) <br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(c)<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(d)<br>&#125;   <br><span class="hljs-title function_">foo</span>()<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li><p>JS引擎进行词法分析和语法分析，首先将所有var声明的变量进行变量提升并赋予初始值undefined，并且扫描到let声明的变量b并将包裹成一个新作用域中并推入词法作用域的栈结构中</p>
+<p><img src="/img/V8-exe6.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>继续扫描，遇到赋值操作就直接赋值，当扫描到大括号时候，生成新的作用域并将里面的对象放入该作用域中，并推入词法作用域的栈中</p>
+<p><img src="/img/V8-exe7.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>扫描结束后，执行上下文如下图所示：</p>
+<p><img src="/img/V8-exe8.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>然后就是代码执行阶段，首先遇到 console.log( a )，就需要在词法环境和变量环境中查找变量a的值了，具体查找方式是：<strong>沿着词法环境的栈顶向下查询，如果在词法环境中的某个块中查找到了，就直接返回给JavaScript引擎，如果没有查找到，那么继续在变量环境中查找。</strong>最终我们找到 a = 1 , 打印结果，后面执行完代码块后，词法作用域里对相应的作用域从栈顶弹出，后面的执行以此类推，最后的打印结果如下：</p>
+</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-comment">// 1</span><br><span class="hljs-comment">// 3</span><br><span class="hljs-comment">// 2</span><br><span class="hljs-comment">// 4</span><br><span class="hljs-comment">// Uncaught ReferenceError: d is not defined</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="五、从执行上下文角度看-“暂时性死区”和“变量提升”"><a href="#五、从执行上下文角度看-“暂时性死区”和“变量提升”" class="headerlink" title="五、从执行上下文角度看 “暂时性死区”和“变量提升”"></a>五、从执行上下文角度看 “暂时性死区”和“变量提升”</h2><p><strong>由于变量环境的变量和函数声明是代码执行过程中动态创建的，</strong>也就是在函数上下文创建时，JS会把所有var声明的变量汇聚到变量环境中，并赋予初始值 undefinded , 这也就是为什么我们可以在var声明变量前可以使用变量，这个现象也被称为“变量提升”</p>
+<p><strong>由于词法环境式依据代码的静态结构创建的，不是代码执行时候创建的</strong>，不会有变量环境这种收集声明变量的动态行为，所以如果在 let 或者 const 声明的变量之前调用会报”ReferrenceError”的报错。</p>
+<p>例1：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a)<br><span class="hljs-keyword">let</span> a = <span class="hljs-string">&quot;123&quot;</span> <br><br><span class="hljs-comment">//output：Uncaught ReferenceError: a is not defined</span><br></code></pre></td></tr></table></figure>
+
+<p>这个例子很容易就能看出来，变量没有提升，在变量声明前使用变量，肯定报错。</p>
+<p>那么看下例2：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> a = <span class="hljs-number">123</span><br>&#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a) <br>  <span class="hljs-keyword">let</span> a = <span class="hljs-string">&quot;123456&quot;</span><br>&#125;<br><br><span class="hljs-comment">//output: Uncaught ReferenceError: Cannot access &#x27;a&#x27; before initialization</span><br></code></pre></td></tr></table></figure>
+
+<p>通常情况下，我们会觉得a 应该根据作用域链向上找然后打印123。很显然没有搞懂执行上下文的编译过程，那么我们画图来理解下报错的原因。</p>
+<p>首先，我们需要理解声明和赋值是两个操作，先进行声明再进行赋值（这里不是指统一声明和统一赋值），具体看以下过程：</p>
+<ol>
+<li><p>扫描所有var声明的变量，并进行变量提升</p>
+<p><img src="/img/V8-exe9.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>进入一个块级作用域，在这个块级作用域中查找所有let或者const变量并进行声明但不赋值</p>
+<p><img src="/img/V8-exe10.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>开始执行块级作用域的代码，遇到console.log( a )，JS引擎首先从词法环境从上到下依次查询，发现a还没有进行赋值，抛出错误： Cannot access ‘a’ before initialization</p>
+</li>
+</ol>
+<p><strong>总结：</strong>一旦进入一个新块级作用域所有变量会<strong>优先使用作用域内部的变量</strong>，<strong>不分在声明前还是后</strong>，所以，在这个作用域中如果存在声明赋值之前使用该变量，就会出现暂时性死区，声明之后使用就不会出现。</p>
+<h2 id="六、从执行上下文的角度看“作用域”和“作用域链”"><a href="#六、从执行上下文的角度看“作用域”和“作用域链”" class="headerlink" title="六、从执行上下文的角度看“作用域”和“作用域链”"></a>六、从执行上下文的角度看“作用域”和“作用域链”</h2><p>首先，要了解作用域链就必须先了解什么是作用域，<strong>作用域也被称之为词法作用域</strong>，它是静态的，也就是说<strong>作用域是在代码定义的时候就已经形成了</strong>，所以作用域是由代码函数中的位置决定的。</p>
+<p>那作用域链，就是将所有作用域连接在一起，它主要是通过执行上下文里的outer实现的，<strong>通过outer指向其父级作用域，以此类推，就实现了作用域的串联，即作用域链。</strong></p>
+<p>通过实例来感受下作用域和作用域链：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">bar</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">var</span> myName = <span class="hljs-string">&quot;1111&quot;</span><br>    <span class="hljs-keyword">let</span> test1 = <span class="hljs-number">100</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">let</span> myName = <span class="hljs-string">&quot;2222&quot;</span><br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(test)<br>    &#125;<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">var</span> myName = <span class="hljs-string">&quot; 3333&quot;</span><br>    <span class="hljs-keyword">let</span> test = <span class="hljs-number">2</span><br>    &#123;<br>        <span class="hljs-keyword">let</span> test = <span class="hljs-number">3</span><br>        <span class="hljs-title function_">bar</span>()<br>    &#125;<br>&#125;<br><span class="hljs-keyword">var</span> myName = <span class="hljs-string">&quot;4444&quot;</span><br><span class="hljs-keyword">let</span> myAge = <span class="hljs-number">10</span><br><span class="hljs-keyword">let</span> test = <span class="hljs-number">1</span><br><span class="hljs-title function_">foo</span>()<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li><p>先进行词法分析和语法分析形成该段代码的调用栈中所有执行上下文。</p>
+<p><img src="/img/V8-exe11.png" srcset="/img/loading.gif" lazyload></p>
+<ol>
+<li>然后我们看由于词法作用域是在代码定义时候就确定，所以函数bar的外部引用outer应该是指向全局执行上下文的词法环境。注意，虽然bar函数是在foo函数内部执行的，但它的词法作用域是不会变的，因此打印test时，test变量的查找顺序如图所示，最后输出1</li>
+</ol>
+<p>我们再来理解下这个过程，<strong>词法作用域是代码没有执行就生成了，跟执行位置没有关系，跟声明位置有关系</strong>，调用栈中执行上下文是调用时产生的，调用栈中的执行上下文的位置是跟它的调用顺序有关系。所以，我们只需要知道函数作用域跟函数执行位置没有关系。</p>
+</li>
+</ol>
+<h2 id="七、从执行上下文看“闭包”"><a href="#七、从执行上下文看“闭包”" class="headerlink" title="七、从执行上下文看“闭包”"></a>七、从执行上下文看“闭包”</h2><p>闭包是指那些引用了另一个函数作用域中变量的函数。通常都是在嵌套函数中实现的，也就是说闭包函数就是指被返回出来的那个函数。如图所示，闭包函数是指inner函数，而不是foo函数。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;<br>	<span class="hljs-keyword">var</span> test = <span class="hljs-string">&quot;1111&quot;</span><br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">inner</span> (<span class="hljs-params"></span>) &#123;<br>		<span class="hljs-keyword">return</span> test<br>	&#125;<br>	<span class="hljs-keyword">return</span> inner<br>&#125;<br><br><span class="hljs-keyword">var</span> bar = <span class="hljs-title function_">foo</span>()<br><span class="hljs-title function_">bar</span>()<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;<br>	<span class="hljs-keyword">var</span> test1 = <span class="hljs-string">&quot;1111&quot;</span><br>	<span class="hljs-keyword">var</span> test2 = <span class="hljs-string">&quot;2222&quot;</span><br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">inner</span> (<span class="hljs-params"></span>) &#123;<br>		<span class="hljs-keyword">return</span> test1<br>	&#125;<br>	<span class="hljs-keyword">return</span> inner<br>&#125;<br><br><span class="hljs-keyword">var</span> bar = <span class="hljs-title function_">foo</span>()<br><br><span class="hljs-title function_">bar</span>()<br></code></pre></td></tr></table></figure>
+
+<p>依旧以上述代码为例，我们看下这段代码的执行栈变化：</p>
+<p><img src="/img/V8-exe12.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/V8-exe13.png" srcset="/img/loading.gif" lazyload></p>
+<p>foo函数执行到return语句时foo函数执行上下文转换成closure(foo)函数执行上下文，执行到bar()生成inner函数执行上下文，里面保存对closure函数的引用。</p>
+<p>注意：闭包函数的表示方法可以写成foo(closure)，代表闭包函数仍可以访问foo函数内部的变量。</p>
+<p>至于闭包函数的回收，当闭包不再被任何变量或函数引用时，它就会被垃圾回收机制回收。如果闭包函数被存储在全局变量中，它就会一直存储到程序结束，除非手动删除变量，或者解除这个外部变量的引用( 赋值为null或者重新赋值 )，如果将一个闭包函数保存在函数的局部变量中，它将在函数执行完毕后被销毁。</p>
+<p>如果闭包引用的变量存在循环引用，即外部变量引用了闭包中的变量，而闭包中的变量又引了外部变量，那么这个闭包就无法被垃圾回收机制回收，直到程序结束或者手动删除这些变量。</p>
+<p>接下来看几个循环引用的例子：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">outer</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">var</span> x = <span class="hljs-number">10</span>;<br>  <span class="hljs-keyword">var</span> inner = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(x);<br>  &#125;;<br>  x = &#123; <span class="hljs-attr">inner</span>: inner &#125;;<br>  <span class="hljs-keyword">return</span> inner;<br>&#125;<br><br><span class="hljs-keyword">var</span> closure = <span class="hljs-title function_">outer</span>();<br><span class="hljs-title function_">closure</span>(); <span class="hljs-comment">// 输出 10</span><br>closure.<span class="hljs-title function_">inner</span>(); <span class="hljs-comment">// 输出 10</span><br><span class="hljs-comment">// inner中引用的变量x引用inner导致循环引用</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">function</span> <span class="hljs-title function_">outer</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">const</span> inner = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>    count++;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(count);<br>    <span class="hljs-built_in">setTimeout</span>(inner, <span class="hljs-number">1000</span>);<br>  &#125;<br>  <span class="hljs-keyword">return</span> inner;<br>&#125;<br><br><span class="hljs-keyword">const</span> inner = <span class="hljs-title function_">outer</span>();<br><span class="hljs-title function_">inner</span>();<span class="hljs-comment">//setTimeout引用inner导致循环引用</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="八、从执行上下文角度看-“this”"><a href="#八、从执行上下文角度看-“this”" class="headerlink" title="八、从执行上下文角度看 “this”"></a>八、从执行上下文角度看 “this”</h2><p>this 是执行上下文的一个属性，它的值是在函数执行时动态确定的。在执行上下文中，this 的值取决于函数的调用方式。</p>
+<p>如果函数是作为对象的方法调用，this 就指向该对象；如果函数是作为普通函数调用，this 就指向全局对象 window。在箭头函数中，this 的值是在函数定义时确定的，而不是在函数执行时确定的。</p>
+<p>除了函数的调用方式，this 的值还受到函数的执行环境的影响。在严格模式下，this 的值不会自动转换为全局对象，而是保持 undefined。</p>
+<p>接下来具体介绍下this的种类，一个是全局执行上下文中的this、函数执行上下文中的this和eval执行上下文中中的this。</p>
+<p><strong>全局执行上下文中的this</strong></p>
+<p>全局执行上下文中的 this 是指向 window 对象的。这也是 this 和作用域链的唯一交点，作用域链的最底端包含了 window 对象，全局执行上下文中的 this 也是指向 window 对象</p>
+<p><strong>函数执行上下文中的this</strong></p>
+<p>函数种类有普通函数、构造函数、箭头函数。</p>
+<ul>
+<li>普通函数的this都指向它的调用者，没有调用者就默认指向window</li>
+<li>构造函数的this指向它的实例对象</li>
+<li>箭头普函数的this指向定义时的上下文，而不是调用时的上下文，因为箭头函数没有自己的this。</li>
+</ul>
+<p>需要记住一点：<strong>this 的值在函数执行时才会确定，而不是在函数定义时确定。</strong>跟作用域不一样是代码静态时就确认了。因此，如果函数被传递给另一个函数作为参数，this 的值可能会发生变化。为了避免这种情况，可以使用 bind、call 或 apply 方法来显式地指定函数的上下文。</p>
+<p><strong>eval执行上下文中的this</strong></p>
+<p>略</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/" class="category-chain-item">浏览器</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" class="print-no-link">#浏览器</a>
+      
+        <a href="/tags/V8%E5%BC%95%E6%93%8E/" class="print-no-link">#V8引擎</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>V8工作原理——从底层理解一段代码的运行和它的特性</div>
+      <div>http://example.com/2023/02/20/V8工作原理——从底层理解一段代码的运行和它的特性/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/23/V8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94JS%E4%B8%AD%E4%BB%A3%E7%A0%81%E6%97%B6%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8%E7%9A%84/" title="V8工作原理——JS中代码时如何存储的">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">V8工作原理——JS中代码时如何存储的</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/28/JS%E6%A8%A1%E5%9D%97%E5%8C%96/" title="JS模块化">
+                        <span class="hidden-mobile">JS模块化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

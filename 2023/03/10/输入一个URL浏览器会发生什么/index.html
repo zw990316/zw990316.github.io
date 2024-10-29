@@ -1,0 +1,856 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="输入一个URL浏览器会发生什么一、 DNS域名解析获取IP地址  根 DNS 服务器 ：返回顶级域 DNS 服务器的 IP 地址 顶级域 DNS 服务器：返回权威 DNS 服务器的 IP 地址 权威 DNS 服务器 ：返回相应主机的 IP 地址   DNS的域名查找，在客户端和浏览器，本地DNS之间的查询方式是递归查询；在本地DNS服务器与根域及其子域之间的查询方式是迭代查询；  在客户端输入 U">
+<meta property="og:type" content="article">
+<meta property="og:title" content="输入一个URL浏览器会发生什么">
+<meta property="og:url" content="http://example.com/2023/03/10/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="输入一个URL浏览器会发生什么一、 DNS域名解析获取IP地址  根 DNS 服务器 ：返回顶级域 DNS 服务器的 IP 地址 顶级域 DNS 服务器：返回权威 DNS 服务器的 IP 地址 权威 DNS 服务器 ：返回相应主机的 IP 地址   DNS的域名查找，在客户端和浏览器，本地DNS之间的查询方式是递归查询；在本地DNS服务器与根域及其子域之间的查询方式是迭代查询；  在客户端输入 U">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/urlwork1.png">
+<meta property="og:image" content="http://example.com/img/urlwork2.png">
+<meta property="og:image" content="http://example.com/img/urlwork3.png">
+<meta property="og:image" content="http://example.com/img/urlwork4.png">
+<meta property="og:image" content="http://example.com/img/urlwork5.png">
+<meta property="og:image" content="http://example.com/img/urlwork6.png">
+<meta property="og:image" content="http://example.com/img/urlwork7.png">
+<meta property="og:image" content="http://example.com/img/urlwork8.png">
+<meta property="og:image" content="http://example.com/img/urlwork9.png">
+<meta property="article:published_time" content="2023-03-10T09:05:47.000Z">
+<meta property="article:modified_time" content="2024-10-21T14:37:58.052Z">
+<meta property="article:author" content="Vito">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/urlwork1.png">
+  
+  
+  
+  <title>输入一个URL浏览器会发生什么 - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="输入一个URL浏览器会发生什么"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-10 17:05" pubdate>
+          2023年3月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          28 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">输入一个URL浏览器会发生什么</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="输入一个URL浏览器会发生什么"><a href="#输入一个URL浏览器会发生什么" class="headerlink" title="输入一个URL浏览器会发生什么"></a>输入一个URL浏览器会发生什么</h1><h2 id="一、-DNS域名解析获取IP地址"><a href="#一、-DNS域名解析获取IP地址" class="headerlink" title="一、 DNS域名解析获取IP地址"></a>一、 <strong>DNS域名解析获取IP地址</strong></h2><p><img src="/img/urlwork1.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>根 DNS 服务器 ：返回顶级域 DNS 服务器的 IP 地址</li>
+<li>顶级域 DNS 服务器：返回权威 DNS 服务器的 IP 地址</li>
+<li>权威 DNS 服务器 ：返回相应主机的 IP 地址</li>
+</ul>
+<blockquote>
+<p>DNS的域名查找，在客户端和浏览器，本地DNS之间的查询方式是递归查询；在本地DNS服务器与根域及其子域之间的查询方式是迭代查询；</p>
+</blockquote>
+<p>在客户端输入 URL 后，会有一个<strong>递归查找</strong>的过程，从<code>浏览器缓存中查找-&gt;本地的hosts文件查找-&gt;找本地DNS解析器缓存查找-&gt;本地DNS服务器查找</code>，这个过程中任何一步找到了都会结束查找流程。</p>
+<p><img src="/img/urlwork2.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果本地DNS服务器无法查询到，则根据本地DNS服务器设置的转发器进行查询。若未用转发模式，则<strong>迭代查找</strong>过程如下图：</p>
+<p><img src="/img/urlwork3.png" srcset="/img/loading.gif" lazyload></p>
+<p>结合起来的过程，可以用一个图表示：</p>
+<p><img src="/img/urlwork4.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>在查找过程中，有以下优化点：</strong></p>
+<ul>
+<li>DNS存在着多级缓存，从离浏览器的距离排序的话，有以下几种: <code>浏览器缓存，系统缓存，路由器缓存，IPS服务器缓存，根域名服务器缓存，顶级域名服务器缓存，主域名服务器缓存</code>。</li>
+<li>在域名和 IP 的映射过程中，给了应用基于域名做负载均衡的机会，可以是简单的负载均衡，也可以根据地址和运营商做全局的负载均衡。</li>
+</ul>
+<h2 id="二、-建立TCP连接"><a href="#二、-建立TCP连接" class="headerlink" title="二、 建立TCP连接"></a>二、 <strong>建立TCP连接</strong></h2><p>首先，判断是不是HTTPS，如果是，则HTTPS其实是HTTP + SSL / TLS 两部分组成，也就是在HTTP上又加了一层处理加密信息的模块。服务端和客户端的信息传输都会通过TLS进行加密，所以传输的数据都是加密后的数据</p>
+<p><strong>我们先了解下TCP报文中字段的含义：</strong></p>
+<ul>
+<li>序列号：seq序号占32位，用来标识从计算机A发送到计算机B的数据包的房号，计算机发送数据时对此进行标记</li>
+<li>确认号：ack确认号占32位，客户端和服务器端都可以发送，ack = seq +1</li>
+<li>标志位：每人标志位占用1Bit,共有6个，分别为 URG、ACK、PSH、RST、SYN、FIN，具体含义如下：URG: 紧急指针有效。<ul>
+<li><strong>ACK:确认序号有效。ACK=0代表未确认；ACK=1代表确认。</strong></li>
+<li>PSH: 接收方应该尽快将这人报文交给应用层。</li>
+<li>RST: 重留连接</li>
+<li><strong>SYN: 建立一个新连接，SYN=0表示这是一个普通TCP报文；SYN=1代表是用于连接的SYN报文段。</strong></li>
+<li><strong>FIN: 断开一个连接，FIN=0表示发送方还未完成发送数据，不能请求关闭连接；FIN=1表示发送方完成数据发送，请求关闭连接。</strong></li>
+</ul>
+</li>
+</ul>
+<p><strong>建立TCP连接，进行三次握手。</strong></p>
+<p><img src="/img/urlwork5.png" srcset="/img/loading.gif" lazyload></p>
+<p>最开始的时候客户端和服务器都是处于CLOSED关闭状态。主动打开连接的为客户端，被动打开连接的是服务器。</p>
+<p>TCP服务器进程先创建传输控制块TCB，时刻准备接受客户进程的连接请求，此时服务器就进入了 <strong>LISTEN 监听状态</strong></p>
+<ul>
+<li>第一次握手：*建立连接。客户端发送连接请求报文段，发送建立连接标志位SYN，并选择一个初始序列号seq=x，此时，TCP客户端进程进入了 <strong>SYN-SENT 同步已发送状态</strong>。*【证明客户端的发送能力正常】</li>
+<li>第二次握手：*服务器收到客户端的SYN报文段，需要对这个SYN报文段进行确认，发送建立连接标志位SYN和确认序号有效标志位ACK，并发送确认号seq = x + 1 （表示确认收到客户端SYN报文），同时发送服务器自己的序列号ack=y，此时，TCP服务器进程进入了 <strong>SYN-RCVD 同步收到状态</strong>。*【证明服务器端的接收能力、发送能力正常】</li>
+<li>第三次握手：<em>客户端收到服务器的SYN+ACK报文段，向服务器发送ACK报文段，告诉服务器序号有效，并发送确认号ack = y + 1（表示确认收到服务端SYN报文），<strong>并发送自己的序列号seq = x+1（为了保证服务器不收到重复的连接请求）</strong>，此时，TCP连接建立，客户端进入<strong>ESTABLISHED已建立连接状态</strong>，触发三次握手。</em>【证明客户端的接收能力正常】</li>
+</ul>
+<p><strong>SSL握手过程</strong></p>
+<ul>
+<li>第一阶段 建立安全能力 包括协议版本 会话Id 密码构件 压缩方法和初始随机数</li>
+<li>第二阶段 服务器发送证书 密钥交换数据和证书请求，最后发送请求-相应阶段的结束信号</li>
+<li>第三阶段 如果有证书请求客户端发送此证书 之后客户端发送密钥交换数据 也可以发送证书验证消息</li>
+<li>第四阶段 变更密码构件和结束握手协议</li>
+</ul>
+<p>完成了之后，客户端和服务器端就可以开始传送数据</p>
+<h2 id="三、浏览器发送HTTP请求，并进行资源缓存缓存"><a href="#三、浏览器发送HTTP请求，并进行资源缓存缓存" class="headerlink" title="三、浏览器发送HTTP请求，并进行资源缓存缓存"></a>三、浏览器发送HTTP请求，并进行资源缓存缓存</h2><p><strong>发送HTTP请求，服务器处理请求，返回响应结果</strong></p>
+<blockquote>
+<p>TCP连接建立后，浏览器就可以利用 HTTP／HTTPS 协议向服务器发送请求了。服务器接受到请求，就解析请求头，如果头部有缓存相关信息如if-none-match与if-modified-since，则验证缓存是否有效，若有效则返回状态码为304，若无效则重新返回资源，状态码为200</p>
+</blockquote>
+<p>这里有发生的一个过程是HTTP缓存，具体可以看<a href="/2023/03/01/%E5%89%8D%E7%AB%AF%E7%BC%93%E5%AD%98%E2%80%94%E2%80%94HTTP%E7%BC%93%E5%AD%98/">前端缓存——HTTP缓存</a></p>
+<h2 id="四、-进行四次挥手，关闭TCP连接"><a href="#四、-进行四次挥手，关闭TCP连接" class="headerlink" title="四、 进行四次挥手，关闭TCP连接"></a>四、 <strong>进行四次挥手，关闭TCP连接</strong></h2><p><img src="/img/urlwork6.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>第一次挥手：<em>客户端发出连接释放报文，并且停止发送数据。发送断开连接标志位FIN，同时也发送自己序列号为seq=u（等于前面已经传送过来的数据的最后一个字节的序号加1），此时，客户端进入FIN-WAIT-1（终止等待1）状态</em></li>
+<li>第二次挥手 ：<em>服务器端接收到客户端断开连接请求后，发出序号有效标志位ACK，同时发送确认号ack=u+1<strong>（告诉客户端收到断开请求，但服务器还不能断）</strong>，并且带上自己的序列号seq=v，此时，服务端就进入了CLOSE-WAIT 关闭等待状态</em></li>
+<li>第三次挥手：<em>客户端接收到服务器端的确认请求后，<strong>客户端就会进入FIN-WAIT-2（终止等待2）</strong>状态，等待服务器发送断开连接请求，服务器将最后的数据发送完毕后，就向客户端发送断开连接标志位FIN和确认号有效标志位ACK，同时发送确认号ack = u+ 1（<strong>告诉客户端，服务器可以断开了）</strong>，并带上服务器序列号为seq=w，服务器就进入了LAST-ACK（最后确认）状态，等待客户端的确认。</em></li>
+<li>第四次挥手：<em>客户端收到服务器的断开连接报文后，必须发出确认，发送确认号有效标志位ACK，并发送确认号ack=w+1（告诉服务器，客户端确定断开了），同时发送自己的序列号是seq=u+1，此时，客户端就进入了TIME-WAIT（时间等待）状态，但此时TCP连接还未终止，必须要经过2MSL后（最长报文寿命），当客户端撤销相应的TCB后，客户端才会进入CLOSED关闭状态，服务器端接收到确认报文后，会立即进入CLOSED关闭状态，到这里TCP连接就断开了，四次挥手完成</em></li>
+</ul>
+<aside>
+💡 简版过程
+
+
+<ul>
+<li>A：“任务处理完毕，我希望断开连接。”</li>
+<li>B：“哦，是吗？请稍等，我准备一下。”</li>
+<li>等待片刻后……</li>
+<li>B：“我准备好了，可以断开连接了。”</li>
+<li>A：“好的，谢谢合作。”</aside></li>
+</ul>
+<h2 id="五、-浏览器渲染"><a href="#五、-浏览器渲染" class="headerlink" title="五、 浏览器渲染"></a>五、 <strong>浏览器渲染</strong></h2><p><img src="/img/urlwork7.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>解析 HTML 代码，构建 DOM 树（DOM Tree）, <strong>下载资源，</strong>解析 CSS 代码，构建 CSSOM 树（CSSOM Tree），执行JS脚本</li>
+<li>将 DOM 树和 CSSOM 树合并，生成渲染树 （Render Tree）。</li>
+<li>对渲染树进行布局（Layout），计算每个渲染对象的位置和大小，然后更新渲染树。</li>
+<li>渲染树后面大小或者位置发生改变，将会重新计算，重新进行布局和绘制，我们也称之为重排（回流）、重绘。</li>
+<li>对渲染树进行绘制（Paint），将渲染对象绘制到屏幕上</li>
+</ul>
+<h3 id="1-构建-DOM-树和CSSOM树"><a href="#1-构建-DOM-树和CSSOM树" class="headerlink" title="1. 构建 DOM 树和CSSOM树"></a>1. <strong>构建 DOM 树和CSSOM树</strong></h3><p><img src="/img/urlwork8.png" srcset="/img/loading.gif" lazyload></p>
+<p>渲染引擎将HTML解析为DOM树，将 CSS 解析为CSSOM树。</p>
+<blockquote>
+<p>CSS 样式来源主要有 3 种，分别是通过 link 引用的外部 CSS 文件、style标签内的 CSS、元素的 style 属性内嵌的 CSS。</p>
+</blockquote>
+<p>CSS的解析不影响DOM的解析，二者是同时进行，但由于渲染树必须等DOM树和CSSOM树都解析完成才可以生成，所以CSSOM解析时间过晚或者时间过长可能会影响DOM的渲染，当然CSS还会不影响JS的下载，但会堵塞JS的执行。</p>
+<p>当然JS的位置也会对DOM的解析产生影响，如果DOM在<head>中，并且没有加<code>defer</code>或者<code>async</code>，将会堵塞DOM的解析。</p>
+<p><strong>所以避免css堵塞的方法：</strong>一定要将css的<link>放在<head>中，并且永远在在JS之前，这样才能保证CSS不会影响到后面JS的执行。</p>
+<p><strong>避免JS堵塞的方法：</strong></p>
+<ul>
+<li>将<code>&lt;script&gt;</code>放到<code>&lt;body&gt;</code>下</li>
+<li>放在<code>&lt;head&gt;</code>中为<code>&lt;script&gt;</code>使用<code>defer</code> 或者 <code>async</code> 异步加载JS</li>
+<li>如果注重<code>&lt;script&gt;</code>加载顺序，就是用<code>defer</code></li>
+<li>如果不需要特定的顺序，那就采用<code>async</code></li>
+</ul>
+<h3 id="2-生成渲染树"><a href="#2-生成渲染树" class="headerlink" title="2. 生成渲染树"></a>2. 生成渲染树</h3><p>根据CSSOM树中每个元素样式和DOM元素结合起来，就会生成一个只包<strong>所有可见节点</strong>的样式的渲染树（Render Tree）。</p>
+<h3 id="3-布局"><a href="#3-布局" class="headerlink" title="3. 布局"></a>3. 布局</h3><p><strong>3.1 生成布局树</strong></p>
+<p>计算元素的尺寸和位置信息，确定元素的位置，构建一棵只包含可见元素<strong>布局树（Layout Tree）。</strong></p>
+<blockquote>
+<p>布局树是渲染树的一个子集，用于描述需要进行局部计算元素位置和大小信息</p>
+</blockquote>
+<p>其中，这个过程需要注意的是<strong>重排（回流）</strong>和<strong>重绘，我们看看那些属性会发生重排和重绘：</strong></p>
+<table>
+<thead>
+<tr>
+<th>常见引起重排属性和方法</th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>width</td>
+<td>height</td>
+<td>margin</td>
+<td>padding</td>
+</tr>
+<tr>
+<td>display</td>
+<td>border-width</td>
+<td>border</td>
+<td>position</td>
+</tr>
+<tr>
+<td>overflow</td>
+<td>font-size</td>
+<td>vertical-align</td>
+<td>min-height</td>
+</tr>
+<tr>
+<td>clientWidth</td>
+<td>clientHeight</td>
+<td>clientTop</td>
+<td>clientLeft</td>
+</tr>
+<tr>
+<td>offsetWidth</td>
+<td>offsetHeight</td>
+<td>offsetTop</td>
+<td>offsetLeft</td>
+</tr>
+<tr>
+<td>scrollWidth</td>
+<td>scrollHeight</td>
+<td>scrollTop</td>
+<td>scrollLeft</td>
+</tr>
+<tr>
+<td>scrollIntoView()</td>
+<td>scrollTo()</td>
+<td>getComputedStyle()</td>
+<td></td>
+</tr>
+<tr>
+<td>getBoundingClientRect()</td>
+<td>scrollIntoViewIfNeeded()</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>常见的引起重绘的属性</th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>color</td>
+<td>border-style</td>
+<td>visibility</td>
+<td>background</td>
+</tr>
+<tr>
+<td>text-decoration</td>
+<td>background-image</td>
+<td>background-position</td>
+<td>background-repeat</td>
+</tr>
+<tr>
+<td>outline-color</td>
+<td>outline</td>
+<td>outline-style</td>
+<td>border-radius</td>
+</tr>
+<tr>
+<td>outline-width</td>
+<td>box-shadow</td>
+<td>background-size</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>重排和重绘都会产生性能影响，但重排最为影响性能，因为<strong>重绘不一定导致重排，但重排一定会导致重绘，所以要尽量避免重排。</strong></p>
+<p><strong>3.1.1 如何避免重排？</strong></p>
+<ul>
+<li><strong>样式集中改变</strong></li>
+<li><strong>读写操作集中改变，不要“读”“写”“读”“写”，尽量改成“读”“读” “写”“写”</strong></li>
+<li><strong>DOM离线</strong><ul>
+<li>使用 display:none指会有一次重排重绘，使用visibility : hidden只会有重绘。</li>
+<li>通过 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/DocumentFragment">documentFragment</a> 创建一个 <code>dom</code> 碎片,在它上面批量操作 <code>dom</code>，操作完成之后，再添加到文档中，这样只会触发一次重排和重绘。</li>
+<li>• 复制节点，在副本上工作，然后替换它</li>
+</ul>
+</li>
+<li><strong>脱离文档流，这样只会发生局部的重排和重绘</strong></li>
+<li><strong>优化动画</strong><ul>
+<li>将动画脱离文档流</li>
+<li>启用GPU加速，也就是使用Canvas2D，布局合成, CSS3转换（transitions），CSS3 3D变换（transforms），WebGL，Vedio等</li>
+</ul>
+</li>
+</ul>
+<p><strong>3.2 生成分层树</strong></p>
+<p>页面中有很多复杂的效果，如一些复杂的 3D 变换、页面滚动，或者使用 z-indexing 做 z 轴排序等，为了更加方便地实现这些效果，渲染引擎还需要为特定的节点生成专用的图层，并生成一棵对应的<strong>图层树（LayerTree）</strong>。</p>
+<blockquote>
+<p>图层树（LayerTree）是渲染树的一个子集，用于描述需要进行图层合成的元素的位置和图层之间的关系。</p>
+</blockquote>
+<h3 id="4-绘制"><a href="#4-绘制" class="headerlink" title="4.绘制"></a>4.绘制</h3><p><strong>栅格化</strong></p>
+<p>为每个图层生成<strong>绘制列表</strong>，并将其提交到合成线程，合成线程会按照视口附近的图块来优先生成位图，实际生成位图的操作是由栅格化来执行的。</p>
+<blockquote>
+<p>绘制列表也是渲染树的一个子集，用户描述需要进行绘制的元素和绘制顺序。</p>
+</blockquote>
+<p>所谓栅格化，是指将图块转换为位图</p>
+<p><img src="/img/urlwork9.png" srcset="/img/loading.gif" lazyload></p>
+<p>通常一个页面可能很大，但是用户只能看到其中的一部分，我们把用户可以看到的这个部分叫做视口（viewport）。在有些情况下，有的图层可以很大，比如有的页面你使用滚动条要滚动好久才能滚动到底部，但是通过视口，用户只能看到页面的很小一部分，所以在这种情况下，要绘制出所有图层内容的话，就会产生太大的开销，而且也没有必要。</p>
+<h3 id="6-显示"><a href="#6-显示" class="headerlink" title="6.显示"></a>6.<strong>显示</strong></h3><p>合成线程发送绘制图块命令给浏览器进程。浏览器进程根据指令生成页面，并显示到显示器上，渲染过程完成。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>输入一个URL浏览器会发生什么</div>
+      <div>http://example.com/2023/03/10/输入一个URL浏览器会发生什么/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/12/%E5%B8%B8%E8%A7%81CSS%E5%B8%83%E5%B1%80%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93/" title="常见CSS布局方案总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">常见CSS布局方案总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/08/%E6%B8%85%E9%99%A4%E6%B5%AE%E5%8A%A8/" title="清除浮动">
+                        <span class="hidden-mobile">清除浮动</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

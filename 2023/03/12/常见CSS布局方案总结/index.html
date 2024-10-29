@@ -1,0 +1,878 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="常见CSS布局方案总结一、水平居中方案思路一：利用text-align:center原理：声明text-align:center可以使得子元素的内联元素水平居中。 条件：将子元素都设置为内联元素即可生效，如果子元素不是内联元素需要我们设置display为inline、inline-block、inline-table、inline-flex 123456.father &amp;#123;  text-a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见CSS布局方案总结">
+<meta property="og:url" content="http://example.com/2023/03/12/%E5%B8%B8%E8%A7%81CSS%E5%B8%83%E5%B1%80%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="常见CSS布局方案总结一、水平居中方案思路一：利用text-align:center原理：声明text-align:center可以使得子元素的内联元素水平居中。 条件：将子元素都设置为内联元素即可生效，如果子元素不是内联元素需要我们设置display为inline、inline-block、inline-table、inline-flex 123456.father &amp;#123;  text-a">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-03-12T04:14:07.000Z">
+<meta property="article:modified_time" content="2024-10-21T14:37:58.052Z">
+<meta property="article:author" content="Vito">
+<meta property="article:tag" content="布局">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>常见CSS布局方案总结 - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="常见CSS布局方案总结"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-12 12:14" pubdate>
+          2023年3月12日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">常见CSS布局方案总结</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="常见CSS布局方案总结"><a href="#常见CSS布局方案总结" class="headerlink" title="常见CSS布局方案总结"></a>常见CSS布局方案总结</h1><h2 id="一、水平居中方案"><a href="#一、水平居中方案" class="headerlink" title="一、水平居中方案"></a>一、水平居中方案</h2><h3 id="思路一：利用text-align-center"><a href="#思路一：利用text-align-center" class="headerlink" title="思路一：利用text-align:center"></a>思路一：利用<code>text-align:center</code></h3><p><strong>原理：</strong>声明<code>text-align:center</code>可以使得子元素的<strong>内联元素</strong>水平居中。</p>
+<p><strong>条件：</strong>将子元素都设置为内联元素即可生效，如果子元素不是内联元素需要我们设置display为<code>inline</code>、<code>inline-block</code>、<code>inline-table</code>、<code>inline-flex</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>  <span class="hljs-attribute">text-align</span>:center<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">display</span>: inline; // 值还可以为 inline-block 、inline-<span class="hljs-selector-tag">table</span> 、inline-<span class="hljs-attribute">flex</span>、inline-<span class="hljs-attribute">grid</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路二：利用margin：0-auto"><a href="#思路二：利用margin：0-auto" class="headerlink" title="思路二：利用margin：0 auto"></a>思路二：利用<code>margin：0 auto</code></h3><p><strong>原理：</strong>利用CSS的盒模型和外边距的特性，当一个块级元素左右外边距都设置为auto，浏览器会自动计算出左右外边距的值，使得水平方向居中。</p>
+<ul>
+<li><p>方式一：在元素定宽的情况下，<code>margin：0 auto</code>可以生效</p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	//无<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">100px</span>;<br>  <span class="hljs-attribute">margin</span>:<span class="hljs-number">0</span> auto;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>方式二：不需要元素定宽，只是让元素处于<code>FFC (flex formatting context)</code> ，或者 <code>GFC (grid formatting context)</code> 中，也就是父元素display属性取<code>flex</code>、<code>inline-flex</code>、<code>grid</code>、<code>inline-grid</code>，<code>margin：0 auto</code>可以生效</p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">display</span>:flex; // 值还可以为inline-<span class="hljs-attribute">flex</span>、<span class="hljs-attribute">grid</span>、inline-<span class="hljs-attribute">grid</span><br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">margin</span>:<span class="hljs-number">0</span> auto;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="思路三：绝对定位"><a href="#思路三：绝对定位" class="headerlink" title="思路三：绝对定位"></a>思路三：绝对定位</h3><p><strong>原理：</strong>通过绝对定位将元素脱离文档流，利用left将元素定位到距离父元素左边界-50%地方，然后通过修正自身宽度的偏移使得水平方向居中。</p>
+<ul>
+<li><p>方式一：绝对定位 +<code>left:50%</code>+ <code>margin-left:-50% * 元素宽度</code></p>
+<p>  条件：子元素必须定宽度</p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">position</span>:relative;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">position</span>:absolute;<br>	<span class="hljs-attribute">left</span>:<span class="hljs-number">50%</span>;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">100px</span>;<br>	<span class="hljs-attribute">margin-left</span>:-<span class="hljs-number">50px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>方式二：绝对定位 + <code>left:50%</code>+ <code>transform:translateX(-50%);</code></p>
+<p>  条件：适用于所有场景，不需要元素定宽度</p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">position</span>:relative;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">position</span>:absolute;<br>	<span class="hljs-attribute">left</span>:<span class="hljs-number">50%</span>;<br>	<span class="hljs-attribute">transform</span>:<span class="hljs-built_in">translateX</span>(-<span class="hljs-number">50%</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="思路四：flex布局"><a href="#思路四：flex布局" class="headerlink" title="思路四：flex布局"></a><strong>思路四：flex布局</strong></h3><p>原理：利用<code>FFC (flex formatting context)</code> 下，水平的主轴<code>justify-content</code>属性特性</p>
+<p>条件：适用于所有场景，不需要元素定宽度</p>
+<p>方式：设置父元素为<code>flex</code>布局，且设置<code>justify-content: center</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">display</span>:flex;<br>	<span class="hljs-attribute">justify-content</span>:cneter<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  // 无<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路五：grid布局"><a href="#思路五：grid布局" class="headerlink" title="思路五：grid布局"></a>思路五：grid布局</h3><p>原理：利用<code>GFC (grid formatting context)</code>  下，水平的主轴<code>justify-content</code>属性特性</p>
+<p>条件：适用于所有场景，不需要元素定宽度</p>
+<p>方式：设置父元素为grid布局，且设置<code>justify-content: center</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">display</span>:flex;<br>	<span class="hljs-attribute">justify-content</span>:cneter<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  // 无<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>小结：</p>
+<ul>
+<li>行内元素，给其父元素设置<code>text-align:center</code></li>
+<li>定宽块级元素，该元素设置<code>margin:0 auto</code></li>
+<li>定宽块级元素，设置父元素为<code>position: relative</code>，子元素<code>position: absulote</code>和<code>left:50%</code>;加<code>margin-left:-50%*宽度</code>；</li>
+<li>不定宽块级元素，设置父元素为<code>position: relative</code>，子元素<code>position: absulote;</code> <code>left: 50%;</code> <code>transform: translateX(-50%);</code></li>
+<li>不定宽块级元素，设置父元素为<code>flex</code>布局，子元素设置<code>margin:0 auto</code>即可</li>
+<li>不定宽块级元素，设置父元素为<code>flex</code>布局，且设置<code>justify-content: center</code></li>
+<li>不定宽块级元素，设置父元素为<code>grid</code>布局，且设置<code>justify-content: center</code></li>
+</ul>
+<h2 id="二、垂直居中方案"><a href="#二、垂直居中方案" class="headerlink" title="二、垂直居中方案"></a>二、垂直居中方案</h2><h3 id="思路一：利用line-height：父元素高度"><a href="#思路一：利用line-height：父元素高度" class="headerlink" title="思路一：利用line-height：父元素高度"></a>思路一：利用<code>line-height：父元素高度</code></h3><p>原理：<code>line-height：父元素高度</code>让行高等于盒子高度，从而让行内元素垂直居中</p>
+<p>条件：适用于内联元素，也就是<code>display:inline | inline-block | inline-flex | inline-grid，由于line-height具有继承性，防止子元素的高受影响</code>，子元素应该设置<code>line-height:子元素高度</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">height</span>：<span class="hljs-number">200px</span>;<br>	<span class="hljs-attribute">line-height</span>:<span class="hljs-number">200px</span>;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">50px</span>;<br>	<span class="hljs-attribute">line-height</span>:<span class="hljs-number">50px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路二：利用vertical-align-middle"><a href="#思路二：利用vertical-align-middle" class="headerlink" title="思路二：利用vertical-align:middle"></a>思路二：利用<code>vertical-align:middle</code></h3><p>原理：vertical-align：middle可以使元素<strong>在表格单元中</strong>或者行内元素垂直居中。该属性原理是<strong><strong>行内元素的基线相对于该元素所在行的基线的垂直对齐。这会使元素降低而不是升高。在表单元格中，这个属性会设置单元格框中的单元格内容的对齐方式。</strong></strong></p>
+<p>条件：<strong>元素必须为内联元素，或者父元素是表格单元</strong>，也就是<code>display:inline | inline-block | inline-flex | inline-grid | table-cell</code></p>
+<ul>
+<li><p>方式一：<strong>父元素</strong>设为<code>display: tabel-cell</code>，并且设置<code>vertical-align:middle</code></p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span><br>	display:table_cell;<br>	vartical-align:middle;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  // 无<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>方式二：<strong>元素</strong>设置为内联元素，并且设置<code>vertical-align:middle</code>，增加一个辅助DOM来改变基线。</p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span><br>	font-size: <span class="hljs-number">0</span>;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">display</span>:inline-block;<br>	<span class="hljs-attribute">vertical-align</span>:middle;<br>&#125;<br><span class="hljs-selector-class">.father</span><span class="hljs-selector-pseudo">::before</span>&#123;<br>	<span class="hljs-attribute">content</span>:<span class="hljs-string">&#x27;&#x27;</span>;<br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">100%</span>;<br>	<span class="hljs-attribute">display</span>:inline-block;<br>	<span class="hljs-attribute">vertical-align</span>:middle;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>vertical-align找基准元素的原则：</strong>同一行中最高的那个inline box就是这一行的基准元素，这也就解释为什么需要辅助元素来占满父元素。</p>
+<p><strong>注意：</strong>inline-block元素间有空格或是换行会产生间隙，使用<code>font-size: 0;</code>可去除</p>
+<h3 id="思路三：子元素使用margin：auto-0"><a href="#思路三：子元素使用margin：auto-0" class="headerlink" title="思路三：子元素使用margin：auto 0"></a>思路三：子元素使用<code>margin：auto 0</code></h3><p><strong>原理：</strong>利用CSS的盒模型和外边距的特性，当一个块级元素<strong>上下</strong>外边距都设置为auto，浏览器会自动计算出左右外边距的值，使得垂直方向居中。</p>
+<p><strong>条件：</strong>不需要确定元素高度，但是必须让元素处于<code>FFC (flex formatting context)</code> ，或者 <code>GFC (grid formatting context)</code> 中，也就是父元素display属性取<code>flex</code>、<code>inline-flex</code>、<code>grid</code>、<code>inline-grid</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">display</span>:flex;// 值还可以为inline-<span class="hljs-attribute">flex</span>、<span class="hljs-attribute">grid</span>、inline-<span class="hljs-attribute">grid</span><br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">margin</span>：auto <span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路四：绝对定位"><a href="#思路四：绝对定位" class="headerlink" title="思路四：绝对定位"></a>思路四：绝对定位</h3><p><strong>原理：</strong>通过绝对定位将元素脱离文档流，利用top将元素定位到距离父元素上边界-50%地方，然后通过修正自身高度的偏移使得垂直方向居中。</p>
+<ul>
+<li><p>方式一：绝对定位 +<code>top:50%</code>+ <code>margin-top:-50% * 元素高度</code></p>
+<p>  条件：子元素必须定高度</p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">position</span>:relative;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">position</span>:absolute;<br>	<span class="hljs-attribute">top</span>:<span class="hljs-number">50%</span>;<br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">100px</span>;<br>	<span class="hljs-attribute">margin-top</span>:-<span class="hljs-number">50px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>方式二：绝对定位 + <code>top:50%</code>+ <code>transform:translateY(-50%);</code></p>
+<p>  条件：适用于所有场景，不需要元素定高度</p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">position</span>:relative;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">position</span>:absolute;<br>	<span class="hljs-attribute">top</span>:<span class="hljs-number">50%</span>;<br>	<span class="hljs-attribute">transform</span>:<span class="hljs-built_in">translateY</span>(-<span class="hljs-number">50%</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="思路五：flex布局"><a href="#思路五：flex布局" class="headerlink" title="思路五：flex布局"></a>思路五：flex布局</h3><p><strong>原理：</strong>利用<code>FFC (flex formatting context)</code> 下，垂直的交叉轴<code>align-item</code>属性特性</p>
+<p><strong>条件：</strong>适用于所有场景，不需要元素定高度</p>
+<p><strong>方式：</strong>设置父元素为<code>flex</code>布局，且设置<code>align-item: center</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">display</span>:flex; <br>	align-item:center<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  // 无<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路六：grid布局"><a href="#思路六：grid布局" class="headerlink" title="思路六：grid布局"></a>思路六：grid布局</h3><p><strong>原理：</strong>利用<code>GFC (grid formatting context)</code>  下，垂直的交叉轴的<code>align-item</code>属性特性</p>
+<p><strong>条件：</strong>适用于所有场景，不需要元素定高度</p>
+<p><strong>方式：</strong>设置父元素为grid布局，且设置<code>align-item: center</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">display</span>:grid; <br>	align-item:center<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  // 无<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>小结：</p>
+<ul>
+<li>若元素是单行文本, 则可设置<code>line-height</code>等于<code>父元素高度</code></li>
+<li>定高块级元素，该元素设置<code>margin:auto 0</code></li>
+<li>定高块级元素，可以用<code>绝对定位</code>+<code>top:50%</code>;+<code>margin-top</code></li>
+<li>不定高会级元素，可以用<code>绝对定位</code>和<code>transform</code></li>
+<li>不定高块级元素，设置<code>父元素</code>为<code>flex</code>布局，<code>子元素</code>设置<code>margin: auto 0</code>即可</li>
+<li>不定高块级元素，设置<code>父元素</code>为<code>flex</code>布局，且设置<code>align-items: center;</code></li>
+<li>不定高块级元素，设置<code>父元素</code>为grid布局，且设置<code>align-items: center;</code></li>
+<li>不定高块级元素，设置<code>父元素</code>为<code>table</code>布局，子元素<code>display: table-cell;vertical-align:middle</code></li>
+</ul>
+<h2 id="三、水平垂直居中方案"><a href="#三、水平垂直居中方案" class="headerlink" title="三、水平垂直居中方案"></a>三、水平垂直居中方案</h2><h3 id="思路一：line-height：父元素高-和-text-align-center"><a href="#思路一：line-height：父元素高-和-text-align-center" class="headerlink" title="思路一：line-height：父元素高 和 text-align:center"></a>思路一：<code>line-height：父元素高</code> 和 <code>text-align:center</code></h3><p>原理：<code>line-height：父元素高度</code>让行高等于盒子高度，从而让行内元素垂直居中，<code>text-align:center</code> 可以是内联元素水平居中</p>
+<p>条件：适用于内联元素，也就是<code>display:inline | inline-block | inline-flex | inline-grid，由于line-height具有继承性，防止子元素的高受影响</code>，子元素应该设置<code>line-height:子元素高度</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">line-height</span>:<span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">text-align</span>:center;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>	<span class="hljs-attribute">width</span>：<span class="hljs-number">50px</span>;<br>	<span class="hljs-attribute">height</span>: <span class="hljs-number">50px</span><br>  line-height:<span class="hljs-number">50px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路二：vertical-align：middle-和-text-align-center"><a href="#思路二：vertical-align：middle-和-text-align-center" class="headerlink" title="思路二：vertical-align：middle 和 text-align:center"></a>思路二：<code>vertical-align：middle</code> 和 <code>text-align:center</code></h3><p><strong>原理：</strong>vertical-align：middle可以使元素<strong>在表格单元中</strong>或者行内元素垂直居中。该属性原理是行内元素的基线相对于该元素所在行的基线的垂直对齐。这会使元素降低而不是升高。在表单元格中，这个属性会设置单元格框中的单元格内容的对齐方式，<code>text-align:center</code> 可以是内联元素水平居中</p>
+<p><strong>条件：</strong>元素必须为内联元素，或者父元素是表格单元，也就是<code>display:inline | inline-block | inline-flex | inline-grid | table-cell</code></p>
+<ul>
+<li><p>方式一：<strong>父元素</strong>设为<code>display: tabel-cell</code>和<code>text-align:center</code>，并且设置<code>vertical-align:middle</code></p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span><br>	display:table_cell;<br>	vartical-align:middle;<br>	<span class="hljs-attribute">text-align</span>:center;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  // 无<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>方式二：父元素加<code>text-align:center</code>，<strong>元素</strong>设置为内联元素，并且设置<code>vertical-align:middle</code>，增加一个辅助DOM来改变基线。</p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span><br>	font-size: <span class="hljs-number">0</span>;<br>	<span class="hljs-attribute">text-align</span>:center<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">display</span>:inline-block;<br>	<span class="hljs-attribute">vertical-align</span>:middle;<br>&#125;<br><span class="hljs-selector-class">.father</span><span class="hljs-selector-pseudo">::before</span>&#123;<br>	<span class="hljs-attribute">content</span>:<span class="hljs-string">&#x27;&#x27;</span>;<br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">100%</span>;<br>	<span class="hljs-attribute">display</span>:inline-block;<br>	<span class="hljs-attribute">vertical-align</span>:middle;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>vertical-align找基准元素的原则：</strong>同一行中最高的那个inline box就是这一行的基准元素，这也就解释为什么需要辅助元素来占满父元素。</p>
+<p><strong>注意：</strong>inline-block元素间有空格或是换行会产生间隙，使用<code>font-size: 0;</code>可去除</p>
+<h3 id="思路三：使用margin：auto"><a href="#思路三：使用margin：auto" class="headerlink" title="思路三：使用margin：auto"></a>思路三：使用<code>margin：auto</code></h3><p><strong>原理：</strong>利用CSS的盒模型和外边距的特性，当一个块级元素<strong>上下左右</strong>外边距都设置为auto，浏览器会自动计算出上下左右外边距的值，使得水平垂直方向居中。</p>
+<p><strong>条件：</strong>不需要定高，但是必须让元素处于<code>FFC (flex formatting context)</code> ，或者 <code>GFC (grid formatting context)</code> 中，也就是父元素display属性取<code>flex</code>、<code>inline-flex</code>、<code>grid</code>、<code>inline-grid</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">display</span>:flex;// 值还可以为inline-<span class="hljs-attribute">flex</span>、<span class="hljs-attribute">grid</span>、inline-<span class="hljs-attribute">grid</span><br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">margin</span>：auto;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路四：绝对定位-1"><a href="#思路四：绝对定位-1" class="headerlink" title="思路四：绝对定位"></a>思路四：绝对定位</h3><p>方式一：绝对定位 + <code>left:50%</code> + <code>top:50%</code> + <code>margin-left:-50%*元素高度</code> + <code>margin-top:-50%*元素高度</code></p>
+<p>条件：子元素必须定宽度和高度</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">position</span>:relative;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">position</span>:absolute;<br>	<span class="hljs-attribute">top</span>:<span class="hljs-number">50%</span>;<br>	<span class="hljs-attribute">left</span>:<span class="hljs-number">50%</span>;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">100px</span>;<br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">100px</span>;<br>	<span class="hljs-attribute">margin-left</span>:-<span class="hljs-number">50px</span>;<br>	<span class="hljs-attribute">margin-top</span>:-<span class="hljs-number">50px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>方式二：绝对定位 + <code>left:50%</code> + <code>top:50%</code> + <code>transform:translate(-50%,-50%)</code></p>
+<p>条件：适用于所有场景，不需要元素定宽度和高度</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">position</span>:relative;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">position</span>:absolute;<br>	<span class="hljs-attribute">top</span>:<span class="hljs-number">50%</span>;<br>	<span class="hljs-attribute">left</span>:<span class="hljs-number">50%</span>;<br>	<span class="hljs-attribute">transform</span>:<span class="hljs-built_in">translate</span>(-<span class="hljs-number">50%</span>,-<span class="hljs-number">50%</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>方式三：绝对定位 + <code>top:0</code> + <code>bottom:0</code> + <code>left:0</code> + <code>right:0</code> + <code>margin:auto</code></p>
+<p>条件：子元素必须定宽度和高度</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>  <span class="hljs-attribute">position</span>: relative;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  <span class="hljs-attribute">position</span>: absolute;<br>  <span class="hljs-attribute">top</span>: <span class="hljs-number">0</span>;<br>  <span class="hljs-attribute">left</span>: <span class="hljs-number">0</span>;<br>  <span class="hljs-attribute">right</span>: <span class="hljs-number">0</span>;<br>  <span class="hljs-attribute">bottom</span>: <span class="hljs-number">0px</span>;<br>  <span class="hljs-attribute">margin</span>: auto;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100px</span>;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">100px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路五：flex布局-1"><a href="#思路五：flex布局-1" class="headerlink" title="思路五：flex布局"></a>思路五：flex布局</h3><p>原理：利用<code>FFC (flex formatting context)</code> 下，利用<code>align-item</code>和<code>justify-content</code>属性特性</p>
+<p>条件：适用于所有场景，不需要元素定高度</p>
+<p>方式：设置父元素为<code>flex</code>布局，且设置<code>justify-content: center</code>和<code>align-item: center</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">display</span>:flex;<br>	<span class="hljs-attribute">justify-content</span>:center;<br>	align-item:center;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  // 无<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路六：grid布局-1"><a href="#思路六：grid布局-1" class="headerlink" title="思路六：grid布局"></a>思路六：grid布局</h3><p>原理：利用<code>GFC (grid formatting context)</code>  下，利用<code>align-item</code>和<code>justify-content</code>属性特性</p>
+<p>条件：适用于所有场景，不需要元素定高度</p>
+<p>方式：设置父元素为<code>flex</code>布局，且设置<code>justify-content: center</code>和<code>align-item: center</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.father</span> &#123;<br>	<span class="hljs-attribute">display</span>:grid;<br>	<span class="hljs-attribute">justify-content</span>:center;<br>	align-item:center;<br>&#125;<br><span class="hljs-selector-class">.son</span> &#123;<br>  // 无<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>小结：</p>
+<ul>
+<li>子元素内联元素，父元素<code>line-height:父元素高度</code>+<code>textalign:center</code></li>
+<li>子元素内联元素，父元素<code>textalign:center</code>，子元素设置<code>vertical-align:middle</code> + 辅助dom</li>
+<li>子元素内联元素，父元素<code>display: tabel-cell</code>+<code>text-align:center</code>+<code>vertical-align:middle</code></li>
+<li>子元素宽高未知，父元素<code>flex/grid</code>布局，子元素设置<code>margin:auto</code>;</li>
+<li>子元素宽高未知，父元素<code>flex</code>布局，设置<code>justify-content: center</code>+<code>align-items: center</code>;</li>
+<li>子元素宽高未知，父元素<code>grid</code>布局，设置<code>justify-content: center</code>+<code>align-items: center</code>;</li>
+<li>子元素宽高已知，父元素<code>position: relative</code>，子元素用绝对定位，设置上下左右为<code>0</code>，<code>margin:auto</code></li>
+<li>子元素宽高已知，父元素<code>position: relative</code>，子元素用绝对定位 <code>left: 50%</code> + <code>top: 50%;</code> 再 <code>margin</code> 自己的负一半；或者 <code>transform: translate(-50%,-50%)</code>;</li>
+</ul>
+<h2 id="四、两栏布局方案——左边定宽，右边自适应"><a href="#四、两栏布局方案——左边定宽，右边自适应" class="headerlink" title="四、两栏布局方案——左边定宽，右边自适应"></a>四、两栏布局方案——左边定宽，右边自适应</h2><h3 id="思路一：利用float布局"><a href="#思路一：利用float布局" class="headerlink" title="思路一：利用float布局"></a>思路一：利用float布局</h3><ul>
+<li><p><strong>方式一：左<code>float</code>+ 右<code>margin</code></strong></p>
+<p>  左设置<code>固定宽度+向左浮动</code>，右边设置<code>margin-left</code>为左边的固定宽度</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span> &#123;<br> <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;<br>&#125;<br><br><span class="hljs-selector-class">.wrap</span>&gt; <span class="hljs-selector-tag">div</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>&#125;<br><br><span class="hljs-selector-class">.left</span> &#123;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">float</span>: left;<br>  <span class="hljs-attribute">background-color</span>: blue;<br>&#125;<br><br><span class="hljs-selector-class">.right</span> &#123;<br>  <span class="hljs-attribute">margin-left</span>: <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">background-color</span>: red;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>方式二：双<code>float</code>+ 右<code>calc</code></strong></p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span> &#123;<br> <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;<br>&#125;<br><br><span class="hljs-selector-class">.wrap</span> &gt; <span class="hljs-selector-tag">div</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>&#125;<br><br><span class="hljs-selector-class">.left</span> &#123;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">float</span>: left;<br>  <span class="hljs-attribute">background-color</span>: blue;<br>&#125;<br><br><span class="hljs-selector-class">.right</span> &#123;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-number">200px</span>);<br>  <span class="hljs-attribute">float</span>: right;<br>  <span class="hljs-attribute">background-color</span>: red;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>方式三：左<code>float</code>+右<code>BFC</code></strong></p>
+<p>  利用了<code>BFC</code> 的区域不会与 <code>float</code> 的元素区域重叠的机制</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span> &#123;<br> <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;<br>&#125;<br><br><span class="hljs-selector-class">.wrap</span> &gt; <span class="hljs-selector-tag">div</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>&#125;<br><br><span class="hljs-selector-class">.left</span> &#123;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">float</span>: left;<br>  <span class="hljs-attribute">background-color</span>: blue;<br>&#125;<br><br><span class="hljs-selector-class">.right</span> &#123;<br>  <span class="hljs-attribute">overflow</span>: hidden;<br>  <span class="hljs-attribute">background-color</span>: red;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="思路二：绝对定位"><a href="#思路二：绝对定位" class="headerlink" title="思路二：绝对定位"></a>思路二：绝对定位</h3><p><strong>左<code>position:absolute</code>+右<code>margin</code></strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span> &#123;<br> <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;<br> <span class="hljs-attribute">position</span>:relative;<br>&#125;<br><br><span class="hljs-selector-class">.wrap</span> &gt; <span class="hljs-selector-tag">div</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>&#125;<br><br><span class="hljs-selector-class">.left</span> &#123;<br>	<span class="hljs-attribute">position</span>:absolute;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;<br>&#125;<br><br><span class="hljs-selector-class">.right</span> &#123;<br>  <span class="hljs-attribute">margin-left</span>:<span class="hljs-number">200px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路三：利用文档流"><a href="#思路三：利用文档流" class="headerlink" title="思路三：利用文档流"></a>思路三：利用文档流</h3><p><strong>双<code>inline-block</code>+右<code>calc</code></strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span> &#123;<br> <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;<br> <span class="hljs-attribute">font-size</span>:<span class="hljs-number">0</span>; //消除inline-block盒子间的空格<br>&#125;<br><br><span class="hljs-selector-class">.wrap</span> &gt; <span class="hljs-selector-tag">div</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>	<span class="hljs-attribute">display</span>:inline-block;<br>	<span class="hljs-attribute">vertical-align</span>:top;<br>&#125;<br><br><span class="hljs-selector-class">.left</span> &#123;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;<br>&#125;<br><br><span class="hljs-selector-class">.right</span> &#123;<br>  <span class="hljs-attribute">width</span>:<span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-number">100px</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路四：Flex布局"><a href="#思路四：Flex布局" class="headerlink" title="思路四：Flex布局"></a>思路四：Flex布局</h3><p><code>最简单常用</code>：使用<code>flex</code>布局（<code>左定宽，右flex1</code>）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">display</span>: flex;<br>&#125;<br><br><span class="hljs-selector-class">.wrap</span> &gt; <span class="hljs-selector-tag">div</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>&#125;<br><br><span class="hljs-selector-class">.left</span> &#123;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">background-color</span>: blue;<br>&#125;<br><br><span class="hljs-selector-class">.right</span> &#123;<br>  <span class="hljs-attribute">flex</span>: <span class="hljs-number">1</span>; // 设置<span class="hljs-attribute">flex-grow</span>属性为<span class="hljs-number">1</span>，默认为<span class="hljs-number">0</span><br>  <span class="hljs-attribute">overflow</span>: hidden;<br>  <span class="hljs-attribute">background-color</span>: red;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路五：Grid布局"><a href="#思路五：Grid布局" class="headerlink" title="思路五：Grid布局"></a>思路五：Grid布局</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">display</span>: grid;<br>	<span class="hljs-attribute">grid-template-columns</span>: <span class="hljs-number">200px</span> <span class="hljs-number">1</span>fr<br>&#125;<br><br><span class="hljs-selector-class">.wrap</span> &gt; <span class="hljs-selector-tag">div</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>&#125;<br><br><span class="hljs-selector-class">.left</span> &#123;<br>  // 无<br>&#125;<br><br><span class="hljs-selector-class">.right</span> &#123;<br> // 无<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="五、三栏布局方案——左右定宽中间自适应布局"><a href="#五、三栏布局方案——左右定宽中间自适应布局" class="headerlink" title="五、三栏布局方案——左右定宽中间自适应布局"></a>五、三栏布局方案——左右定宽中间自适应布局</h2><h3 id="思路一：流体布局"><a href="#思路一：流体布局" class="headerlink" title="思路一：流体布局"></a>思路一：流体布局</h3><p>左右<code>float</code>+中<code>margin</code>：左右栏定宽并设置浮动，中间一栏设置左右两个方向的<code>margin</code>值且不设置宽度。注意：DOM结构必须为<strong>左右中</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>左侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>      <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>右侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;main&quot;</span>&gt;</span>中间<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs css">*&#123;<br>    <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>;<br>    <span class="hljs-attribute">border</span>: <span class="hljs-number">0</span>;<br>&#125;<br><span class="hljs-selector-class">.left</span>&#123;<br>    <span class="hljs-attribute">width</span>: <span class="hljs-number">100px</span>;<br>    <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>    <span class="hljs-attribute">float</span>: left;<br>&#125;<br><span class="hljs-selector-class">.right</span>&#123;<br>    <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;<br>    <span class="hljs-attribute">height</span>: <span class="hljs-number">500px</span>;<br>    <span class="hljs-attribute">float</span>: right;<br>&#125;<br><span class="hljs-selector-class">.main</span>&#123;<br>    <span class="hljs-attribute">height</span>: <span class="hljs-number">500px</span>;<br>    <span class="hljs-attribute">margin-left</span>: -<span class="hljs-number">100px</span>;<br>    <span class="hljs-attribute">margin-right</span>: -<span class="hljs-number">200px</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="思路二：BFC布局"><a href="#思路二：BFC布局" class="headerlink" title="思路二：BFC布局"></a>思路二：BFC布局</h3><p>利用BFC 区域，不会与浮动元素重叠的特性。<strong>左右模块各自向左右浮动</strong>，并设置中间模块的<code>overflow：hidden</code>，使中间模块宽度自适应。注意：DOM结构必须为<strong>左右中</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>左侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>      <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>右侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;main&quot;</span>&gt;</span>中间<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs css">*&#123;<br>    <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>;<br>    <span class="hljs-attribute">border</span>: <span class="hljs-number">0</span>;<br>&#125;<br><span class="hljs-selector-class">.left</span>&#123;<br>    <span class="hljs-attribute">width</span>: <span class="hljs-number">100px</span>;<br>    <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>    <span class="hljs-attribute">float</span>: left;<br>&#125;<br><span class="hljs-selector-class">.main</span>&#123;<br>    <span class="hljs-attribute">height</span>: <span class="hljs-number">500px</span>;<br>    <span class="hljs-attribute">overflow</span>: hidden;<br>&#125;<br><span class="hljs-selector-class">.right</span>&#123;<br>    <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;<br>    <span class="hljs-attribute">height</span>: <span class="hljs-number">500px</span>;<br>    <span class="hljs-attribute">float</span>: right;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路三：Flex布局"><a href="#思路三：Flex布局" class="headerlink" title="思路三：Flex布局"></a>思路三：Flex布局</h3><p><strong>方式一：利用</strong><code>justify-content: space-around</code><strong>属性</strong></p>
+<p>通过在父元素声明<code>justify-content: space-around</code>，使得水平方向元素靠两边布局，左右定宽，中间宽度设置100%</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>左侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;center&quot;</span>&gt;</span>中间<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>右侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span>&#123;<br>  <span class="hljs-attribute">display</span>: flex;<br>  <span class="hljs-attribute">justify-content</span>: space-around;<br>&#125;<br><span class="hljs-selector-class">.left</span>&#123;<br>  <span class="hljs-attribute">width</span>：<span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>&#125;<br><span class="hljs-selector-class">.center</span>&#123;<br>  <span class="hljs-attribute">width</span>:<span class="hljs-number">200px</span><br>  height:<span class="hljs-number">500px</span>;<br>&#125;<br><span class="hljs-selector-class">.right</span>&#123;<br>	<span class="hljs-attribute">width</span>：<span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">flex</span>: <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>方式二：利用 <code>flex-grow</code> 、<code>flex-shrink</code> 、 <code>flex-basis</code>属性</strong></p>
+<p>通过这三个属性缩写形式，父元素<code>flex</code>，左右设置<code>flex: 0 1 200px</code>，中间设置<code>flex:1</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>左侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;center&quot;</span>&gt;</span>中间<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>右侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span>&#123;<br>  <span class="hljs-attribute">display</span>: flex;<br>&#125;<br><span class="hljs-selector-class">.left</span>&#123;<br>  <span class="hljs-attribute">flex</span>: <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>&#125;<br><span class="hljs-selector-class">.center</span>&#123;<br>  <span class="hljs-attribute">flex</span>: <span class="hljs-number">1</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>&#125;<br><span class="hljs-selector-class">.right</span>&#123;<br>  <span class="hljs-attribute">flex</span>: <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路四：Grid布局"><a href="#思路四：Grid布局" class="headerlink" title="思路四：Grid布局"></a>思路四：Grid布局</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">display</span>: grid;<br>	<span class="hljs-attribute">grid-template-columns</span>: <span class="hljs-number">200px</span> <span class="hljs-number">1</span>fr <span class="hljs-number">200px</span>;<br>&#125;<br><br><span class="hljs-selector-class">.wrap</span> &gt; <span class="hljs-selector-tag">div</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>&#125;<br><br><span class="hljs-selector-class">.left</span> &#123;<br>  // 无<br>&#125;<br><br><span class="hljs-selector-class">.right</span> &#123;<br> // 无<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路五：绝对定位"><a href="#思路五：绝对定位" class="headerlink" title="思路五：绝对定位"></a>思路五：绝对定位</h3><p>左右<code>绝对定位</code>+中<code>margin</code>：左右两栏设置绝对定位放左右，中间设置两个方面的<code>margin</code>值，注意DOM结构顺序，顺序不同代码有微少差异。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>左侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>右侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>	 <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;center&quot;</span>&gt;</span>中间<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span>&#123;<br>  <span class="hljs-attribute">position</span>:realtive;<br>&#125;<br><span class="hljs-selector-class">.left</span>&#123;<br>  <span class="hljs-attribute">position</span>:absolute;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>&#125;<br><span class="hljs-selector-class">.center</span>&#123;<br>  <span class="hljs-attribute">margin-left</span>:<span class="hljs-number">200px</span>;<br>	<span class="hljs-attribute">margin-right</span>:<span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>&#125;<br><span class="hljs-selector-class">.right</span>&#123;<br>	<span class="hljs-attribute">position</span>:absolute;<br>	<span class="hljs-attribute">right</span>:<span class="hljs-number">0</span>;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">200px</span><br>  height:<span class="hljs-number">500px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="思路六：圣杯布局"><a href="#思路六：圣杯布局" class="headerlink" title="思路六：圣杯布局"></a>思路六：圣杯布局</h3><p>父元素设置左右<code>padding</code>，子元素三栏都通过<code>float</code>浮动，然后通过<strong>负值<code>margin</code><strong>或者</strong>相对定位</strong>进行调整。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;center&quot;</span>&gt;</span>中间<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>左侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>右侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>通过margin调节位置</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span>&#123;<br>  <span class="hljs-attribute">position</span>:realtive;<br>	<span class="hljs-attribute">padding-left</span>:<span class="hljs-number">200px</span>;<br>	<span class="hljs-attribute">padding-right</span>:<span class="hljs-number">200px</span>;<br>&#125;<br><span class="hljs-selector-class">.center</span>&#123;<br>	<span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:left</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>&#125;<br><span class="hljs-selector-class">.left</span>&#123;<br>  <span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:left</span>;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>	<span class="hljs-attribute">margin-left</span>:<span class="hljs-built_in">calc</span>(-<span class="hljs-number">100%</span> - <span class="hljs-number">200px</span>);// 同样负的<span class="hljs-attribute">margin-right</span>也是不能达到效果<br>&#125;<br><span class="hljs-selector-class">.right</span>&#123;<br>	<span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:left</span>;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">200px</span><br>  height:<span class="hljs-number">500px</span>;<br>	<span class="hljs-attribute">margin-right</span>:-<span class="hljs-number">200px</span>; //为什么<span class="hljs-attribute">margin-right</span>就可以挤到父元素的<span class="hljs-attribute">padding</span>里，<span class="hljs-attribute">margin-left</span>就不可以<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过相对定位调节位置</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span>&#123;<br>  <span class="hljs-attribute">position</span>:realtive;<br>	<span class="hljs-attribute">padding-left</span>:<span class="hljs-number">200px</span>;<br>	<span class="hljs-attribute">padding-right</span>:<span class="hljs-number">200px</span>;<br>&#125;<br><span class="hljs-selector-class">.center</span>&#123;<br>	<span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:left</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>&#125;<br><span class="hljs-selector-class">.left</span>&#123;<br>  <span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:left</span>;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>	<span class="hljs-attribute">margin-left</span>:-<span class="hljs-number">100%</span>;<br>	<span class="hljs-attribute">position</span>:relative;<br>	<span class="hljs-attribute">left</span>:-<span class="hljs-number">200px</span>; <br>&#125;<br><span class="hljs-selector-class">.right</span>&#123;<br>	<span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:left</span>;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">200px</span><br>  height:<span class="hljs-number">500px</span>;<br>	<span class="hljs-attribute">position</span>:relative;<br>	<span class="hljs-attribute">margin-left</span>:-<span class="hljs-number">200px</span>;<br>	<span class="hljs-attribute">right</span>:-<span class="hljs-number">200px</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>缺陷：中间栏的最小宽度不能小于左右两栏的宽度，否则左右两栏会掉到下一行。（设置 <code>min-width</code> 解决）</p>
+<h3 id="思路七：双飞翼布局（圣杯布局改进版）"><a href="#思路七：双飞翼布局（圣杯布局改进版）" class="headerlink" title="思路七：双飞翼布局（圣杯布局改进版）"></a>思路七：双飞翼布局（圣杯布局改进版）</h3><p>对圣杯布局的改进，取消了相对定位</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;center&quot;</span>&gt;</span><br>			<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;inner&quot;</span>&gt;</span>中间<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>		<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>左侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>右侧<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.wrap</span>&#123;<br>&#125;<br><span class="hljs-selector-class">.center</span>&#123;<br>	<span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:left</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>&#125;<br><span class="hljs-selector-class">.inner</span>&#123;<br>   <span class="hljs-attribute">margin-left</span>:<span class="hljs-number">200px</span>;<br>   <span class="hljs-attribute">margin-right</span>: <span class="hljs-number">200px</span>;<br>&#125;<br><span class="hljs-selector-class">.left</span>&#123;<br>  <span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:left</span>;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">200px</span>;<br>  <span class="hljs-attribute">height</span>:<span class="hljs-number">500px</span>;<br>	<span class="hljs-attribute">margin-left</span>:-<span class="hljs-number">100%</span>;<br>&#125;<br><span class="hljs-selector-class">.right</span>&#123;<br>	<span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:left</span>;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">200px</span><br>  height:<span class="hljs-number">500px</span>;<br>	<span class="hljs-attribute">margin-left</span>: -<span class="hljs-number">200px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>优势：解决圣杯布局中，margin的复杂调节，节省很多css代码</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CSS/" class="category-chain-item">CSS</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%B8%83%E5%B1%80/" class="print-no-link">#布局</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>常见CSS布局方案总结</div>
+      <div>http://example.com/2023/03/12/常见CSS布局方案总结/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/15/%E5%AD%A6%E4%BC%9A%E4%BD%BF%E7%94%A8for-in%E4%B8%8Efor-of/" title="学会使用for-in与for-of">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">学会使用for-in与for-of</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/10/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88/" title="输入一个URL浏览器会发生什么">
+                        <span class="hidden-mobile">输入一个URL浏览器会发生什么</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,754 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="nvm版本管理工具使用和踩坑一、简介nvm 全称 Node Version Manager，是一个 Node.js 版本管理工具，可以在同一台电脑上安装多个不同版本的 Node.js，通过 nvm 可以方便地在这些版本间进行切换，保证不同项目能够使用对应的 Node.js 版本。 nvm 可以在 Windows、macOS 和 Linux 等多个操作系统上使用，并支持在命令行上进行安装和版本管理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nvm版本管理工具使用和踩坑">
+<meta property="og:url" content="http://example.com/2023/07/30/nvm%E7%89%88%E6%9C%AC%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E5%92%8C%E8%B8%A9%E5%9D%91/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="nvm版本管理工具使用和踩坑一、简介nvm 全称 Node Version Manager，是一个 Node.js 版本管理工具，可以在同一台电脑上安装多个不同版本的 Node.js，通过 nvm 可以方便地在这些版本间进行切换，保证不同项目能够使用对应的 Node.js 版本。 nvm 可以在 Windows、macOS 和 Linux 等多个操作系统上使用，并支持在命令行上进行安装和版本管理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/81688718460_.pic.jpg">
+<meta property="og:image" content="http://example.com/2023/07/30/nvm%E7%89%88%E6%9C%AC%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E5%92%8C%E8%B8%A9%E5%9D%91/img/71688718418_.pic.jpg">
+<meta property="article:published_time" content="2023-07-30T03:16:20.000Z">
+<meta property="article:modified_time" content="2024-10-22T16:36:05.223Z">
+<meta property="article:author" content="Vito">
+<meta property="article:tag" content="工具">
+<meta property="article:tag" content="nvm">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/81688718460_.pic.jpg">
+  
+  
+  
+  <title>nvm版本管理工具使用和踩坑 - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="nvm版本管理工具使用和踩坑"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-07-30 11:16" pubdate>
+          2023年7月30日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">nvm版本管理工具使用和踩坑</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="nvm版本管理工具使用和踩坑"><a href="#nvm版本管理工具使用和踩坑" class="headerlink" title="nvm版本管理工具使用和踩坑"></a>nvm版本管理工具使用和踩坑</h1><h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>nvm 全称 Node Version Manager，是一个 Node.js 版本管理工具，可以在同一台电脑上安装多个不同版本的 Node.js，通过 nvm 可以方便地在这些版本间进行切换，保证不同项目能够使用对应的 Node.js 版本。</p>
+<p>nvm 可以在 Windows、macOS 和 Linux 等多个操作系统上使用，并支持在命令行上进行安装和版本管理。它可以让你方便地进行以下操作：</p>
+<ol>
+<li>安装多个 Node.js 版本，并在不同版本之间进行快速切换。</li>
+<li>快速切换默认 Node.js 版本。</li>
+<li>在同一版本下管理多个全局的 npm 包。</li>
+<li>让多个开发者在同一台电脑上使用不同的 Node.js 版本。</li>
+<li>一键安装当前最新版本的 Node.js。</li>
+</ol>
+<h1 id="二、下载和安装"><a href="#二、下载和安装" class="headerlink" title="二、下载和安装"></a>二、下载和安装</h1><h2 id="1-windows系统"><a href="#1-windows系统" class="headerlink" title="1. windows系统"></a>1. windows系统</h2><h3 id="1-1-下载"><a href="#1-1-下载" class="headerlink" title="1.1 下载"></a>1.1 下载</h3><p>nvm for window</p>
+<h3 id="1-2-链接"><a href="#1-2-链接" class="headerlink" title="1.2 链接"></a>1.2 链接</h3><p><a target="_blank" rel="noopener" href="https://github.com/coreybutler/nvm-windows/releases">https://github.com/coreybutler/nvm-windows/releases</a></p>
+<h3 id="1-3-安装"><a href="#1-3-安装" class="headerlink" title="1.3 安装"></a>1.3 安装</h3><p>官网提供两个版本：</p>
+<ul>
+<li><code>nvm-noinstall.zip</code> 这个是绿色免安装版本，但是使用之前需要配置</li>
+<li><code>nvm-setup.zip</code>这是一个安装包，下载之后点击安装，无需配置就可以使用</li>
+</ul>
+<p><strong>注意：在安装nvm之前一定要把之前的node卸载！！！</strong></p>
+<p><strong>【方式一】通过<code>nvm-noinstall.zip</code>安装：</strong></p>
+<ol>
+<li>把 nvm_noinstall.zip 解压到比如<code>D:\nvm</code> 中；</li>
+<li>右键以管理员的身份运行<code>install.cmd</code>文件 ，直接按回车,会在解压的根目录生成一个<code>setting.txt</code>，以我的为例就是生成在<code>D盘</code>，将<code>setting.txt</code>复制到nvm下面方便管理，然后配置setting.text。</li>
+<li>setting.text配置如下： <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-comment">//指定 nvm 的根目录路径，如果不配置，nvm 将采用默认的根目录</span><br><span class="hljs-attr">root</span>: <span class="hljs-attr">D</span>:\nvm<br><br><span class="hljs-comment">//指定当前系统使用的node所在的目录路径</span><br><span class="hljs-attr">path</span>: <span class="hljs-attr">D</span>:\nodejs<br><br><span class="hljs-comment">//指定当前系统的 CPU 架构，它有两个可选值分别是 &quot;x86&quot; 和 &quot;x64&quot;。如果不配置，nvm 将自动检测当前系统的 CPU 架构。</span><br><span class="hljs-attr">arch</span>: <span class="hljs-number">64</span><br><br><span class="hljs-comment">//指定 nvm 在下载 Node.js 安装包时所需要使用的代理服务器地址</span><br><span class="hljs-attr">proxy</span>: none<br><br><span class="hljs-comment">//指定 Node.js 安装文件的下载地址，如果不配置，nvm 将采用默认的下载地址:https://nodejs.org/dist/。</span><br><span class="hljs-attr">node_mirror</span>: <span class="hljs-attr">https</span>:<span class="hljs-comment">//npm.taobao.org/mirrors/node/</span><br><br><span class="hljs-comment">//指定 npm 安装包的下载地址，如果不配置，将采用默认的下载地址:https://registry.npmjs.org/。</span><br><span class="hljs-attr">npm_mirror</span>: <span class="hljs-attr">https</span>:<span class="hljs-comment">//npm.taobao.org/mirrors/npm/</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>一般情况下path里的路径自动生成，但是我们可以手动改成我们想要的路径</p>
+</blockquote>
+</li>
+<li>然后配置nvm的环境变量 打开<code>‘控制面板主页-&gt;高级系统设置-&gt;高级-&gt;环境变量’</code>后会有<code>‘用户变量’</code>和<code>‘系统变量’</code>两个选项，建议这<strong>两个里面都加上</strong>：<ul>
+<li>新增 NVM_HOME: D:\nvm</li>
+<li>新增 NVM_SYMLINK: D:\nodejs</li>
+<li>在PATH里增加两项<ul>
+<li>%NVM_HOME%</li>
+<li>%NVM_SYMLINK%</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>在powershell 输入<code>nvm -v</code>，如果显示nvm配置成功。</li>
+<li>通过<code>nvm install 版本号</code>安装 node 环境，然后通过<code>nvm use 版本号</code>使用这个版本node （安装第一个node版本一定要<code>nvm use 版本号</code>，不然步骤7可能操作失败）</li>
+<li>通过<code>node -v</code>和<code>npm -v</code>查看能否显示出对应版本。</li>
+</ol>
+<p><strong>【方式二】通过nvm-setup.zip安装</strong></p>
+<ol>
+<li>双击 <code>nvm-setup.exe</code>安装，点击accept，然后next</li>
+<li>选择nvm的安装路径，点击next</li>
+<li>选择系统使用node的环境路径，建议和nvm同一个盘（单纯后期方便找）</li>
+<li>确认安装：打开powershell，输入nvm -v </li>
+<li>检查环境变量（一般情况下环境变量都已经自动添加好了，至于添加的内容和<code>方式一</code>一样）</li>
+<li>配置node和npm的下载镜像</li>
+</ol>
+<p><strong>注意：可能个人原因</strong>，我安装包安装后的nvm目录只有两个文件夹，没有setting.txt文件，安装的node包在这里也看不见，所以，这种方式只能通过命令配置镜像。个人推荐「<strong>方式一」，配置更加自由！</strong></p>
+<h2 id="2-mac系统"><a href="#2-mac系统" class="headerlink" title="2. mac系统"></a>2. mac系统</h2><p>通过brew安装nvm即可</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs json">brew install nvm<br></code></pre></td></tr></table></figure>
+
+<p>安装过程中可能会遇到报错</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs json">==&gt; Fetching nvm<br>==&gt; Downloading https<span class="hljs-punctuation">:</span><span class="hljs-comment">//mirrors.ustc.edu.cn/homebrew-bottles/nvm-0.39.4.arm64_ve</span><br>Already downloaded<span class="hljs-punctuation">:</span> /Users/zhangwei/Library/Caches/Homebrew/downloads/dc96936aeec84a5d727a170130b7480c48f6d414f94f907ad5526b0b2418aef3--nvm<span class="hljs-number">-0.39</span><span class="hljs-number">.4</span>.arm64_ventura.bottle.tar.gz<br>==&gt; Reinstalling nvm <br>==&gt; Pouring nvm<span class="hljs-number">-0.39</span><span class="hljs-number">.4</span>.arm64_ventura.bottle.tar.gz<br>==&gt; Caveats<br>Please note that upstream has asked us to make explicit managing<br>nvm via Homebrew is unsupported by them and you should check any<br>problems against the standard nvm install method prior to reporting.<br><br>You should create NVM&#x27;s working directory if it doesn&#x27;t exist<span class="hljs-punctuation">:</span><br>  mkdir ~/.nvm<br><br>Add the following to your shell profile e.g. ~/.profile or ~/.zshrc<span class="hljs-punctuation">:</span><br>  export NVM_DIR=<span class="hljs-string">&quot;$HOME/.nvm&quot;</span><br>  <span class="hljs-punctuation">[</span> -s <span class="hljs-string">&quot;/opt/homebrew/opt/nvm/nvm.sh&quot;</span> <span class="hljs-punctuation">]</span> &amp;&amp; \. <span class="hljs-string">&quot;/opt/homebrew/opt/nvm/nvm.sh&quot;</span>  # This loads nvm<br>  <span class="hljs-punctuation">[</span> -s <span class="hljs-string">&quot;/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm&quot;</span> <span class="hljs-punctuation">]</span> &amp;&amp; \. <span class="hljs-string">&quot;/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm&quot;</span>  # This loads nvm bash_completion<br><br>You can set $NVM_DIR to any location<span class="hljs-punctuation">,</span> but leaving it unchanged from<br>/opt/homebrew/Cellar/nvm/<span class="hljs-number">0.39</span><span class="hljs-number">.4</span> will destroy any nvm-installed Node installations<br>upon upgrade/reinstall.<br><br>Type `nvm help` for further information.<br>==&gt; Summary<br>🍺  /opt/homebrew/Cellar/nvm/<span class="hljs-number">0.39</span><span class="hljs-number">.4</span><span class="hljs-punctuation">:</span> <span class="hljs-number">9</span> files<span class="hljs-punctuation">,</span> <span class="hljs-number">191.5</span>KB<br>==&gt; Running `brew cleanup nvm`...<br>Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.<br>Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).<br>zhangwei@loaclhost ~ % <br>zhangwei@loaclhost ~ % brew install nvm <br>Running `brew update --auto-update`...<br>To restore the stashed changes to /opt/homebrew/Library/Taps/mongodb/homebrew-brew<span class="hljs-punctuation">,</span> run<span class="hljs-punctuation">:</span><br>  cd /opt/homebrew/Library/Taps/mongodb/homebrew-brew &amp;&amp; git stash pop<br>==&gt; Auto-updated Homebrew!<br>Updated <span class="hljs-number">1</span> tap (mongodb/brew).<br><br>You have <span class="hljs-number">4</span> outdated formulae installed.<br></code></pre></td></tr></table></figure>
+
+<p>报错原因是我们没有配置nvm环境变量</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs json">提示的原因是因为没有配置nvm的环境变量<br>建议用 brew info nvm 查看包安装的介绍，有些会提示怎么设置环境变量<br><br><span class="hljs-number">1</span>、查看用户目录下有没有 .nvm<span class="hljs-punctuation">,</span> 没有则创建<br>mkdir ~/.nvm<br><span class="hljs-number">2</span>、打开.bash_profile<span class="hljs-punctuation">,</span>添加如下<br>export NVM_DIR=<span class="hljs-string">&quot;$HOME/.nvm&quot;</span><br>  <span class="hljs-punctuation">[</span> -s <span class="hljs-string">&quot;/usr/local/opt/nvm/nvm.sh&quot;</span> <span class="hljs-punctuation">]</span> &amp;&amp; . <span class="hljs-string">&quot;/usr/local/opt/nvm/nvm.sh&quot;</span>  # This loads nvm<br>  <span class="hljs-punctuation">[</span> -s <span class="hljs-string">&quot;/usr/local/opt/nvm/etc/bash_completion.d/nvm&quot;</span> <span class="hljs-punctuation">]</span> &amp;&amp; . <span class="hljs-string">&quot;/usr/local/opt/nvm/etc/bash_completion.d/nvm&quot;</span>  # This loads nvm <br><br><span class="hljs-number">3</span>、brew 查看已经安装的包<br>brew list<br></code></pre></td></tr></table></figure>
+
+<h1 id="三、nvm常用命令"><a href="#三、nvm常用命令" class="headerlink" title="三、nvm常用命令"></a>三、nvm常用命令</h1><h3 id="1-查看nvm版本"><a href="#1-查看nvm版本" class="headerlink" title="1. 查看nvm版本"></a>1. 查看nvm版本</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jsx">nvm -v<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-显示node版本列表"><a href="#2-显示node版本列表" class="headerlink" title="2. 显示node版本列表"></a>2. 显示node版本列表</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs jsx">nvm list <span class="hljs-comment">//显示已经的安装node版本</span><br><br>nvm list available <span class="hljs-comment">//显示所有可下载的版本</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-安装指定node版本"><a href="#3-安装指定node版本" class="headerlink" title="3. 安装指定node版本"></a>3. 安装指定node版本</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs jsx">nvm install <span class="hljs-number">14.5</span><span class="hljs-number">.0</span> <span class="hljs-comment">// 安装 14.5.0 版本的 node.js</span><br><br>nvm install latest <span class="hljs-comment">// 安装最新版本</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-切换指定node版本"><a href="#4-切换指定node版本" class="headerlink" title="4. 切换指定node版本"></a>4. 切换指定node版本</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs jsx">nvm use <span class="hljs-number">14.5</span><span class="hljs-number">.0</span> <span class="hljs-comment">// 切换到 14.5.0 版本的 node.js</span><br><br>nvm use <span class="hljs-number">14</span> <span class="hljs-comment">//切换当前列表为14开头的版本</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-卸载指定node版本"><a href="#5-卸载指定node版本" class="headerlink" title="5. 卸载指定node版本"></a>5. 卸载指定node版本</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jsx">nvm uninstall <span class="hljs-number">14.5</span><span class="hljs-number">.0</span> <span class="hljs-comment">// 安装 14.5.0 版本的 node.js</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="6-设置node-npm镜像"><a href="#6-设置node-npm镜像" class="headerlink" title="6. 设置node/ npm镜像"></a>6. 设置node/ npm镜像</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs jsx">nvm node_mirror [url] <span class="hljs-comment">//设置node镜像。默认是https://nodejs.org/dist/。如果不写url，则使用默认url。</span><br>nvm npm_mirror [url]  <span class="hljs-comment">//设置npm镜像。https://github.com/npm/cli/archive/。如果不写url，则使用默认url。</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="7-nvm缓存"><a href="#7-nvm缓存" class="headerlink" title="7. nvm缓存"></a>7. <strong>nvm缓存</strong></h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs jsx">nvm cache dir <span class="hljs-comment">// 显示nvm的缓存目录</span><br>nvm cache clear <span class="hljs-comment">// 清除nvm的缓存目录</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="8-帮助"><a href="#8-帮助" class="headerlink" title="8.帮助"></a>8.帮助</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jsx">nvm --help <span class="hljs-comment">//显示命令行帮助信息</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="四、踩坑记录"><a href="#四、踩坑记录" class="headerlink" title="四、踩坑记录"></a>四、踩坑记录</h1><ol>
+<li>在安装nvm之前没有卸载node，导致使用<code>nvm use 版本</code>命令时，切换版本失败</li>
+</ol>
+<p>【解决】将node和nvm都卸载，重新安装。</p>
+<ol start="2">
+<li>后期下载node版本没有通过nvm install命令安装，而是通过node官网的安装程序安装，导致<code>nvm use 版本</code>命令切换失败。</li>
+</ol>
+<p>【解决】这个问题的关键之处是node安装时路径没有安装在nvm的根目录上。我们去官网下载node版本时，不要下载<code>xxx.msi</code>，这是安装程序，他会直接控制我们全局的node，我们要下载完整装好的压缩包。如下：</p>
+<p><img src="/img/81688718460_.pic.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>然后直接解压到nvm的根目录上，并且修改文件名字为<code>v版本号</code></p>
+<p><img src="img/71688718418_.pic.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>此时在查看当前安装的版本应该就显示了，然后再切换到这个版本即可</p>
+<p><strong>3. nvm下载node成功但是npm下载失败</strong></p>
+<p>【解决】主要原因一般是我们的镜像里没有对应node版本的npm</p>
+<p>我们的解决办法有两个：</p>
+<ul>
+<li>直接从官网下载node压缩包，然后解压在nvm根目录，并重命名<code>v+版本号</code>，步骤同<strong>问题2</strong></li>
+<li>修改我们的nvm中的node镜像和npm镜像<ul>
+<li>方式一：通过修改setting.txt文件内容  <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-attr">node_mirror</span>: <span class="hljs-attr">https</span>:<span class="hljs-comment">//npm.taobao.org/mirrors/node/</span><br><span class="hljs-attr">npm_mirror</span>: <span class="hljs-attr">https</span>:<span class="hljs-comment">//npm.taobao.org/mirrors/npm/</span><br></code></pre></td></tr></table></figure>
+</li>
+<li>方式二：通过nvm命令修改镜像地址  <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-comment">//设置 Node.js 下载镜像地址</span><br>nvm node_mirror <span class="hljs-attr">https</span>:<span class="hljs-comment">//npm.taobao.org/mirrors/node/</span><br><span class="hljs-comment">//设置 npm 下载镜像地址</span><br>nvm npm_mirror <span class="hljs-attr">https</span>:<span class="hljs-comment">//npm.taobao.org/mirrors/npm/</span><br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>4. nvm install 卡顿</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/mirrors/node/<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E5%85%B7/" class="category-chain-item">工具</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%B7%A5%E5%85%B7/" class="print-no-link">#工具</a>
+      
+        <a href="/tags/nvm/" class="print-no-link">#nvm</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>nvm版本管理工具使用和踩坑</div>
+      <div>http://example.com/2023/07/30/nvm版本工具使用和踩坑/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年7月30日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/02/%E5%90%91Nexus%E4%B8%8A%E4%BC%A0%E6%9C%AC%E5%9C%B0%E7%9A%84npm%E4%BE%9D%E8%B5%96/" title="向Nexus上传本地的npm依赖">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">向Nexus上传本地的npm依赖</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/17/%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9%E9%A6%96%E9%80%89pnpm/" title="为什么选择首选pnpm">
+                        <span class="hidden-mobile">为什么选择首选pnpm</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

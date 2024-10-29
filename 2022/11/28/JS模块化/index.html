@@ -1,0 +1,782 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="JS模块化一、什么是模块化？模块化其实是指解决一个复杂问题时 自顶向下逐层把系统划分成若干模块的过程，每个模块完成一个特定的子功能（单一职责），所有的模块按某种方法组装起来，成为一个整体，从而完成整个系统所要求的功能。 二、早期JS模块化方案1. 普通函数全局function模式 : 将不同的功能封装成不同的全局函数 1234567function fn1()&amp;#123;  &#x2F;&#x2F;...&amp;#125;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS模块化">
+<meta property="og:url" content="http://example.com/2022/11/28/JS%E6%A8%A1%E5%9D%97%E5%8C%96/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="JS模块化一、什么是模块化？模块化其实是指解决一个复杂问题时 自顶向下逐层把系统划分成若干模块的过程，每个模块完成一个特定的子功能（单一职责），所有的模块按某种方法组装起来，成为一个整体，从而完成整个系统所要求的功能。 二、早期JS模块化方案1. 普通函数全局function模式 : 将不同的功能封装成不同的全局函数 1234567function fn1()&amp;#123;  &#x2F;&#x2F;...&amp;#125;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-28T13:47:00.000Z">
+<meta property="article:modified_time" content="2024-10-21T14:37:58.049Z">
+<meta property="article:author" content="Vito">
+<meta property="article:tag" content="JS基础">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>JS模块化 - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JS模块化"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-28 21:47" pubdate>
+          2022年11月28日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JS模块化</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="JS模块化"><a href="#JS模块化" class="headerlink" title="JS模块化"></a>JS模块化</h1><h2 id="一、什么是模块化？"><a href="#一、什么是模块化？" class="headerlink" title="一、什么是模块化？"></a>一、什么是模块化？</h2><p>模块化其实是指解决一个复杂问题时 <code>自顶向下逐层把系统划分成若干模块</code>的过程，每个模块完成一个特定的子功能（单一职责），所有的模块按某种方法组装起来，成为一个整体，从而完成整个系统所要求的功能。</p>
+<h2 id="二、早期JS模块化方案"><a href="#二、早期JS模块化方案" class="headerlink" title="二、早期JS模块化方案"></a>二、早期JS模块化方案</h2><h3 id="1-普通函数"><a href="#1-普通函数" class="headerlink" title="1. 普通函数"></a>1. 普通函数</h3><p><strong>全局function模式 : 将不同的功能封装成不同的全局函数</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">fn1</span>(<span class="hljs-params"></span>)&#123;<br>  <span class="hljs-comment">//...</span><br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">fn2</span>(<span class="hljs-params"></span>)&#123;<br>  <span class="hljs-comment">//...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>缺点：</strong></p>
+<ul>
+<li>容易引发命名冲突</li>
+<li>依赖关系难以管理：如果我们引用的当前模块引用了其他模块，就需要将当前模块和它引用的模块都复制到我们需要地方，造成代码冗余。</li>
+<li>模块可重用性差：如果想在项目中引用别的项目中的模块，就需要整个模块复制过来，可重用差，不好维护。</li>
+<li>模块可测试性差：测试成本高，不容易测试。</li>
+</ul>
+<h3 id="2-命名空间（对象）"><a href="#2-命名空间（对象）" class="headerlink" title="2.命名空间（对象）"></a>2.<strong>命名空间（对象）</strong></h3><p>随着代码量的增加，普通函数方式更容易引起命名冲突，所以利用对象的特点，命名空间就被提出。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> myMoudle = &#123; <br>	<span class="hljs-attr">privite1</span>: <span class="hljs-string">&#x27;privite1&#x27;</span><br>	<span class="hljs-attr">privite2</span>: <span class="hljs-string">&#x27;privite2&#x27;</span><br>	<span class="hljs-attr">fn1</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">a,b</span>)&#123;<br>		<span class="hljs-keyword">return</span> a + b + privite1 <br>	&#125;<br>	<span class="hljs-attr">fn2</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">a,b</span>)&#123;<br>		<span class="hljs-keyword">return</span> a - b - privite2<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>缺点:</strong> 数据不安全(外部可以直接修改模块内部的数据)</p>
+<h3 id="3-立即执行函数（IIFE）"><a href="#3-立即执行函数（IIFE）" class="headerlink" title="3.立即执行函数（IIFE）"></a>3.<strong>立即执行函数（IIFE）</strong></h3><p>命名空间一定程度上解决了全局命名空间上的变量污染问题，但是无法解决代码和数据隔离问题，还是得利用函数，只不过这个函数是立即执行函数IIFE，利用函数闭包的特性来实现私有数据和共享方法</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> myMoudle = (<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123; <br>	<span class="hljs-keyword">var</span> privite1 = <span class="hljs-string">&#x27;privite1&#x27;</span><br>	<span class="hljs-keyword">var</span> privite2 = <span class="hljs-string">&#x27;privite2&#x27;</span><br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">fn1</span>(<span class="hljs-params">a,b</span>)&#123;<br>		<span class="hljs-keyword">return</span> a + b + privite1 <br>	&#125;<br><br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">fn2</span>(<span class="hljs-params">a,b</span>)&#123;<br>		<span class="hljs-keyword">return</span> a - b - privite2<br>	&#125;<br>	<br>	<span class="hljs-keyword">return</span> &#123; fn1,fn2&#125;<br>&#125;)()<br></code></pre></td></tr></table></figure>
+
+<p>这样也就可以通过<code>myMoudle.fn1()</code> 来获取fn1方法，外部只能调用暴露出来的方法和属性，实现了属性方法私有化。</p>
+<p><strong>缺点:</strong> 如果当前这个模块依赖另一个模块怎么办。</p>
+<p>如果这个模块需要依赖其他模块，就可以通过函数传参的形式传入依赖,也是现代模块化规范的思想来源</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> otherModule = (<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>	<span class="hljs-keyword">return</span> &#123;<br>		<span class="hljs-attr">a</span>:<span class="hljs-number">1</span>,<br>		<span class="hljs-attr">b</span>:<span class="hljs-number">2</span><br>		&#125;<br>&#125;)()<br><br><span class="hljs-keyword">var</span> myMoudle = (<span class="hljs-keyword">function</span>(<span class="hljs-params">other</span>) &#123; <br>	<span class="hljs-keyword">var</span> privite1 = <span class="hljs-string">&#x27;privite1&#x27;</span><br>	<span class="hljs-keyword">var</span> privite2 = <span class="hljs-string">&#x27;privite2&#x27;</span><br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">fn1</span>(<span class="hljs-params">a,b</span>)&#123;<br>		<span class="hljs-keyword">return</span> a + b + privite1 + other.<span class="hljs-property">a</span><br>	&#125;<br><br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">fn2</span>(<span class="hljs-params">a,b</span>)&#123;<br>		<span class="hljs-keyword">return</span> a - b - privite2 - other.<span class="hljs-property">b</span><br>	&#125;<br>	<br>	<span class="hljs-keyword">return</span> &#123; fn1,fn2&#125;<br>&#125;)(otherModule)<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-依赖注入"><a href="#4-依赖注入" class="headerlink" title="4.依赖注入"></a>4.依赖注入</h3><p>我们先看下例子：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-comment">// 模块fnA</span><br><span class="hljs-keyword">let</span> fnA = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>  <span class="hljs-keyword">return</span> &#123;<span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;我是fnA&#x27;</span>&#125;<br>&#125;<br><br><span class="hljs-comment">// 模块fnB</span><br><span class="hljs-keyword">let</span> fnB = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>  <span class="hljs-keyword">return</span> &#123;<span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;我是fnB&#x27;</span>&#125;<br>&#125;<br><br><span class="hljs-comment">// 模块fnC 其中依赖fnA和fnB模块</span><br><span class="hljs-keyword">let</span> fnC = <span class="hljs-keyword">function</span>(<span class="hljs-params">fnA, fnB</span>)&#123;<br>  <span class="hljs-keyword">let</span> a = <span class="hljs-title function_">fnA</span>()<br>  <span class="hljs-keyword">let</span> b = <span class="hljs-title function_">fnB</span>()<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a, b)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面这样的代码无论从哪个角度看都很不灵活，我们不知道这段代码中有哪些依赖，也不能对引入的依赖进行二次修改，因为会造成原函数的更改。</p>
+<p>我们来简单实现一个依赖注册器，我们新建一个 <code>injector</code> 对象，它是独立的，以便它能够在我们应用的各个部分都拥有同样的功能。如果我们在很多地方都调用了函数 <code>fnC</code>，后面突然有需求需要调用第三个依赖项我们不可能去修改fnC模块的传参。</p>
+<p>所以我们需要解决下面问题：</p>
+<ul>
+<li>可以实现依赖的注册</li>
+<li>依赖注入器应该可以接收依赖（函数等），注入成功后给我们返回一个可以获取所有资源的函数</li>
+<li>依赖注入器要能够保持传递函数的作用域</li>
+<li>传递的函数能够接收自定义的参数，而不仅仅是被描述的依赖项</li>
+</ul>
+<p>我们来简单实现一个依赖注册器，我们新建一个 <code>injector</code><br> 对象，它是独立的，以便它能够在我们应用的各个部分都拥有同样的功能。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><br><span class="hljs-keyword">let</span> injector = &#123;<br>  <span class="hljs-attr">dependencies</span>: &#123;&#125;,<br>  <span class="hljs-attr">register</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">key, value</span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dependencies</span>[key] = value;<br>  &#125;,<br>  <span class="hljs-attr">resolve</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">deps, func, scope</span>) &#123;<br>    <span class="hljs-keyword">var</span> args = [];<br>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; deps.<span class="hljs-property">length</span>, d = deps[i]; i++) &#123;<br>      <span class="hljs-keyword">if</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dependencies</span>[d]) &#123;<br>        <span class="hljs-comment">// 存在此依赖</span><br>        args.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dependencies</span>[d]);<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 不存在</span><br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;不存在依赖：&#x27;</span> + d);<br>      &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>      func.<span class="hljs-title function_">apply</span>(scope || &#123;&#125;, args.<span class="hljs-title function_">concat</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">slice</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>, <span class="hljs-number">0</span>)));<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，这个对象非常简单，只有三个属性，<code>dependencies</code> 用来保存依赖，<code>register</code> 用来添加依赖，最后的 <code>resolve</code> 用来注入依赖。</p>
+<p><code>resolve</code> 函数需要做的事情很简单，先检查 <code>deps</code> 数组，然后在 <code>dependencies</code> 对象种寻找依赖，依次添加至 <code>args</code> 数组中，<code>scope</code> 参数存在则指定其作用域，返回的函数中将其参数使用 <code>.apply</code> 的方法传入我们传递回去的 <code>func</code> 回调。</p>
+<p>再来看看使用：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs jsx"><span class="hljs-comment">// 添加</span><br>injector.<span class="hljs-title function_">register</span>(<span class="hljs-string">&#x27;fnA&#x27;</span>, fnA)<br>injector.<span class="hljs-title function_">register</span>(<span class="hljs-string">&#x27;fnB&#x27;</span>, fnB)<br><br><span class="hljs-comment">// 注入1</span><br>(injector.<span class="hljs-title function_">resolve</span>([<span class="hljs-string">&#x27;fnA&#x27;</span>, <span class="hljs-string">&#x27;fnB&#x27;</span>], <span class="hljs-keyword">function</span>(<span class="hljs-params">fnA, fnB</span>)&#123;<br>  <span class="hljs-keyword">let</span> a = <span class="hljs-title function_">fnA</span>()<br>  <span class="hljs-keyword">let</span> b = <span class="hljs-title function_">fnB</span>()<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a, b)<br>&#125;))()<br><br><span class="hljs-comment">// 注入2：注入时传入额外参数</span><br>(injector.<span class="hljs-title function_">resolve</span>([<span class="hljs-string">&#x27;fnA&#x27;</span>, <span class="hljs-string">&#x27;fnB&#x27;</span>], <span class="hljs-keyword">function</span>(<span class="hljs-params">fnA, fnB, str</span>)&#123;<br>  <span class="hljs-keyword">let</span> a = <span class="hljs-title function_">fnA</span>()<br>  <span class="hljs-keyword">let</span> b = <span class="hljs-title function_">fnB</span>()<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a, b, str)<br>&#125;))(<span class="hljs-string">&#x27;isboyjc&#x27;</span>)<br><br></code></pre></td></tr></table></figure>
+
+<p>由此，我们实现了一个简单的依赖注入，依赖注入并不是一个新的东西，它在其他语言中存在已久，它是一种设计模式，也可以说是一种风格。</p>
+<p>早期的模块化演变过程中还有很多方案，就不一一写了。我们所说的模块化方案，并不是相互独立的，每种方案之间可能相互借鉴，就像依赖注入这种方式也用到了 <code>IIFE</code> ，一个好的模块化方案，无非就像是解决我们上面依赖注入提出的几个问题一样解决实际问题而存在。</p>
+<h2 id="三、现代JS模块化规范演进"><a href="#三、现代JS模块化规范演进" class="headerlink" title="三、现代JS模块化规范演进"></a>三、现代<strong>JS模块化规范演进</strong></h2><h3 id="1-CommonJs规范"><a href="#1-CommonJs规范" class="headerlink" title="1. CommonJs规范"></a>1. CommonJs规范</h3><p>CommonJS规范是Node.js采用的模块化规范，它的主要特点是<strong>同步加载模块</strong>，模块的输出值是<strong>被缓存的</strong>，<strong>多次加载同一个模块，只会执行一次</strong>，然后直接从缓存中读取，如果缓存模块发生变化，<strong>模块值并不能实时更新。</strong>CommonJS规范适用于<strong>服务器端</strong>，因为服务器端的模块文件都存放在本地磁盘，加载速度比较快，同步加载不会对性能造成太大影响。</p>
+<h3 id="2-AMD规范-Asynchronous-Module-Definition"><a href="#2-AMD规范-Asynchronous-Module-Definition" class="headerlink" title="2. AMD规范**(Asynchronous Module Definition)**"></a>2. AMD规范**(Asynchronous Module Definition)**</h3><p>AMD是RequireJS采用的模块化规范，它的主要特点是<strong>异步加载模块</strong>，<strong>推崇依赖前置，模块在一开始就会加载。</strong>模块的加载不影响后面语句的执行，模块的输出值<strong>不是被缓存的</strong>，<strong>每次加载都会执行一次。</strong>AMD规范适用于<strong>浏览器端</strong>，因为浏览器端的模块文件都存放在服务器上，加载速度比较慢，异步加载可以提高页面加载速度。</p>
+<p>优势：目前绝大多数第三方库都支持AMD规范</p>
+<p>缺点： 使用复杂 模块划分细致，模块JS文件会出现请求频繁的情况</p>
+<h3 id="3-CMD规范-Common-Module-Definition"><a href="#3-CMD规范-Common-Module-Definition" class="headerlink" title="3. CMD规范**(Common Module Definition)**"></a>3. CMD规范**(Common Module Definition)**</h3><p>CMD是SeaJS采用的模块化规范，它的主要特点是<strong>延迟执行，推崇依赖就近，</strong>与AMD不同的是，CMD是在需要<strong>使用模块的时候才加载</strong>。模块的加载不影响后面语句的执行，模块的输出值<strong>是被缓存的</strong>，<strong>多次加载同一个模块，只会执行一次</strong>，然后直接从缓存中读取，<strong>如果缓存模块发生变化，模块值并不能实时更新。</strong>CMD规范适用于<strong>浏览器端</strong>，因为浏览器端的模块文件都存放在服务器上，加载速度比较慢，延迟执行可以提高页面加载速度。</p>
+<h3 id="4-ES-Module规范"><a href="#4-ES-Module规范" class="headerlink" title="4. ES Module规范"></a>4. <strong>ES Module规范</strong></h3><p>ES Module是它是JavaScript官方的模块化规范。它的主要特点是<strong>既支持同步也支持异步加载模块，</strong></p>
+<p>使用<code>**import**</code>语句就是同步加载模块而且这些同步模块会被ESModule静态绑定，使用<code>**import()**</code>函数就是异步加载模块，这些异步模块会被ESModule动态绑定。模块的输出值是<strong>会被缓存的，多次加载同一个模块，只会执行一次，然后直接从缓存中读取</strong>，如果模块的值发生变化，由于ESModule输出的是一个值的引用，<strong>即使模块被缓存了，ESModule依然可以实时更新缓存的值。</strong>而且ESModule是静态编译，在代码执行前就确认了模块依赖关系，可以进行静态优化和分析，所以ESModule也拥有更好的性能，并且ESModule同样适用于<strong>浏览器</strong>也适用于<strong>服务端。</strong></p>
+<h3 id="5-区别对比"><a href="#5-区别对比" class="headerlink" title="5. 区别对比"></a>5. 区别对比</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>CommonJS</th>
+<th>AMD</th>
+<th>CMD</th>
+<th>ESMoudle</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>适用环境</td>
+<td>服务端</td>
+<td>浏览器端</td>
+<td>浏览器端</td>
+<td>服务器端、浏览器端</td>
+</tr>
+<tr>
+<td>执行方式</td>
+<td>同步</td>
+<td>异步</td>
+<td>异步</td>
+<td>同步、异步</td>
+</tr>
+<tr>
+<td>模块是否缓存</td>
+<td>缓存</td>
+<td>不缓存</td>
+<td>缓存</td>
+<td>缓存</td>
+</tr>
+<tr>
+<td>是否实时更新</td>
+<td>不实时更新</td>
+<td>不实时更新</td>
+<td>不实时更新</td>
+<td>实时更新</td>
+</tr>
+<tr>
+<td>加载方式</td>
+<td>运行时加载</td>
+<td>运行时加载</td>
+<td>运行时加载</td>
+<td>静态加载、运行时加载（动态绑定时）</td>
+</tr>
+<tr>
+<td>模块输出类型</td>
+<td>值的拷贝</td>
+<td>值的拷贝</td>
+<td>值的拷贝</td>
+<td>值的引用</td>
+</tr>
+<tr>
+<td>导入模块</td>
+<td>require()</td>
+<td>require()</td>
+<td>require()</td>
+<td>import</td>
+</tr>
+<tr>
+<td>导出模块</td>
+<td>module.exports = value/ exports.xxx = value</td>
+<td>return</td>
+<td>module.exports = value/ exports.xxx = value</td>
+<td>export / export default</td>
+</tr>
+<tr>
+<td>定义模块</td>
+<td>不需要定义</td>
+<td>define()</td>
+<td>define()</td>
+<td>不需要定义</td>
+</tr>
+</tbody></table>
+<h2 id="四、-ES6-模块与-CommonJS-模块的差异"><a href="#四、-ES6-模块与-CommonJS-模块的差异" class="headerlink" title="四、 ES6 模块与 CommonJS 模块的差异"></a>四、 ES6 模块与 CommonJS 模块的差异</h2><h3 id="1-CommonJS-模块输出的是一个值的拷贝，ES6-模块输出的是值的引用。"><a href="#1-CommonJS-模块输出的是一个值的拷贝，ES6-模块输出的是值的引用。" class="headerlink" title="1. CommonJS 模块输出的是一个值的拷贝，ES6 模块输出的是值的引用。"></a>1. CommonJS 模块输出的是一个值的拷贝，ES6 模块输出的是值的引用。</h3><ul>
+<li>CommonJS 模块输出的是值的拷贝，也就是说，一旦输出一个值，模块内部的变化就影响不到这个值。</li>
+<li>ES6 模块的运行机制与 CommonJS 不一样。JS 引擎对脚本静态分析的时候，遇到模块加载命令<code>import</code>，就会生成一个只读引用。等到脚本真正执行时，再根据这个只读引用，到被加载的那个模块里面去取值。换句话说，ES6 的<code>import</code>有点像 Unix 系统的“符号连接”，原始值变了，<code>import</code>加载的值也会跟着变。因此，ES6 模块是动态引用，并且不会缓存值，模块里面的变量绑定其所在的模块。</li>
+</ul>
+<h3 id="2-CommonJS-模块是运行时加载，ES6-模块是编译时输出接口。"><a href="#2-CommonJS-模块是运行时加载，ES6-模块是编译时输出接口。" class="headerlink" title="2. CommonJS 模块是运行时加载，ES6 模块是编译时输出接口。"></a>2. CommonJS 模块是运行时加载，ES6 模块是编译时输出接口。</h3><ul>
+<li>运行时加载: CommonJS 模块就是对象；即在输入时是先加载整个模块，生成一个对象，然后再从这个对象上面读取方法，这种加载称为“运行时加载”。</li>
+<li>编译时加载: ES6 模块不是对象，而是通过 <code>export</code> 命令显式指定输出的代码，<code>import</code>时采用静态命令的形式。即在<code>import</code>时可以指定加载某个输出值，而不是加载整个模块，这种加载称为“编译时加载”。</li>
+</ul>
+<p>CommonJS 加载的是一个对象（即<code>module.exports</code>属性），该对象只有在脚本运行完才会生成。而 ES6 模块不是对象，它的对外接口只是一种静态定义，在代码静态解析阶段就会生成。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Javascript/" class="category-chain-item">Javascript</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JS%E5%9F%BA%E7%A1%80/" class="print-no-link">#JS基础</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JS模块化</div>
+      <div>http://example.com/2022/11/28/JS模块化/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月28日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/20/V8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E4%BB%8E%E5%BA%95%E5%B1%82%E7%90%86%E8%A7%A3%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81%E7%9A%84%E8%BF%90%E8%A1%8C%E5%92%8C%E5%AE%83%E7%9A%84%E7%89%B9%E6%80%A7/" title="V8工作原理——从底层理解一段代码的运行和它的特性">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">V8工作原理——从底层理解一段代码的运行和它的特性</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/21/%E4%B8%80%E6%AC%A1%E6%8E%8C%E6%8F%A1JS%E4%B8%AD%E7%9A%84this/" title="一次掌握JS中的this">
+                        <span class="hidden-mobile">一次掌握JS中的this</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

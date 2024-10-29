@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/head_img.png">
+  <link rel="icon" href="/img/head_img.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="rgb(82,118,138)">
+  <meta name="author" content="Vito">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="向Nexus上传本地的npm依赖最近在公司有上传内部npm服务器的需求，需要将npm包上传到nexus中，解决这个问题，有两种思路 【 方式1 】暂时开通外网权限，通过设置类型为代理(proxy)的私库来缓存相关的依赖包。首先就是新建一个私库：  选择npm(proxy)  然后输入名称和要代理的远程仓库地址  完成之后本地就可以将拉取依赖的地址设置成这个新建的私库的地址，拉取完成后相关的依赖便会">
+<meta property="og:type" content="article">
+<meta property="og:title" content="向Nexus上传本地的npm依赖">
+<meta property="og:url" content="http://example.com/2023/08/02/%E5%90%91Nexus%E4%B8%8A%E4%BC%A0%E6%9C%AC%E5%9C%B0%E7%9A%84npm%E4%BE%9D%E8%B5%96/index.html">
+<meta property="og:site_name" content="Vito&#39;s Blog">
+<meta property="og:description" content="向Nexus上传本地的npm依赖最近在公司有上传内部npm服务器的需求，需要将npm包上传到nexus中，解决这个问题，有两种思路 【 方式1 】暂时开通外网权限，通过设置类型为代理(proxy)的私库来缓存相关的依赖包。首先就是新建一个私库：  选择npm(proxy)  然后输入名称和要代理的远程仓库地址  完成之后本地就可以将拉取依赖的地址设置成这个新建的私库的地址，拉取完成后相关的依赖便会">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/24497001-2e026a388de29574.webp">
+<meta property="og:image" content="http://example.com/img/24497001-8f457e2ce138c04c.webp">
+<meta property="og:image" content="http://example.com/img/24497001-8c9e6e6351bd784d.webp">
+<meta property="og:image" content="http://example.com/img/24497001-b6d5036d96009acf.webp">
+<meta property="og:image" content="http://example.com/img/24497001-f5368221b15eb34a.webp">
+<meta property="og:image" content="http://example.com/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A120231012-195823.png">
+<meta property="og:image" content="http://example.com/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A120231012-194839.png">
+<meta property="og:image" content="http://example.com/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A120231012-194909.png">
+<meta property="og:image" content="http://example.com/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A120231012-194631.png">
+<meta property="article:published_time" content="2023-08-02T05:05:47.000Z">
+<meta property="article:modified_time" content="2024-10-22T17:05:32.070Z">
+<meta property="article:author" content="Vito">
+<meta property="article:tag" content="工具">
+<meta property="article:tag" content="Nexus">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/24497001-2e026a388de29574.webp">
+  
+  
+  
+  <title>向Nexus上传本地的npm依赖 - Vito&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vito&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg8.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="向Nexus上传本地的npm依赖"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-02 13:05" pubdate>
+          2023年8月2日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          613 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          6 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">向Nexus上传本地的npm依赖</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="向Nexus上传本地的npm依赖"><a href="#向Nexus上传本地的npm依赖" class="headerlink" title="向Nexus上传本地的npm依赖"></a><strong>向Nexus上传本地的npm依赖</strong></h1><p>最近在公司有上传内部npm服务器的需求，需要将npm包上传到nexus中，解决这个问题，有两种思路</p>
+<h3 id="【-方式1-】暂时开通外网权限，通过设置类型为代理-proxy-的私库来缓存相关的依赖包。"><a href="#【-方式1-】暂时开通外网权限，通过设置类型为代理-proxy-的私库来缓存相关的依赖包。" class="headerlink" title="【 方式1 】暂时开通外网权限，通过设置类型为代理(proxy)的私库来缓存相关的依赖包。"></a>【 方式1 】暂时开通外网权限，通过设置类型为代理(proxy)的私库来缓存相关的依赖包。</h3><p>首先就是新建一个私库：</p>
+<p><img src="/img/24497001-2e026a388de29574.webp" srcset="/img/loading.gif" lazyload></p>
+<p>选择npm(proxy)</p>
+<p><img src="/img/24497001-8f457e2ce138c04c.webp" srcset="/img/loading.gif" lazyload></p>
+<p>然后输入名称和要代理的远程仓库地址</p>
+<p><img src="/img/24497001-8c9e6e6351bd784d.webp" srcset="/img/loading.gif" lazyload></p>
+<p>完成之后本地就可以将拉取依赖的地址设置成这个新建的私库的地址，拉取完成后相关的依赖便会缓存在这个私库中。</p>
+<p>优点：操作方便、自动缓存</p>
+<p>缺点：每次变更了依赖内容都需要去申请一次外网权限</p>
+<h3 id="【-方式2-】向Nexus上传本地的npm依赖"><a href="#【-方式2-】向Nexus上传本地的npm依赖" class="headerlink" title="【 方式2 】向Nexus上传本地的npm依赖"></a>【 方式2 】向Nexus上传本地的npm依赖</h3><p>首先也是需要创建私库，和方式1不同，创建的是类型为hosted的私库：</p>
+<p><img src="/img/24497001-b6d5036d96009acf.webp" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/24497001-f5368221b15eb34a.webp" srcset="/img/loading.gif" lazyload></p>
+<p>之后便是需要下载本地对应依赖的tgz包并且上传到这个私库中。</p>
+<ol>
+<li>安装<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://link.segmentfault.com/?enc=lVYHAWcrhAzsGmuwSP27dw%253D%253D.tQXZgU6Azp6Dox4nqOMT9uhCDdWMqpN8aPOHyzMnbabcAZ5rQawT%252F5NgZtaExRN1niYnOgYTFCfN1GLJWQnA%252Bg%253D%253D">node-tgz-downloader</a>，用来下载依赖的tgz文件</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install node-tgz-downloader -g<br></code></pre></td></tr></table></figure>
+
+<p>2.安装依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install<br></code></pre></td></tr></table></figure>
+
+<p>3.安装完依赖后会生成package-lock.json文件，然后可以执行下面的命令下载对应的依赖包tgz（注意：下载时一些包经常会下载失败，需要保证网络条件稳定，若失败可多尝试几次）下载的tgz文件会在项目根目录/tarballs下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">download-tgz package-lock package-lock.json<br></code></pre></td></tr></table></figure>
+
+<p>ps:如果是使用yarn来安装依赖，可以将yarn.lock先转换成package-lock.json：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install -g synp<br><br>// 在根目录下<br>synp --source-file yarn.lock<br></code></pre></td></tr></table></figure>
+
+<p>4.去重</p>
+<p>在根目录下新建一个tgz文件夹，然后在tarballs文件夹下执行下面的shell命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">find . -name <span class="hljs-string">&#x27;*.tgz&#x27;</span> -<span class="hljs-built_in">exec</span> <span class="hljs-built_in">cp</span> -f &#123;&#125; ../tgz \;<br></code></pre></td></tr></table></figure>
+
+<p>5.创建并执行发布脚本</p>
+<p>新建.publish.sh，内容为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><br>PACKAGE_PATH=./tgz<br>REPOSITORY= <span class="hljs-string">&quot;仓库地址&quot;</span><br>npm login --registry=<span class="hljs-variable">$REPOSITORY</span><br><span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> <span class="hljs-variable">$PACKAGE_PATH</span>/*.tgz; <span class="hljs-keyword">do</span><br> npm publish <span class="hljs-variable">$file</span> --registry=<span class="hljs-variable">$REPOSITORY</span> <br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure>
+
+<p>然后执行该脚本，上传速度比较慢，个人测试2000多个tgz文件，用时1小时多。</p>
+<p>注意：查找仓库地址方法如下：</p>
+<p><img src="/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A120231012-195823.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果上传后部分包缺失，可以重新上传或者采用nexus的手动上传，操作如下：</p>
+<p><img src="/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A120231012-194839.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A120231012-194909.png" srcset="/img/loading.gif" lazyload></p>
+<p>正常情况下，npm服务器都会有一个npm-group虚拟仓库来将多个npm仓库组合在一起，主要是方便使用者下载时只需一个网址即可。</p>
+<p>将我们新建的仓库加入虚拟仓库，如图：<br><img src="/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A120231012-194631.png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E5%85%B7/" class="category-chain-item">工具</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%B7%A5%E5%85%B7/" class="print-no-link">#工具</a>
+      
+        <a href="/tags/Nexus/" class="print-no-link">#Nexus</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>向Nexus上传本地的npm依赖</div>
+      <div>http://example.com/2023/08/02/向Nexus上传本地的npm依赖/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Vito</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年8月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/22/pa11y%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB/" title="pa11y源码分享">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">pa11y源码分享</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/30/nvm%E7%89%88%E6%9C%AC%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E5%92%8C%E8%B8%A9%E5%9D%91/" title="nvm版本管理工具使用和踩坑">
+                        <span class="hidden-mobile">nvm版本管理工具使用和踩坑</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
